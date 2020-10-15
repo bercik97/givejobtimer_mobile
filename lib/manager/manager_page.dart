@@ -4,6 +4,9 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:givejobtimer_mobile/internationalization/localization/localization_constants.dart';
 import 'package:givejobtimer_mobile/internationalization/util/language_util.dart';
+import 'package:givejobtimer_mobile/manager/pages/employees/employees_page.dart';
+import 'package:givejobtimer_mobile/manager/pages/working_employees/employees_at_work_page.dart';
+import 'package:givejobtimer_mobile/manager/pages/workplace/workplace_page.dart';
 import 'package:givejobtimer_mobile/manager/shared/manager_side_bar.dart';
 import 'package:givejobtimer_mobile/shared/app_bar.dart';
 import 'package:givejobtimer_mobile/shared/colors.dart';
@@ -40,9 +43,8 @@ class _ManagerPageState extends State<ManagerPage> {
             child: Column(
               children: <Widget>[
                 Container(
-                  width: 150,
-                  height: 150,
-                  margin: EdgeInsets.only(top: 20),
+                  width: 120,
+                  height: 120,
                   decoration: BoxDecoration(
                     shape: BoxShape.circle,
                     image: DecorationImage(
@@ -63,10 +65,112 @@ class _ManagerPageState extends State<ManagerPage> {
                     text18White(
                         getTranslated(context, 'manager') + ' #' + _user.id),
                   ],
-                )
+                ),
+                SingleChildScrollView(
+                  child: Padding(
+                    padding: const EdgeInsets.all(12.0),
+                    child: Column(
+                      children: <Widget>[
+                        SizedBox(height: 10),
+                        Row(
+                          children: <Widget>[
+                            Expanded(
+                              child: Material(
+                                color: BRIGHTER_DARK,
+                                child: InkWell(
+                                  onTap: () {
+                                    Navigator.of(context).push(
+                                      CupertinoPageRoute<Null>(
+                                        builder: (BuildContext context) {
+                                          return EmployeesPage(_user);
+                                        },
+                                      ),
+                                    );
+                                  },
+                                  child: _buildScrollableContainer(
+                                      'images/big-employees-icon.png',
+                                      'employees',
+                                      'seeYourEmployees'),
+                                ),
+                              ),
+                            ),
+                            SizedBox(width: 10),
+                            Expanded(
+                              child: Material(
+                                color: BRIGHTER_DARK,
+                                child: InkWell(
+                                  onTap: () {
+                                    Navigator.of(context).push(
+                                      CupertinoPageRoute<Null>(
+                                        builder: (BuildContext context) {
+                                          return EmployeesAtWorkPage(_user);
+                                        },
+                                      ),
+                                    );
+                                  },
+                                  child: _buildScrollableContainer(
+                                      'images/big-employees_in_work-icon.png',
+                                      'employeesAtWork',
+                                      'seeCurrentlyWorkingEmployees'),
+                                ),
+                              ),
+                            ),
+                          ],
+                        ),
+                        SizedBox(height: 10),
+                        Row(
+                          children: <Widget>[
+                            Expanded(
+                              child: Material(
+                                color: BRIGHTER_DARK,
+                                child: InkWell(
+                                  onTap: () => {
+                                    Navigator.of(context).push(
+                                      CupertinoPageRoute<Null>(
+                                        builder: (BuildContext context) {
+                                          return WorkplacePage(_user);
+                                        },
+                                      ),
+                                    ),
+                                  },
+                                  child: _buildScrollableContainer(
+                                      'images/big-employees-icon.png',
+                                      'workplaces',
+                                      'manageWorkplaces'),
+                                ),
+                              ),
+                            ),
+                            SizedBox(width: 10),
+                            Expanded(child: Material(color: DARK)),
+                          ],
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
               ],
             ),
           ),
+        ),
+      ),
+    );
+  }
+
+  Widget _buildScrollableContainer(
+      String imagePath, String title, String subtitle) {
+    return Container(
+      height: 160,
+      child: SingleChildScrollView(
+        scrollDirection: Axis.vertical,
+        child: Column(
+          children: <Widget>[
+            Image(height: 100, image: AssetImage(imagePath)),
+            text18WhiteBold(getTranslated(context, title)),
+            Padding(
+                padding: EdgeInsets.only(left: 10, right: 10),
+                child: textCenter13White(getTranslated(context, subtitle))),
+            SizedBox(height: 10)
+          ],
         ),
       ),
     );

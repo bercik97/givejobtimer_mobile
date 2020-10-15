@@ -91,5 +91,11 @@
   "sweden": "Sweden",
   "ukraine": "Ukraine",
   "employee": "Employee",
-  "manager": "Manager"
+  "manager": "Manager",
+  "employees": "Employees",
+  "seeYourEmployees": "See your employees",
+  "employeesAtWork": "Employees at work",
+  "seeCurrentlyWorkingEmployees": "See currently working employees",
+  "workplaces": "Workplaces",
+  "manageWorkplaces": "Manage your workplaces"
 }

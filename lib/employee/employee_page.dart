@@ -40,9 +40,8 @@ class _EmployeePageState extends State<EmployeePage> {
             child: Column(
               children: <Widget>[
                 Container(
-                  width: 150,
-                  height: 150,
-                  margin: EdgeInsets.only(top: 20),
+                  width: 120,
+                  height: 120,
                   decoration: BoxDecoration(
                     shape: BoxShape.circle,
                     image: DecorationImage(
