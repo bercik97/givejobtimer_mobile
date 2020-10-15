@@ -56,5 +56,9 @@
   "confirmation": "Confirmation",
   "exitRegistrationContent": "Are you sure u want to exit from registration form?",
   "exitAgree": "Yes, I want to exit",
-  "no": "No"
+  "no": "No",
+  "loginCodeIsRequired": "Login code is required",
+  "loginSuccessfully": "Login successfully",
+  "wrongLoginCode": "Wrong login code",
+  "cannotConnectToServer": "Unable to connect to server"
 }

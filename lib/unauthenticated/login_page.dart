@@ -1,17 +1,26 @@
+import 'dart:convert';
+
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:givejobtimer_mobile/employee/employee_page.dart';
+import 'package:givejobtimer_mobile/manager/manager_page.dart';
 import 'package:givejobtimer_mobile/shared/colors.dart';
 import 'package:givejobtimer_mobile/shared/constants.dart';
 import 'package:givejobtimer_mobile/shared/icons.dart';
+import 'package:givejobtimer_mobile/shared/model/user.dart';
 import 'package:givejobtimer_mobile/shared/texts.dart';
+import 'package:givejobtimer_mobile/shared/toastr.dart';
+import 'package:givejobtimer_mobile/shared/validator.dart';
 import 'package:givejobtimer_mobile/unauthenticated/registration_page.dart';
 import 'package:givejobtimer_mobile/unauthenticated/service/token_service.dart';
 import 'package:givejobtimer_mobile/widget/circular_progress_indicator.dart';
+import 'package:http/http.dart' as http;
 import 'package:pin_code_text_field/pin_code_text_field.dart';
 import 'package:progress_dialog/progress_dialog.dart';
 
 import '../internationalization/localization/localization_constants.dart';
+import '../main.dart';
 import 'get_started_page.dart';
 
 class LoginPage extends StatefulWidget {
@@ -20,11 +29,9 @@ class LoginPage extends StatefulWidget {
 }
 
 class _LoginPageState extends State<LoginPage> {
-  final TokenService _tokenService = new TokenService();
-  final TextEditingController _tokenController = new TextEditingController();
-
-  final TextEditingController _loginCodeController =
-      new TextEditingController();
+  final TokenService _tokenService = TokenService();
+  final TextEditingController _tokenController = TextEditingController();
+  final TextEditingController _loginCodeController = TextEditingController();
 
   bool _loginCodeVisible = false;
 
@@ -79,7 +86,65 @@ class _LoginPageState extends State<LoginPage> {
               height: 50,
               shape: new RoundedRectangleBorder(
                   borderRadius: new BorderRadius.circular(30.0)),
-              onPressed: () {},
+              onPressed: () {
+                String loginCode = _loginCodeController.text;
+                String invalidMessage =
+                    ValidatorService.validateLoginCode(loginCode, context);
+                if (invalidMessage != null) {
+                  ToastService.showErrorToast(invalidMessage);
+                  return;
+                }
+                progressDialog.show();
+                _login(_loginCodeController.text).then((res) {
+                  FocusScope.of(context).unfocus();
+                  bool resNotNullOrEmpty = res.body != null && res.body != '{}';
+                  if (res.statusCode == 200 && resNotNullOrEmpty) {
+                    String authHeader = 'Basic ' +
+                        base64Encode(utf8.encode('$loginCode:$loginCode'));
+                    storage.write(key: 'authorization', value: authHeader);
+                    Map map = json.decode(res.body);
+                    User user = new User();
+                    user.id = map['id'];
+                    user.role = map['role'];
+                    user.name = map['name'];
+                    user.surname = map['surname'];
+                    user.nationality = map['nationality'];
+                    user.phone = map['phone'];
+                    user.viber = map['viber'];
+                    user.whatsApp = map['whatsApp'];
+                    user.authHeader = authHeader;
+                    storage.write(key: 'id', value: user.id);
+                    storage.write(key: 'role', value: user.role);
+                    storage.write(key: 'name', value: user.name);
+                    storage.write(key: 'surname', value: user.surname);
+                    storage.write(key: 'nationality', value: user.nationality);
+                    storage.write(key: 'phone', value: user.phone);
+                    storage.write(key: 'viber', value: user.viber);
+                    storage.write(key: 'whatsApp', value: user.whatsApp);
+                    if (user.role == ROLE_EMPLOYEE) {
+                      Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                              builder: (context) => EmployeePage(user)));
+                    } else {
+                      Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                              builder: (context) => ManagerPage(user)));
+                    }
+                    ToastService.showSuccessToast(
+                        getTranslated(context, 'loginSuccessfully'));
+                  } else {
+                    progressDialog.hide();
+                    ToastService.showErrorToast(
+                        getTranslated(context, 'wrongLoginCode'));
+                  }
+                }, onError: (e) {
+                  progressDialog.hide();
+                  ToastService.showErrorToast(
+                      getTranslated(context, 'cannotConnectToServer'));
+                });
+              },
               color: GREEN,
               child: text20White(getTranslated(context, 'login')),
               textColor: Colors.white,
@@ -99,6 +164,14 @@ class _LoginPageState extends State<LoginPage> {
         ),
       ),
     );
+  }
+
+  Future<http.Response> _login(String loginCode) async {
+    String basicAuth =
+        'Basic ' + base64Encode(utf8.encode('$loginCode:$loginCode'));
+    var res = await http
+        .get('$SERVER_IP/login', headers: {'authorization': basicAuth});
+    return res;
   }
 
   _buildUniqueCodeField() {
