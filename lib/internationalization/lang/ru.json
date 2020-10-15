@@ -15,6 +15,7 @@
   "success": "Success",
   "failure": "Failure",
   "tokenIsCorrect": "The token you entered is correct.",
-  "redirectToRegistration": "Now, you will be redirected to the registration form.",
+  "redirectToManagerRegistration": "Now, you will be redirected to the MANAGER registration form.",
+  "redirectToEmployeeRegistration": "Now, you will be redirected to the EMPLOYEE registration form.",
   "tokenIsIncorrect": "Passed token is not correct."
 }

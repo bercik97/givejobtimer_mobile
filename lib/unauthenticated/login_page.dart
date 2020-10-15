@@ -6,6 +6,7 @@ import 'package:givejobtimer_mobile/shared/constants.dart';
 import 'package:givejobtimer_mobile/shared/icons.dart';
 import 'package:givejobtimer_mobile/shared/texts.dart';
 import 'package:givejobtimer_mobile/unauthenticated/registration_page.dart';
+import 'package:givejobtimer_mobile/unauthenticated/service/token_service.dart';
 import 'package:givejobtimer_mobile/widget/circular_progress_indicator.dart';
 import 'package:pin_code_text_field/pin_code_text_field.dart';
 import 'package:progress_dialog/progress_dialog.dart';
@@ -19,8 +20,11 @@ class LoginPage extends StatefulWidget {
 }
 
 class _LoginPageState extends State<LoginPage> {
-  final TextEditingController _loginCodeController = TextEditingController();
-  final TextEditingController _tokenController = TextEditingController();
+  final TokenService _tokenService = new TokenService();
+  final TextEditingController _tokenController = new TextEditingController();
+
+  final TextEditingController _loginCodeController =
+      new TextEditingController();
 
   bool _loginCodeVisible = false;
 
@@ -189,17 +193,30 @@ class _LoginPageState extends State<LoginPage> {
                       ),
                       SizedBox(width: 25),
                       MaterialButton(
-                        elevation: 0,
-                        height: 50,
-                        shape: new RoundedRectangleBorder(
-                            borderRadius: new BorderRadius.circular(30.0)),
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: <Widget>[iconWhite(Icons.check)],
-                        ),
-                        color: GREEN,
-                        onPressed: () {},
-                      ),
+                          elevation: 0,
+                          height: 50,
+                          shape: new RoundedRectangleBorder(
+                              borderRadius: new BorderRadius.circular(30.0)),
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: <Widget>[iconWhite(Icons.check)],
+                          ),
+                          color: GREEN,
+                          onPressed: () {
+                            _tokenService
+                                .findTokenRole(_tokenController.text)
+                                .then(
+                              (res) {
+                                if (res == null) {
+                                  _tokenAlertDialog(false, res);
+                                  return;
+                                }
+                                _tokenAlertDialog(true, res);
+                              },
+                            ).catchError((onError) {
+                              _tokenAlertDialog(false, null);
+                            });
+                          }),
                     ],
                   ),
                 ],
@@ -211,7 +228,7 @@ class _LoginPageState extends State<LoginPage> {
     );
   }
 
-  _tokenAlertDialog(bool isCorrect, String accountExpirationDate) {
+  _tokenAlertDialog(bool isCorrect, String role) {
     return showDialog(
       barrierDismissible: false,
       context: context,
@@ -225,9 +242,7 @@ class _LoginPageState extends State<LoginPage> {
             child: ListBody(
               children: <Widget>[
                 textWhite(isCorrect
-                    ? getTranslated(context, 'tokenIsCorrect') +
-                        '\n\n' +
-                        getTranslated(context, 'redirectToRegistration')
+                    ? _buildSuccessMessageForSpecificRoleToken(role)
                     : getTranslated(context, 'tokenIsIncorrect')),
               ],
             ),
@@ -287,6 +302,15 @@ class _LoginPageState extends State<LoginPage> {
         );
       },
     );
+  }
+
+  _buildSuccessMessageForSpecificRoleToken(String role) {
+    String msg = getTranslated(context, 'tokenIsCorrect') + '\n\n';
+    if (role == ROLE_MANAGER) {
+      return msg + getTranslated(context, 'redirectToManagerRegistration');
+    } else {
+      return msg + getTranslated(context, 'redirectToEmployeeRegistration');
+    }
   }
 
   _buildFooterLogo() {
