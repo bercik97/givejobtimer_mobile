@@ -1,0 +1,57 @@
+name: givejobtimer_mobile
+description: GiveJobTimer
+
+version: 1.0.0+1
+
+environment:
+  sdk: ">=2.2.2 <3.0.0"
+
+dependencies:
+  flutter:
+    sdk: flutter
+  flutter_localizations:
+    sdk: flutter
+  shared_preferences: ^0.5.6+3
+
+  cupertino_icons: ^0.1.2
+  http: ^0.12.1
+  flutter_secure_storage: ^3.3.3
+  fluttertoast: ^4.0.0
+  progress_dialog: ^1.2.4
+  countup: ^0.1.0
+  open_appstore: ^1.0.2
+  url_launcher: ^5.4.2
+  pin_code_text_field: ^1.7.1
+  form_field_validator: ^1.0.1
+  dropdown_formfield: ^0.1.2
+  flutter_plugin_pdf_viewer: ^1.0.7
+  slide_popup_dialog: ^0.0.2
+  flutter_speed_dial: ^1.2.1
+  date_range_picker: ^1.0.6
+  date_util: ^0.1.4
+  intl: ^0.16.0
+  bouncing_widget: ^1.2.0
+  shimmer: ^1.1.1
+
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+
+  flutter_launcher_icons: ^0.7.0
+
+flutter_icons:
+  image_path: "images/logo.png"
+  ios: true
+  android: true
+
+flutter:
+  uses-material-design: true
+
+  assets:
+    - lib/internationalization/lang/be.json
+    - lib/internationalization/lang/en.json
+    - lib/internationalization/lang/pt.json
+    - lib/internationalization/lang/pl.json
+    - lib/internationalization/lang/ru.json
+    - lib/internationalization/lang/uk.json
+    - images/logo.png

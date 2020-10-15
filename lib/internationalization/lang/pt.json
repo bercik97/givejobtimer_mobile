@@ -1,0 +1,20 @@
+{
+  "getStartedTitle": "Welcome to the",
+  "getStartedDescription": "An application that will help you monitor the working time.",
+  "getStartedLanguage": "Please select the language you speak.",
+  "getStarted": "Let's start",
+  "loading": "Loading ...",
+  "loginTitle": "Sign in and continue",
+  "loginDescription": "Enter your login code to continue to the GiveJob Timer.",
+  "loginCode": "Login code",
+  "login": "Login",
+  "createNewAccount": "Create new account",
+  "createNewAccountPopupTitle": "Enter token to proceed registration",
+  "continue": "Continue",
+  "close": "Close",
+  "success": "Success",
+  "failure": "Failure",
+  "tokenIsCorrect": "The token you entered is correct.",
+  "redirectToRegistration": "Now, you will be redirected to the registration form.",
+  "tokenIsIncorrect": "Passed token is not correct."
+}
