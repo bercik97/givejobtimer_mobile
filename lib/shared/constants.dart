@@ -3,6 +3,9 @@ library constants;
 const String SERVER_IP = 'http://10.0.2.2:8080/api';
 //const String SERVER_IP = 'https://givejobtimer-server.herokuapp.com/api';
 
+const String ANDROID_APP_ID = 'pl.givejob.givejobtimer_mobile';
+const String IOS_APP_ID = null;
+
 const String APP_NAME = 'GiveJob Timer';
 
 const String ROLE_EMPLOYEE = 'ROLE_EMPLOYEE';

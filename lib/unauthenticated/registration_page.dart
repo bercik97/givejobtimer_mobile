@@ -171,7 +171,7 @@ class _EmployeeRegistrationPageState extends State<EmployeeRegistrationPage> {
             Navigator.of(context).push(
               CupertinoPageRoute<Null>(
                 builder: (BuildContext context) {
-                  return DocumentsPage();
+                  return DocumentsPage(null);
                 },
               ),
             );

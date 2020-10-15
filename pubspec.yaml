@@ -55,5 +55,10 @@ flutter:
     - lib/internationalization/lang/ru.json
     - lib/internationalization/lang/uk.json
     - images/logo.png
+    - images/facebook-logo.png
+    - images/instagram-logo.png
+    - images/linkedin-logo.png
+    - images/big-employee-icon.png
+    - images/big-manager-icon.png
     - docs/regulations.pdf
     - docs/privacy_policy.pdf
