@@ -400,34 +400,17 @@ class _EmployeeRegistrationPageState extends State<EmployeeRegistrationPage> {
                     name: _nameController.text,
                     surname: _surnameController.text,
                     nationality: _nationality,
-                    phoneNumber: _phoneController.text,
-                    viberNumber: _viberController.text,
-                    whatsAppNumber: _whatsAppController.text,
+                    phone: _phoneController.text,
+                    viber: _viberController.text,
+                    whatsApp: _whatsAppController.text,
                     tokenId: widget._tokenId,
                     role: widget._role),
                 _registerService.registerUser(dto).then((res) {
-                  _showSuccessDialog();
+                  _showSuccessDialog(res);
                 }).catchError((onError) {
-                  String s = onError.toString();
-                  if (s.contains('LOGIN__UNIQUE')) {
-                    _errorDialog(
-                      getTranslated(context, 'usernameExists') +
-                          '\n' +
-                          getTranslated(context, 'chooseOtherUsername'),
-                    );
-                  } else if (s.contains('TOKEN_INCORRECT') ||
-                      s.contains('TOKEN_NULL_OR_EMPTY')) {
-                    _errorDialogWithNavigate(
-                      getTranslated(context, 'tokenIsIncorrect') +
-                          '\n' +
-                          getTranslated(
-                              context, 'askAdministratorWhatWentWrong'),
-                    );
-                  } else {
-                    _errorDialog(
-                      getTranslated(context, 'smthWentWrong'),
-                    );
-                  }
+                  _errorDialog(
+                    getTranslated(context, 'smthWentWrong'),
+                  );
                 }),
               }
           },
@@ -465,7 +448,7 @@ class _EmployeeRegistrationPageState extends State<EmployeeRegistrationPage> {
     );
   }
 
-  _showSuccessDialog() {
+  _showSuccessDialog(String loginCode) {
     return showDialog(
       context: context,
       builder: (BuildContext context) {
@@ -476,38 +459,15 @@ class _EmployeeRegistrationPageState extends State<EmployeeRegistrationPage> {
             child: ListBody(
               children: <Widget>[
                 textWhite(getTranslated(this.context, 'registerSuccess')),
+                SizedBox(height: 10),
+                text20GreenBold(
+                    getTranslated(this.context, 'loginCode') + ': $loginCode'),
               ],
             ),
           ),
           actions: <Widget>[
             FlatButton(
               child: textWhite(getTranslated(this.context, 'goToLoginPage')),
-              onPressed: () => _resetAndOpenPage(),
-            ),
-          ],
-        );
-      },
-    );
-  }
-
-  _errorDialogWithNavigate(String errorMsg) {
-    return showDialog(
-      barrierDismissible: false,
-      context: context,
-      builder: (BuildContext context) {
-        return AlertDialog(
-          backgroundColor: DARK,
-          title: textGreen(getTranslated(this.context, 'close')),
-          content: SingleChildScrollView(
-            child: ListBody(
-              children: <Widget>[
-                textWhite(errorMsg),
-              ],
-            ),
-          ),
-          actions: <Widget>[
-            FlatButton(
-              child: textWhite(getTranslated(this.context, 'close')),
               onPressed: () => _resetAndOpenPage(),
             ),
           ],

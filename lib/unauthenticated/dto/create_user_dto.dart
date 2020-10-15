@@ -4,9 +4,9 @@ class CreateUserDto {
   final String name;
   final String surname;
   final String nationality;
-  final String phoneNumber;
-  final String viberNumber;
-  final String whatsAppNumber;
+  final String phone;
+  final String viber;
+  final String whatsApp;
   final String tokenId;
   final String role;
 
@@ -14,9 +14,9 @@ class CreateUserDto {
     @required this.name,
     @required this.surname,
     @required this.nationality,
-    @required this.phoneNumber,
-    @required this.viberNumber,
-    @required this.whatsAppNumber,
+    @required this.phone,
+    @required this.viber,
+    @required this.whatsApp,
     @required this.tokenId,
     @required this.role,
   });
@@ -26,9 +26,9 @@ class CreateUserDto {
     map['name'] = dto.name;
     map['surname'] = dto.surname;
     map['nationality'] = dto.nationality;
-    map['phoneNumber'] = dto.phoneNumber;
-    map['viberNumber'] = dto.viberNumber;
-    map['whatsAppNumber'] = dto.whatsAppNumber;
+    map['phone'] = dto.phone;
+    map['viber'] = dto.viber;
+    map['whatsApp'] = dto.whatsApp;
     map['tokenId'] = dto.tokenId;
     map['role'] = dto.role;
     return map;

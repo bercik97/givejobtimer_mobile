@@ -11,6 +11,6 @@ class RegisterService {
     Response res = await post(_url,
         body: jsonEncode(CreateUserDto.jsonEncode(dto)),
         headers: {"content-type": "application/json"});
-    return res.statusCode == 200 ? res : Future.error(res.body);
+    return res.statusCode == 200 ? res.body.toString() : Future.error(res.body);
   }
 }
