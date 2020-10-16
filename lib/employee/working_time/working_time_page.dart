@@ -51,20 +51,59 @@ class _WorkingTimePageState extends State<WorkingTimePage> {
                 DateTime.now().toString().substring(0, 10)),
         drawer: employeeSideBar(context, _user),
         body: SingleChildScrollView(
-          child: Center(
-            child: Column(
-              children: [
-                _buildStartTimeView(),
-                _handleEmployeeInWork(),
-              ],
-            ),
+          child: FutureBuilder(
+            future: _workTimeService
+                .checkIfIsCurrentlyAtWorkAndFindAllByEmployeeIdAndDateOrEndTimeIsNull(
+                    _user.employeeId, DateTime.now()),
+            builder: (BuildContext context,
+                AsyncSnapshot<IsCurrentlyAtWorkWithWorkTimesDto> snapshot) {
+              if (snapshot.connectionState == ConnectionState.waiting ||
+                  snapshot.data == null) {
+                return Padding(
+                  padding: EdgeInsets.only(top: 50),
+                  child: Center(child: circularProgressIndicator()),
+                );
+              } else {
+                IsCurrentlyAtWorkWithWorkTimesDto dto = snapshot.data;
+                List workTimes = dto.workTimes;
+                if (dto.currentlyAtWork) {
+                  return _handleEmployeeInWork(workTimes);
+                } else {
+                  return _handleEmployeeNotInWork(workTimes);
+                }
+              }
+            },
           ),
         ),
       ),
     );
   }
 
-  Widget _buildStartTimeView() {
+  Widget _handleEmployeeInWork(List workTimes) {
+    return Center(
+      child: Column(
+        children: [
+          _buildBtn(Icons.pause, _showEnterWorkplaceCode),
+          _buildPauseHint(),
+          _displayWorkTimes(workTimes),
+        ],
+      ),
+    );
+  }
+
+  Widget _handleEmployeeNotInWork(List workTimes) {
+    return Center(
+      child: Column(
+        children: [
+          _buildBtn(Icons.play_arrow, _showEnterWorkplaceCode),
+          _buildStartHint(),
+          _displayWorkTimes(workTimes),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildBtn(IconData icon, Function() fun) {
     return Column(
       children: <Widget>[
         SizedBox(height: 20),
@@ -77,11 +116,27 @@ class _WorkingTimePageState extends State<WorkingTimePage> {
           child: BouncingWidget(
             duration: Duration(milliseconds: 100),
             scaleFactor: 2,
-            onPressed: () => _showEnterWorkplaceCode(),
-            child: Icon(Icons.play_arrow, size: 100),
+            onPressed: () => fun(),
+            child: Icon(icon, size: 100),
           ),
         ),
       ],
+    );
+  }
+
+  Widget _buildStartHint() {
+    return Padding(
+      padding: EdgeInsets.all(20),
+      child:
+          textCenter18Green(getTranslated(context, 'hintPressBtnToStart')),
+    );
+  }
+
+  Widget _buildPauseHint() {
+    return Padding(
+      padding: EdgeInsets.all(20),
+      child:
+          textCenter18Green(getTranslated(context, 'hintPressBtnToPause')),
     );
   }
 
@@ -248,75 +303,41 @@ class _WorkingTimePageState extends State<WorkingTimePage> {
     );
   }
 
-  _handleEmployeeInWork() {
+  _displayWorkTimes(List workTimes) {
     return SingleChildScrollView(
-      child: FutureBuilder(
-        future: _workTimeService
-            .checkIfIsCurrentlyAtWorkAndFindAllByEmployeeIdAndDateOrEndTimeIsNull(
-                _user.employeeId, DateTime.now()),
-        builder: (BuildContext context,
-            AsyncSnapshot<IsCurrentlyAtWorkWithWorkTimesDto> snapshot) {
-          if (snapshot.connectionState == ConnectionState.waiting ||
-              snapshot.data == null) {
-            return Padding(
-              padding: EdgeInsets.only(top: 50),
-              child: Center(child: circularProgressIndicator()),
-            );
-          } else {
-            IsCurrentlyAtWorkWithWorkTimesDto dto = snapshot.data;
-            List workTimes = dto.workTimes;
-            return workTimes.isNotEmpty
-                ? Expanded(
-                    child: SingleChildScrollView(
-                      scrollDirection: Axis.vertical,
-                      child: SingleChildScrollView(
-                        scrollDirection: Axis.horizontal,
-                        child: Theme(
-                          data: Theme.of(this.context)
-                              .copyWith(dividerColor: MORE_BRIGHTER_DARK),
-                          child: DataTable(
-                            columns: [
-                              DataColumn(
-                                  label: textWhiteBold(
-                                      getTranslated(this.context, 'from'))),
-                              DataColumn(
-                                  label: textWhiteBold(
-                                      getTranslated(this.context, 'to'))),
-                              DataColumn(
-                                  label: textWhiteBold(
-                                      getTranslated(this.context, 'sum'))),
-                              DataColumn(
-                                  label: textWhiteBold(getTranslated(
-                                      this.context, 'workplaceId'))),
-                            ],
-                            rows: [
-                              for (var workTime in workTimes)
-                                DataRow(
-                                  cells: [
-                                    DataCell(textWhite(workTime.startTime)),
-                                    DataCell(textWhite(workTime.endTime != null
-                                        ? workTime.startTime
-                                        : '-')),
-                                    DataCell(textWhite(
-                                        workTime.totalTime != null
-                                            ? workTime.totalTime
-                                            : '-')),
-                                    DataCell(textWhite(workTime.workplaceId)),
-                                  ],
-                                ),
-                            ],
-                          ),
-                        ),
-                      ),
-                    ),
-                  )
-                : Padding(
-                    padding: EdgeInsets.all(20),
-                    child: textCenter18Green(
-                        getTranslated(context, 'hintPressStartBtnToStart')),
-                  );
-          }
-        },
+      scrollDirection: Axis.vertical,
+      child: SingleChildScrollView(
+        scrollDirection: Axis.horizontal,
+        child: Theme(
+          data:
+              Theme.of(this.context).copyWith(dividerColor: MORE_BRIGHTER_DARK),
+          child: DataTable(
+            columns: [
+              DataColumn(
+                  label: textWhiteBold(getTranslated(this.context, 'from'))),
+              DataColumn(
+                  label: textWhiteBold(getTranslated(this.context, 'to'))),
+              DataColumn(
+                  label: textWhiteBold(getTranslated(this.context, 'sum'))),
+              DataColumn(
+                  label: textWhiteBold(
+                      getTranslated(this.context, 'workplaceId'))),
+            ],
+            rows: [
+              for (var workTime in workTimes)
+                DataRow(
+                  cells: [
+                    DataCell(textWhite(workTime.startTime)),
+                    DataCell(textWhite(
+                        workTime.endTime != null ? workTime.startTime : '-')),
+                    DataCell(textWhite(
+                        workTime.totalTime != null ? workTime.totalTime : '-')),
+                    DataCell(textWhite(workTime.workplaceId)),
+                  ],
+                ),
+            ],
+          ),
+        ),
       ),
     );
   }
