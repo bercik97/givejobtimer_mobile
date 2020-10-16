@@ -109,7 +109,7 @@ class _ManagerPageState extends State<ManagerPage> {
                                     ),
                                   },
                                   child: _buildScrollableContainer(
-                                      'images/big-employees-icon.png',
+                                      'images/big-workplace-icon.png',
                                       'workplaces',
                                       'manageWorkplaces'),
                                 ),

@@ -10,6 +10,7 @@ import 'package:givejobtimer_mobile/shared/colors.dart';
 import 'package:givejobtimer_mobile/shared/constants.dart';
 import 'package:givejobtimer_mobile/shared/model/user.dart';
 import 'package:givejobtimer_mobile/shared/texts.dart';
+import 'package:givejobtimer_mobile/widget/contact_section.dart';
 
 class EmployeePage extends StatefulWidget {
   final User _user;
@@ -63,10 +64,75 @@ class _EmployeePageState extends State<EmployeePage> {
                         ' #' +
                         _user.id.toString()),
                   ],
-                )
+                ),
+                SingleChildScrollView(
+                  child: Padding(
+                    padding: const EdgeInsets.all(12.0),
+                    child: Column(
+                      children: <Widget>[
+                        SizedBox(height: 10),
+                        Row(
+                          children: <Widget>[
+                            Expanded(
+                              child: Material(
+                                color: BRIGHTER_DARK,
+                                child: InkWell(
+                                  onTap: () {},
+                                  child: _buildScrollableContainer(
+                                      'images/big-employees-icon.png',
+                                      'workingTime',
+                                      'startFinishWork'),
+                                ),
+                              ),
+                            ),
+                            SizedBox(width: 10),
+                            Expanded(
+                              child: Material(
+                                color: BRIGHTER_DARK,
+                                child: InkWell(
+                                  onTap: () => {
+                                    showContactDialog(
+                                        context,
+                                        _user.managerPhone,
+                                        _user.managerViber,
+                                        _user.managerWhatsApp),
+                                  },
+                                  child: _buildScrollableContainer(
+                                      'images/big-employees-icon.png',
+                                      'contact',
+                                      'contactWithYourManager'),
+                                ),
+                              ),
+                            ),
+                          ],
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
               ],
             ),
           ),
+        ),
+      ),
+    );
+  }
+
+  Widget _buildScrollableContainer(
+      String imagePath, String title, String subtitle) {
+    return Container(
+      height: 160,
+      child: SingleChildScrollView(
+        scrollDirection: Axis.vertical,
+        child: Column(
+          children: <Widget>[
+            Image(height: 100, image: AssetImage(imagePath)),
+            text18WhiteBold(getTranslated(context, title)),
+            Padding(
+                padding: EdgeInsets.only(left: 10, right: 10),
+                child: textCenter13White(getTranslated(context, subtitle))),
+            SizedBox(height: 10)
+          ],
         ),
       ),
     );

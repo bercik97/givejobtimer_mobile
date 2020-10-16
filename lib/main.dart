@@ -56,6 +56,9 @@ class _MyAppState extends State<MyApp> {
     var auth = await storage.read(key: 'authorization');
     var id = await storage.read(key: 'id');
     var managerId = await storage.read(key: 'managerId');
+    var managerPhone = await storage.read(key: 'managerPhone');
+    var managerViber = await storage.read(key: 'managerViber');
+    var managerWhatsApp = await storage.read(key: 'managerWhatsApp');
     var employeeId = await storage.read(key: 'employeeId');
     var role = await storage.read(key: 'role');
     var name = await storage.read(key: 'name');
@@ -69,6 +72,9 @@ class _MyAppState extends State<MyApp> {
     map['authorization'] = auth;
     map['id'] = id;
     map['managerId'] = managerId;
+    map['managerPhone'] = managerPhone;
+    map['managerViber'] = managerViber;
+    map['managerWhatsApp'] = managerWhatsApp;
     map['employeeId'] = employeeId;
     map['role'] = role;
     map['name'] = name;

@@ -125,5 +125,9 @@
   "hint": "Hint",
   "needToSelectWorkplaces": "You need to select workplaces",
   "whichYouWantToRemove": "which you want to remove",
-  "workplaceUpdatedSuccessfully": "Workplace updated successfully"
+  "workplaceUpdatedSuccessfully": "Workplace updated successfully",
+  "workingTime": "Working Time",
+  "startFinishWork": "Start / Finish your work",
+  "contact": "Contact",
+  "contactWithYourManager": "Contact with your manager"
 }

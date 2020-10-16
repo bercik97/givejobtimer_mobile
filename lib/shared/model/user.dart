@@ -9,6 +9,9 @@ class User {
   String phone;
   String viber;
   String whatsApp;
+  String managerPhone;
+  String managerViber;
+  String managerWhatsApp;
   String authHeader;
 
   User();
@@ -24,6 +27,9 @@ class User {
     phone = data['phone'];
     viber = data['viber'];
     whatsApp = data['whatsApp'];
+    managerPhone = data['managerPhone'];
+    managerViber = data['managerViber'];
+    managerWhatsApp = data['managerWhatsApp'];
     authHeader = data['authorization'];
     return this;
   }
