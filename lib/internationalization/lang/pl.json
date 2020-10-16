@@ -129,5 +129,13 @@
   "startFinishWork": "Start / Finish your work",
   "contact": "Contact",
   "contactWithYourManager": "Contact with your manager",
-  "manageYourWorkTime": "Manage your work time"
+  "manageYourWorkTime": "Manage your work time",
+  "startTimeConfirmation": "Are you sure you want to start work at workplace of number",
+  "yesImSure": "Yes, Im sure",
+  "enterWorkplaceCode": "Enter workplace code",
+  "enterWorkplaceCodePopupTitle": "Enter workplace code to begin work",
+  "workplaceCodeIsCorrect": "The workplace code you entered is CORRECT",
+  "workplaceCodeIsCorrectNd": "You can start your work from now!",
+  "workplaceCodeIsIncorrect": "Passed workplace code is not correct",
+  "correctWorkplaceCode": "Workplace code is CORRECT"
 }

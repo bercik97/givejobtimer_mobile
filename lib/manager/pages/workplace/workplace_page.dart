@@ -7,7 +7,7 @@ import 'package:givejobtimer_mobile/internationalization/localization/localizati
 import 'package:givejobtimer_mobile/manager/dto/create_workplace_dto.dart';
 import 'package:givejobtimer_mobile/manager/dto/update_workplace_dto.dart';
 import 'package:givejobtimer_mobile/manager/dto/workplace_dto.dart';
-import 'package:givejobtimer_mobile/manager/service/workplace_service.dart';
+import 'package:givejobtimer_mobile/shared/service/workplace_service.dart';
 import 'package:givejobtimer_mobile/manager/shared/manager_side_bar.dart';
 import 'package:givejobtimer_mobile/shared/app_bar.dart';
 import 'package:givejobtimer_mobile/shared/colors.dart';

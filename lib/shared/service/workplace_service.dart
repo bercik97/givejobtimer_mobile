@@ -24,6 +24,19 @@ class WorkplaceService {
     return res.statusCode == 200 ? res.body.toString() : Future.error(res.body);
   }
 
+  Future<bool> isCorrectByIdAndManagerId(
+      String id, String managerIdAsString) async {
+    int managerId = int.parse(managerIdAsString);
+    String url = _url + '/is-correct/$id/$managerId';
+    Response res =
+        await get(url, headers: {HttpHeaders.authorizationHeader: authHeader});
+    if (res.statusCode == 200) {
+      return res.body == 'true';
+    } else {
+      return false;
+    }
+  }
+
   Future<List<WorkplaceDto>> findAllByManagerId(String managerId) async {
     int id = int.parse(managerId);
     String url = _url + '/$id';

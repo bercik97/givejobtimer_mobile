@@ -14,18 +14,18 @@ import 'package:givejobtimer_mobile/unauthenticated/service/register_service.dar
 import 'dto/create_user_dto.dart';
 import 'login_page.dart';
 
-class EmployeeRegistrationPage extends StatefulWidget {
+class RegisterPage extends StatefulWidget {
   final String _tokenId;
   final String _role;
 
-  EmployeeRegistrationPage(this._tokenId, this._role);
+  RegisterPage(this._tokenId, this._role);
 
   @override
-  _EmployeeRegistrationPageState createState() =>
-      _EmployeeRegistrationPageState();
+  _RegisterPageState createState() =>
+      _RegisterPageState();
 }
 
-class _EmployeeRegistrationPageState extends State<EmployeeRegistrationPage> {
+class _RegisterPageState extends State<RegisterPage> {
   CreateUserDto dto;
   RegisterService _registerService = RegisterService();
   GlobalKey<FormState> formKey = GlobalKey<FormState>();
