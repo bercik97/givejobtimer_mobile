@@ -2,7 +2,7 @@ import 'package:bouncing_widget/bouncing_widget.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:givejobtimer_mobile/employee/dto/create_work_time_dto.dart';
-import 'package:givejobtimer_mobile/employee/dto/work_time_dto.dart';
+import 'package:givejobtimer_mobile/employee/dto/is_currently_at_work_with_work_times_dto.dart';
 import 'package:givejobtimer_mobile/employee/service/work_time_service.dart';
 import 'package:givejobtimer_mobile/employee/shared/employee_side_bar.dart';
 import 'package:givejobtimer_mobile/internationalization/localization/localization_constants.dart';
@@ -55,7 +55,7 @@ class _WorkingTimePageState extends State<WorkingTimePage> {
             child: Column(
               children: [
                 _buildStartTimeView(),
-                _buildAllWorkTimes(),
+                _handleEmployeeInWork(),
               ],
             ),
           ),
@@ -80,11 +80,6 @@ class _WorkingTimePageState extends State<WorkingTimePage> {
             onPressed: () => _showEnterWorkplaceCode(),
             child: Icon(Icons.play_arrow, size: 100),
           ),
-        ),
-        Padding(
-          padding: EdgeInsets.all(20),
-          child: textCenter18Green(
-              getTranslated(context, 'hintPressStartBtnToStart')),
         ),
       ],
     );
@@ -253,13 +248,14 @@ class _WorkingTimePageState extends State<WorkingTimePage> {
     );
   }
 
-  _buildAllWorkTimes() {
+  _handleEmployeeInWork() {
     return SingleChildScrollView(
       child: FutureBuilder(
-        future: _workTimeService.findAllWorkTimesByEmployeeIdAndDate(
-            _user.employeeId, DateTime.now()),
-        builder:
-            (BuildContext context, AsyncSnapshot<List<WorkTimeDto>> snapshot) {
+        future: _workTimeService
+            .checkIfIsCurrentlyAtWorkAndFindAllByEmployeeIdAndDateOrEndTimeIsNull(
+                _user.employeeId, DateTime.now()),
+        builder: (BuildContext context,
+            AsyncSnapshot<IsCurrentlyAtWorkWithWorkTimesDto> snapshot) {
           if (snapshot.connectionState == ConnectionState.waiting ||
               snapshot.data == null) {
             return Padding(
@@ -267,53 +263,58 @@ class _WorkingTimePageState extends State<WorkingTimePage> {
               child: Center(child: circularProgressIndicator()),
             );
           } else {
-            List<WorkTimeDto> workTimes = snapshot.data;
-            return Expanded(
-              child: SingleChildScrollView(
-                scrollDirection: Axis.vertical,
-                child: SingleChildScrollView(
-                  scrollDirection: Axis.horizontal,
-                  child: Theme(
-                    data: Theme.of(this.context)
-                        .copyWith(dividerColor: MORE_BRIGHTER_DARK),
-                    child: DataTable(
-                      columnSpacing: 30,
-                      columns: [
-                        DataColumn(label: textWhiteBold('No.')),
-                        DataColumn(
-                            label: textWhiteBold(
-                                getTranslated(this.context, 'from'))),
-                        DataColumn(
-                            label: textWhiteBold(
-                                getTranslated(this.context, 'to'))),
-                        DataColumn(
-                            label: textWhiteBold(
-                                getTranslated(this.context, 'sum'))),
-                        DataColumn(
-                            label: textWhiteBold(
-                                getTranslated(this.context, 'workplaceId'))),
-                      ],
-                      rows: [
-                        for (int i = 0; i < workTimes.length; i++)
-                          DataRow(
-                            cells: [
-                              DataCell(textWhite((i + 1).toString())),
-                              DataCell(textWhite(workTimes[i].startTime)),
-                              DataCell(textWhite(workTimes[i].endTime != null
-                                  ? workTimes[i].startTime
-                                  : '-')),
-                              DataCell(textWhite(workTimes[i].totalTime != null
-                                  ? workTimes[i].totalTime
-                                  : '-')),
-                              DataCell(textWhite(workTimes[i].workplaceId)),
+            IsCurrentlyAtWorkWithWorkTimesDto dto = snapshot.data;
+            List workTimes = dto.workTimes;
+            return workTimes.isNotEmpty
+                ? Expanded(
+                    child: SingleChildScrollView(
+                      scrollDirection: Axis.vertical,
+                      child: SingleChildScrollView(
+                        scrollDirection: Axis.horizontal,
+                        child: Theme(
+                          data: Theme.of(this.context)
+                              .copyWith(dividerColor: MORE_BRIGHTER_DARK),
+                          child: DataTable(
+                            columns: [
+                              DataColumn(
+                                  label: textWhiteBold(
+                                      getTranslated(this.context, 'from'))),
+                              DataColumn(
+                                  label: textWhiteBold(
+                                      getTranslated(this.context, 'to'))),
+                              DataColumn(
+                                  label: textWhiteBold(
+                                      getTranslated(this.context, 'sum'))),
+                              DataColumn(
+                                  label: textWhiteBold(getTranslated(
+                                      this.context, 'workplaceId'))),
+                            ],
+                            rows: [
+                              for (var workTime in workTimes)
+                                DataRow(
+                                  cells: [
+                                    DataCell(textWhite(workTime.startTime)),
+                                    DataCell(textWhite(workTime.endTime != null
+                                        ? workTime.startTime
+                                        : '-')),
+                                    DataCell(textWhite(
+                                        workTime.totalTime != null
+                                            ? workTime.totalTime
+                                            : '-')),
+                                    DataCell(textWhite(workTime.workplaceId)),
+                                  ],
+                                ),
                             ],
                           ),
-                      ],
+                        ),
+                      ),
                     ),
-                  ),
-                ),
-              ),
-            );
+                  )
+                : Padding(
+                    padding: EdgeInsets.all(20),
+                    child: textCenter18Green(
+                        getTranslated(context, 'hintPressStartBtnToStart')),
+                  );
           }
         },
       ),
