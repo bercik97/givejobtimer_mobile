@@ -27,16 +27,4 @@ class ToastService {
       fontSize: 16,
     );
   }
-
-  static showToast(String msg) {
-    Fluttertoast.showToast(
-      msg: msg,
-      toastLength: Toast.LENGTH_SHORT,
-      gravity: ToastGravity.CENTER,
-      timeInSecForIosWeb: 3,
-      backgroundColor: WHITE,
-      textColor: DARK,
-      fontSize: 16,
-    );
-  }
 }
