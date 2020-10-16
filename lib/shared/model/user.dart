@@ -1,5 +1,7 @@
 class User {
   String id;
+  String managerId;
+  String employeeId;
   String role;
   String name;
   String surname;
@@ -13,6 +15,8 @@ class User {
 
   User create(Map<String, String> data) {
     id = data['id'];
+    managerId = data['managerId'];
+    employeeId = data['employeeId'];
     role = data['role'];
     name = data['name'];
     surname = data['surname'];

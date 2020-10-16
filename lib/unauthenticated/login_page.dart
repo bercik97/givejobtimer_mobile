@@ -105,6 +105,8 @@ class _LoginPageState extends State<LoginPage> {
                     Map map = json.decode(res.body);
                     User user = new User();
                     user.id = map['id'];
+                    user.managerId = map['managerId'];
+                    user.employeeId = map['employeeId'];
                     user.role = map['role'];
                     user.name = map['name'];
                     user.surname = map['surname'];
@@ -113,7 +115,9 @@ class _LoginPageState extends State<LoginPage> {
                     user.viber = map['viber'];
                     user.whatsApp = map['whatsApp'];
                     user.authHeader = authHeader;
-                    storage.write(key: 'id', value: user.id);
+                    storage.write(key: 'id', value: user.id.toString());
+                    storage.write(key: 'managerId', value: user.managerId.toString());
+                    storage.write(key: 'employeeId', value: user.employeeId.toString());
                     storage.write(key: 'role', value: user.role);
                     storage.write(key: 'name', value: user.name);
                     storage.write(key: 'surname', value: user.surname);

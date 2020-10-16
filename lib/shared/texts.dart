@@ -113,6 +113,7 @@ Text textCenter28GreenBold(String text) { return Text(text, textAlign: TextAlign
 /////////////////////
 Text textGreenBold(String text) { return Text(text, style: TextStyle(color: GREEN, fontWeight: FontWeight.bold)); }
 Text text16GreenBold(String text) { return Text(text, style: TextStyle(fontSize: 16, color: GREEN, fontWeight: FontWeight.bold)); }
+Text text18GreenBold(String text) { return Text(text, style: TextStyle(fontSize: 18, color: GREEN, fontWeight: FontWeight.bold)); }
 Text text20GreenBold(String text) { return Text(text, style: TextStyle(fontSize: 20, color: GREEN, fontWeight: FontWeight.bold)); }
 
 

@@ -94,8 +94,18 @@
   "manager": "Manager",
   "employees": "Employees",
   "seeYourEmployees": "See your employees",
-  "employeesAtWork": "Employees at work",
-  "seeCurrentlyWorkingEmployees": "See currently working employees",
   "workplaces": "Workplaces",
-  "manageWorkplaces": "Manage your workplaces"
+  "manageWorkplaces": "Manage your workplaces",
+  "search": "Search",
+  "hoursWorkedToday": "Hours worked today",
+  "workplace": "Workplace",
+  "noEmployees": "No employees",
+  "youHaveNoEmployees": "You have no added employees",
+  "status": "Status",
+  "didNotStartWork": "Did not start work",
+  "currentlyWorking": "Currently working",
+  "finishedWork": "Finished work",
+  "statisticsForToday": "Statistics for today",
+  "hoursWorked": "Hours worked",
+  "empty": "Empty"
 }

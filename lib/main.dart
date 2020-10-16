@@ -55,6 +55,8 @@ class _MyAppState extends State<MyApp> {
     var getStartedClick = await storage.read(key: 'getStartedClick');
     var auth = await storage.read(key: 'authorization');
     var id = await storage.read(key: 'id');
+    var managerId = await storage.read(key: 'managerId');
+    var employeeId = await storage.read(key: 'employeeId');
     var role = await storage.read(key: 'role');
     var name = await storage.read(key: 'name');
     var surname = await storage.read(key: 'surname');
@@ -66,6 +68,8 @@ class _MyAppState extends State<MyApp> {
     map['getStartedClick'] = getStartedClick;
     map['authorization'] = auth;
     map['id'] = id;
+    map['managerId'] = managerId;
+    map['employeeId'] = employeeId;
     map['role'] = role;
     map['name'] = name;
     map['surname'] = surname;

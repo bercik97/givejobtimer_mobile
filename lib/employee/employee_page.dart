@@ -59,8 +59,9 @@ class _EmployeePageState extends State<EmployeePage> {
                         ' ' +
                         LanguageUtil.findFlagByNationality(_user.nationality)),
                     SizedBox(height: 2.5),
-                    text18White(
-                        getTranslated(context, 'employee') + ' #' + _user.id),
+                    text18White(getTranslated(context, 'employee') +
+                        ' #' +
+                        _user.id.toString()),
                   ],
                 )
               ],

@@ -5,7 +5,6 @@ import 'package:flutter/material.dart';
 import 'package:givejobtimer_mobile/internationalization/localization/localization_constants.dart';
 import 'package:givejobtimer_mobile/internationalization/util/language_util.dart';
 import 'package:givejobtimer_mobile/manager/pages/employees/employees_page.dart';
-import 'package:givejobtimer_mobile/manager/pages/working_employees/employees_at_work_page.dart';
 import 'package:givejobtimer_mobile/manager/pages/workplace/workplace_page.dart';
 import 'package:givejobtimer_mobile/manager/shared/manager_side_bar.dart';
 import 'package:givejobtimer_mobile/shared/app_bar.dart';
@@ -62,8 +61,9 @@ class _ManagerPageState extends State<ManagerPage> {
                         ' ' +
                         LanguageUtil.findFlagByNationality(_user.nationality)),
                     SizedBox(height: 2.5),
-                    text18White(
-                        getTranslated(context, 'manager') + ' #' + _user.id),
+                    text18White(getTranslated(context, 'manager') +
+                        ' #' +
+                        _user.id.toString()),
                   ],
                 ),
                 SingleChildScrollView(
@@ -99,31 +99,6 @@ class _ManagerPageState extends State<ManagerPage> {
                               child: Material(
                                 color: BRIGHTER_DARK,
                                 child: InkWell(
-                                  onTap: () {
-                                    Navigator.of(context).push(
-                                      CupertinoPageRoute<Null>(
-                                        builder: (BuildContext context) {
-                                          return EmployeesAtWorkPage(_user);
-                                        },
-                                      ),
-                                    );
-                                  },
-                                  child: _buildScrollableContainer(
-                                      'images/big-employees_in_work-icon.png',
-                                      'employeesAtWork',
-                                      'seeCurrentlyWorkingEmployees'),
-                                ),
-                              ),
-                            ),
-                          ],
-                        ),
-                        SizedBox(height: 10),
-                        Row(
-                          children: <Widget>[
-                            Expanded(
-                              child: Material(
-                                color: BRIGHTER_DARK,
-                                child: InkWell(
                                   onTap: () => {
                                     Navigator.of(context).push(
                                       CupertinoPageRoute<Null>(
@@ -140,8 +115,6 @@ class _ManagerPageState extends State<ManagerPage> {
                                 ),
                               ),
                             ),
-                            SizedBox(width: 10),
-                            Expanded(child: Material(color: DARK)),
                           ],
                         ),
                       ],
