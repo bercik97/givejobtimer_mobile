@@ -2,6 +2,7 @@ import 'package:bouncing_widget/bouncing_widget.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:givejobtimer_mobile/employee/dto/create_work_time_dto.dart';
+import 'package:givejobtimer_mobile/employee/dto/finish_work_time_dto.dart';
 import 'package:givejobtimer_mobile/employee/dto/is_currently_at_work_with_work_times_dto.dart';
 import 'package:givejobtimer_mobile/employee/service/work_time_service.dart';
 import 'package:givejobtimer_mobile/employee/shared/employee_side_bar.dart';
@@ -31,6 +32,8 @@ class _WorkingTimePageState extends State<WorkingTimePage> {
   final _workplaceCodeController = TextEditingController();
   WorkplaceService _workplaceService;
   WorkTimeService _workTimeService;
+
+  IsCurrentlyAtWorkWithWorkTimesDto _dto;
 
   @override
   Widget build(BuildContext context) {
@@ -64,9 +67,9 @@ class _WorkingTimePageState extends State<WorkingTimePage> {
                   child: Center(child: circularProgressIndicator()),
                 );
               } else {
-                IsCurrentlyAtWorkWithWorkTimesDto dto = snapshot.data;
-                List workTimes = dto.workTimes;
-                if (dto.currentlyAtWork) {
+                _dto = snapshot.data;
+                List workTimes = _dto.workTimes;
+                if (_dto.currentlyAtWork) {
                   return _handleEmployeeInWork(workTimes);
                 } else {
                   return _handleEmployeeNotInWork(workTimes);
@@ -83,7 +86,7 @@ class _WorkingTimePageState extends State<WorkingTimePage> {
     return Center(
       child: Column(
         children: [
-          _buildBtn(Icons.pause, _showEnterWorkplaceCode),
+          _buildBtn(Icons.pause, _showPauseWorkDialog),
           _buildPauseHint(),
           _displayWorkTimes(workTimes),
         ],
@@ -127,16 +130,57 @@ class _WorkingTimePageState extends State<WorkingTimePage> {
   Widget _buildStartHint() {
     return Padding(
       padding: EdgeInsets.all(20),
-      child:
-          textCenter18Green(getTranslated(context, 'hintPressBtnToStart')),
+      child: textCenter18Green(getTranslated(context, 'hintPressBtnToStart')),
     );
   }
 
   Widget _buildPauseHint() {
     return Padding(
       padding: EdgeInsets.all(20),
-      child:
-          textCenter18Green(getTranslated(context, 'hintPressBtnToPause')),
+      child: textCenter18Green(getTranslated(context, 'hintPressBtnToPause')),
+    );
+  }
+
+  _showPauseWorkDialog() {
+    FinishWorkTimeDto dto;
+    return showDialog(
+      barrierDismissible: false,
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          backgroundColor: DARK,
+          title: textGreen(getTranslated(context, 'confirmation')),
+          content: SingleChildScrollView(
+            child: ListBody(
+              children: <Widget>[
+                textCenter20Green(
+                    getTranslated(context, 'pauseWorkConfirmation'))
+              ],
+            ),
+          ),
+          actions: <Widget>[
+            Row(
+              children: [
+                FlatButton(
+                  child: textWhite(getTranslated(context, 'workIsDone')),
+                  onPressed: () => {
+                    dto = new FinishWorkTimeDto(
+                        id: _dto.notFinishedWorkTimeId,
+                        endTime: DateTime.now().toString().substring(11, 19)),
+                    _workTimeService.finish(dto).then((res) => {
+                          _refresh(),
+                          Navigator.pop(context),
+                        })
+                  },
+                ),
+                FlatButton(
+                    child: textWhite(getTranslated(context, 'no')),
+                    onPressed: () => Navigator.of(context).pop()),
+              ],
+            ),
+          ],
+        );
+      },
     );
   }
 
@@ -215,9 +259,11 @@ class _WorkingTimePageState extends State<WorkingTimePage> {
                                   _user.managerId)
                               .then(
                             (res) {
+                              Navigator.pop(context);
                               _resultWorkplaceCodeAlertDialog(res);
                             },
                           ).catchError((onError) {
+                            Navigator.pop(context);
                             _resultWorkplaceCodeAlertDialog(false);
                           });
                         },
@@ -277,6 +323,7 @@ class _WorkingTimePageState extends State<WorkingTimePage> {
                               employeeId: int.parse(_user.employeeId)),
                           _workTimeService.create(dto).then(
                                 (value) => {
+                                  _refresh(),
                                   Navigator.pop(context),
                                 },
                               )
@@ -312,6 +359,7 @@ class _WorkingTimePageState extends State<WorkingTimePage> {
           data:
               Theme.of(this.context).copyWith(dividerColor: MORE_BRIGHTER_DARK),
           child: DataTable(
+            columnSpacing: 45,
             columns: [
               DataColumn(
                   label: textWhiteBold(getTranslated(this.context, 'from'))),
@@ -329,7 +377,7 @@ class _WorkingTimePageState extends State<WorkingTimePage> {
                   cells: [
                     DataCell(textWhite(workTime.startTime)),
                     DataCell(textWhite(
-                        workTime.endTime != null ? workTime.startTime : '-')),
+                        workTime.endTime != null ? workTime.endTime : '-')),
                     DataCell(textWhite(
                         workTime.totalTime != null ? workTime.totalTime : '-')),
                     DataCell(textWhite(workTime.workplaceId)),
@@ -340,5 +388,16 @@ class _WorkingTimePageState extends State<WorkingTimePage> {
         ),
       ),
     );
+  }
+
+  Future<Null> _refresh() {
+    return _workTimeService
+        .checkIfIsCurrentlyAtWorkAndFindAllByEmployeeIdAndDateOrEndTimeIsNull(
+            _user.employeeId, DateTime.now())
+        .then((res) {
+      setState(() {
+        _dto = res;
+      });
+    });
   }
 }

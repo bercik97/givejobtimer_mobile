@@ -2,6 +2,7 @@ import 'dart:convert';
 import 'dart:io';
 
 import 'package:givejobtimer_mobile/employee/dto/create_work_time_dto.dart';
+import 'package:givejobtimer_mobile/employee/dto/finish_work_time_dto.dart';
 import 'package:givejobtimer_mobile/employee/dto/is_currently_at_work_with_work_times_dto.dart';
 import 'package:givejobtimer_mobile/shared/constants.dart';
 import 'package:http/http.dart';
@@ -36,5 +37,16 @@ class WorkTimeService {
     } else {
       return Future.error(res.body);
     }
+  }
+
+  Future<dynamic> finish(FinishWorkTimeDto dto) async {
+    String url = _url + '/finish';
+    Response res = await put(url,
+        body: jsonEncode(FinishWorkTimeDto.jsonEncode(dto)),
+        headers: {
+          HttpHeaders.authorizationHeader: authHeader,
+          "content-type": "application/json"
+        });
+    return res.statusCode == 200 ? res : Future.error(res.body);
   }
 }

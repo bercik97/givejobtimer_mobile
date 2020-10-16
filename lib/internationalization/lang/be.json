@@ -144,5 +144,7 @@
   "from": "From",
   "to": "To",
   "sum": "Sum",
-  "workplaceId": "Workplace id"
+  "workplaceId": "Workplace id",
+  "pauseWorkConfirmation": "Are you sure you want to STOP your work?",
+  "workIsDone": "Yes, work is done"
 }
