@@ -160,36 +160,16 @@ class _EmployeesPageState extends State<EmployeesPage> {
                                                     children: <Widget>[
                                                       textWhite(getTranslated(
                                                               this.context,
-                                                              'hoursWorkedToday') +
+                                                              'timeWorkedToday') +
                                                           ': '),
-                                                      textGreenBold("0"),
-                                                    ],
-                                                  ),
-                                                  alignment: Alignment.topLeft),
-                                              Align(
-                                                  child: Row(
-                                                    children: <Widget>[
-                                                      textWhite(getTranslated(
+                                                      textGreenBold(employee
+                                                                  .timeWorkedToday !=
+                                                              null
+                                                          ? employee
+                                                              .timeWorkedToday
+                                                          : getTranslated(
                                                               this.context,
-                                                              'workplace') +
-                                                          ': '),
-                                                      textGreenBold(
-                                                          "Słupsk ul. Lawendowa"),
-                                                    ],
-                                                  ),
-                                                  alignment: Alignment.topLeft),
-                                              Align(
-                                                  child: Row(
-                                                    children: <Widget>[
-                                                      textWhite(getTranslated(
-                                                              this.context,
-                                                              'status') +
-                                                          ': '),
-                                                      textGreenBold(
-                                                          getTranslated(
-                                                              this.context,
-                                                              'finishedWork')),
-                                                      iconGreen(Icons.done)
+                                                              'empty')),
                                                     ],
                                                   ),
                                                   alignment: Alignment.topLeft),

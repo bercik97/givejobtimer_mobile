@@ -97,26 +97,9 @@ class _ManagerEmployeeProfilePageState
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: <Widget>[
                         text18White(
-                            getTranslated(this.context, 'hoursWorked') + ': '),
-                        text18GreenBold("0"),
-                      ],
-                    ),
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: <Widget>[
-                        text18White(
-                            getTranslated(this.context, 'workplace') + ': '),
-                        text18GreenBold("Słupsk ul. Lawendowa"),
-                      ],
-                    ),
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: <Widget>[
-                        text18White(
-                            getTranslated(this.context, 'status') + ': '),
-                        text18GreenBold(
-                            getTranslated(this.context, 'finishedWork')),
-                        iconGreen(Icons.done)
+                            getTranslated(this.context, 'timeWorkedToday') +
+                                ': '),
+                        text18GreenBold(_employee.timeWorkedToday),
                       ],
                     ),
                   ],
