@@ -1,6 +1,9 @@
 import 'package:bouncing_widget/bouncing_widget.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:givejobtimer_mobile/employee/dto/create_work_time_dto.dart';
+import 'package:givejobtimer_mobile/employee/dto/work_time_dto.dart';
+import 'package:givejobtimer_mobile/employee/service/work_time_service.dart';
 import 'package:givejobtimer_mobile/employee/shared/employee_side_bar.dart';
 import 'package:givejobtimer_mobile/internationalization/localization/localization_constants.dart';
 import 'package:givejobtimer_mobile/shared/app_bar.dart';
@@ -10,6 +13,7 @@ import 'package:givejobtimer_mobile/shared/icons.dart';
 import 'package:givejobtimer_mobile/shared/model/user.dart';
 import 'package:givejobtimer_mobile/shared/service/workplace_service.dart';
 import 'package:givejobtimer_mobile/shared/texts.dart';
+import 'package:givejobtimer_mobile/widget/circular_progress_indicator.dart';
 import 'package:pin_code_text_field/pin_code_text_field.dart';
 
 class WorkingTimePage extends StatefulWidget {
@@ -26,11 +30,13 @@ class _WorkingTimePageState extends State<WorkingTimePage> {
 
   final _workplaceCodeController = TextEditingController();
   WorkplaceService _workplaceService;
+  WorkTimeService _workTimeService;
 
   @override
   Widget build(BuildContext context) {
     this._user = widget._user;
     _workplaceService = new WorkplaceService(_user.authHeader);
+    _workTimeService = new WorkTimeService(_user.authHeader);
     return MaterialApp(
       title: APP_NAME,
       theme: ThemeData(primarySwatch: MaterialColor(0xffFFFFFF, WHITE_RGBO)),
@@ -38,11 +44,20 @@ class _WorkingTimePageState extends State<WorkingTimePage> {
       home: Scaffold(
         backgroundColor: DARK,
         appBar: appBar(
-            context, _user, getTranslated(context, 'manageYourWorkTime')),
+            context,
+            _user,
+            getTranslated(context, 'workTime') +
+                ' / ' +
+                DateTime.now().toString().substring(0, 10)),
         drawer: employeeSideBar(context, _user),
         body: SingleChildScrollView(
           child: Center(
-            child: _buildStartTimeView(),
+            child: Column(
+              children: [
+                _buildStartTimeView(),
+                _buildAllWorkTimes(),
+              ],
+            ),
           ),
         ),
       ),
@@ -55,7 +70,7 @@ class _WorkingTimePageState extends State<WorkingTimePage> {
         Padding(
           padding: EdgeInsets.all(20),
           child: textCenter20Green(
-              'Hint: Press start button and enter workplace code to begin work'),
+              getTranslated(context, 'hintPressStartBtnToStart')),
         ),
         Container(
           decoration: BoxDecoration(
@@ -67,18 +82,7 @@ class _WorkingTimePageState extends State<WorkingTimePage> {
             duration: Duration(milliseconds: 100),
             scaleFactor: 2,
             onPressed: () => _showEnterWorkplaceCode(),
-            child: Icon(
-              Icons.play_arrow,
-              size: 150,
-            ),
-          ),
-        ),
-        SingleChildScrollView(
-          child: Padding(
-            padding: const EdgeInsets.all(12.0),
-            child: Column(
-              children: <Widget>[],
-            ),
+            child: Icon(Icons.play_arrow, size: 100),
           ),
         ),
       ],
@@ -179,6 +183,8 @@ class _WorkingTimePageState extends State<WorkingTimePage> {
   }
 
   _resultWorkplaceCodeAlertDialog(bool isCorrect) {
+    CreateWorkTimeDto dto;
+    String workplaceId = _workplaceCodeController.text;
     return showDialog(
       barrierDismissible: false,
       context: context,
@@ -197,8 +203,7 @@ class _WorkingTimePageState extends State<WorkingTimePage> {
                         children: [
                           textCenter20White(
                               getTranslated(context, 'startTimeConfirmation')),
-                          textCenter20GreenBold(
-                              _workplaceCodeController.text + '?'),
+                          textCenter20GreenBold(workplaceId + '?'),
                         ],
                       )
                     : textWhite(
@@ -212,7 +217,19 @@ class _WorkingTimePageState extends State<WorkingTimePage> {
                     children: [
                       FlatButton(
                         child: textWhite(getTranslated(context, 'yesImSure')),
-                        onPressed: () => {},
+                        onPressed: () => {
+                          dto = new CreateWorkTimeDto(
+                              date: DateTime.now().toString().substring(0, 10),
+                              startTime:
+                                  DateTime.now().toString().substring(11, 19),
+                              workplaceId: workplaceId,
+                              employeeId: int.parse(_user.employeeId)),
+                          _workTimeService.create(dto).then(
+                                (value) => {
+                                  Navigator.pop(context),
+                                },
+                              )
+                        },
                       ),
                       FlatButton(
                           child: textWhite(getTranslated(context, 'no')),
@@ -232,6 +249,73 @@ class _WorkingTimePageState extends State<WorkingTimePage> {
           ],
         );
       },
+    );
+  }
+
+  _buildAllWorkTimes() {
+    return SingleChildScrollView(
+      child: FutureBuilder(
+        future: _workTimeService.findAllWorkTimesByEmployeeIdAndDate(
+            _user.employeeId, DateTime.now()),
+        builder:
+            (BuildContext context, AsyncSnapshot<List<WorkTimeDto>> snapshot) {
+          if (snapshot.connectionState == ConnectionState.waiting ||
+              snapshot.data == null) {
+            return Padding(
+              padding: EdgeInsets.only(top: 50),
+              child: Center(child: circularProgressIndicator()),
+            );
+          } else {
+            List<WorkTimeDto> workTimes = snapshot.data;
+            return Expanded(
+              child: SingleChildScrollView(
+                scrollDirection: Axis.vertical,
+                child: SingleChildScrollView(
+                  scrollDirection: Axis.horizontal,
+                  child: Theme(
+                    data: Theme.of(this.context)
+                        .copyWith(dividerColor: MORE_BRIGHTER_DARK),
+                    child: DataTable(
+                      columnSpacing: 30,
+                      columns: [
+                        DataColumn(label: textWhiteBold('No.')),
+                        DataColumn(
+                            label: textWhiteBold(
+                                getTranslated(this.context, 'from'))),
+                        DataColumn(
+                            label: textWhiteBold(
+                                getTranslated(this.context, 'to'))),
+                        DataColumn(
+                            label: textWhiteBold(
+                                getTranslated(this.context, 'sum'))),
+                        DataColumn(
+                            label: textWhiteBold(
+                                getTranslated(this.context, 'workplaceId'))),
+                      ],
+                      rows: [
+                        for (int i = 0; i < workTimes.length; i++)
+                          DataRow(
+                            cells: [
+                              DataCell(textWhite((i + 1).toString())),
+                              DataCell(textWhite(workTimes[i].startTime)),
+                              DataCell(textWhite(workTimes[i].endTime != null
+                                  ? workTimes[i].startTime
+                                  : '-')),
+                              DataCell(textWhite(workTimes[i].totalTime != null
+                                  ? workTimes[i].totalTime
+                                  : '-')),
+                              DataCell(textWhite(workTimes[i].workplaceId)),
+                            ],
+                          ),
+                      ],
+                    ),
+                  ),
+                ),
+              ),
+            );
+          }
+        },
+      ),
     );
   }
 }

@@ -130,7 +130,7 @@
   "startFinishWork": "Start / Finish your work",
   "contact": "Contact",
   "contactWithYourManager": "Contact with your manager",
-  "manageYourWorkTime": "Manage your work time",
+  "workTime": "Work time",
   "startTimeConfirmation": "Are you sure you want to start work at workplace of number",
   "yesImSure": "Yes, Im sure",
   "enterWorkplaceCode": "Enter workplace code",
@@ -138,5 +138,10 @@
   "workplaceCodeIsCorrect": "The workplace code you entered is CORRECT",
   "workplaceCodeIsCorrectNd": "You can start your work from now!",
   "workplaceCodeIsIncorrect": "Passed workplace code is not correct",
-  "correctWorkplaceCode": "Workplace code is CORRECT"
+  "correctWorkplaceCode": "Workplace code is CORRECT",
+  "hintPressStartBtnToStart": "Hint: Press start button and enter workplace code to begin work",
+  "from": "From",
+  "to": "To",
+  "sum": "Sum",
+  "workplaceId": "Workplace id"
 }
