@@ -67,14 +67,10 @@ class _WorkingTimePageState extends State<WorkingTimePage> {
   Widget _buildStartTimeView() {
     return Column(
       children: <Widget>[
-        Padding(
-          padding: EdgeInsets.all(20),
-          child: textCenter20Green(
-              getTranslated(context, 'hintPressStartBtnToStart')),
-        ),
+        SizedBox(height: 20),
         Container(
           decoration: BoxDecoration(
-            border: Border.all(color: GREEN, width: 4),
+            border: Border.all(color: GREEN, width: 7.5),
             color: WHITE,
             shape: BoxShape.circle,
           ),
@@ -84,6 +80,11 @@ class _WorkingTimePageState extends State<WorkingTimePage> {
             onPressed: () => _showEnterWorkplaceCode(),
             child: Icon(Icons.play_arrow, size: 100),
           ),
+        ),
+        Padding(
+          padding: EdgeInsets.all(20),
+          child: textCenter18Green(
+              getTranslated(context, 'hintPressStartBtnToStart')),
         ),
       ],
     );
