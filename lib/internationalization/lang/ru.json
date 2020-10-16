@@ -128,5 +128,6 @@
   "workingTime": "Working Time",
   "startFinishWork": "Start / Finish your work",
   "contact": "Contact",
-  "contactWithYourManager": "Contact with your manager"
+  "contactWithYourManager": "Contact with your manager",
+  "manageYourWorkTime": "Manage your work time"
 }

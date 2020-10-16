@@ -3,6 +3,7 @@ import 'dart:convert';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:givejobtimer_mobile/employee/shared/employee_side_bar.dart';
+import 'package:givejobtimer_mobile/employee/working_time/working_time_page.dart';
 import 'package:givejobtimer_mobile/internationalization/localization/localization_constants.dart';
 import 'package:givejobtimer_mobile/internationalization/util/language_util.dart';
 import 'package:givejobtimer_mobile/shared/app_bar.dart';
@@ -77,7 +78,15 @@ class _EmployeePageState extends State<EmployeePage> {
                               child: Material(
                                 color: BRIGHTER_DARK,
                                 child: InkWell(
-                                  onTap: () {},
+                                  onTap: () {
+                                    Navigator.of(context).push(
+                                      CupertinoPageRoute<Null>(
+                                        builder: (BuildContext context) {
+                                          return WorkingTimePage(_user);
+                                        },
+                                      ),
+                                    );
+                                  },
                                   child: _buildScrollableContainer(
                                       'images/big-employees-icon.png',
                                       'workingTime',
