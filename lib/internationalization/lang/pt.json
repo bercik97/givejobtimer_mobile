@@ -144,5 +144,19 @@
   "needToSelectWorkTimes": "You need to select work times",
   "areYouSureYouWantToDeleteSelectedWorkTimes": "Are you sure you want to delete selected work times?",
   "selectedWorkTimesRemoved": "Selected work times removed!",
-  "deleteSelectedWorkTimes": "Delete selected work times"
+  "deleteSelectedWorkTimes": "Delete selected work times",
+  "noMonthsWorked": "No months worked",
+  "noDaysWorkedInCurrentWorkplace": "Current workplace has no days worked yet",
+  "january": "იანვარი",
+  "february": "თებერვალი",
+  "march": "მარტი",
+  "april": "აპრილი",
+  "may": "მაისი",
+  "june": "ივნისი",
+  "july": "ივლისი",
+  "august": "აგვისტო",
+  "september": "სექტემბერი",
+  "october": "ოქტომბერი",
+  "november": "ნოემბერი",
+  "december": "დეკემბერი"
 }

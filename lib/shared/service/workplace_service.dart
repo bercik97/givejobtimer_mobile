@@ -3,6 +3,7 @@ import 'dart:io';
 
 import 'package:givejobtimer_mobile/manager/dto/create_workplace_dto.dart';
 import 'package:givejobtimer_mobile/manager/dto/update_workplace_dto.dart';
+import 'package:givejobtimer_mobile/manager/dto/work_place_dates_dto.dart';
 import 'package:givejobtimer_mobile/manager/dto/workplace_dto.dart';
 import 'package:givejobtimer_mobile/shared/constants.dart';
 import 'package:http/http.dart';
@@ -39,12 +40,26 @@ class WorkplaceService {
 
   Future<List<WorkplaceDto>> findAllByManagerId(String managerId) async {
     int id = int.parse(managerId);
-    String url = _url + '/$id';
+    String url = _url + '/manager/$id';
     Response res =
         await get(url, headers: {HttpHeaders.authorizationHeader: authHeader});
     if (res.statusCode == 200) {
       return (json.decode(res.body) as List)
           .map((data) => WorkplaceDto.fromJson(data))
+          .toList();
+    } else {
+      return Future.error(res.body);
+    }
+  }
+
+  Future<List<WorkplaceDatesDto>> findAllDatesWithTotalTimeByWorkplaceId(
+      String workplaceId) async {
+    String url = _url + '/$workplaceId';
+    Response res =
+        await get(url, headers: {HttpHeaders.authorizationHeader: authHeader});
+    if (res.statusCode == 200) {
+      return (json.decode(res.body) as List)
+          .map((data) => WorkplaceDatesDto.fromJson(data))
           .toList();
     } else {
       return Future.error(res.body);

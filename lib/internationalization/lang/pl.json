@@ -144,5 +144,19 @@
   "needToSelectWorkTimes": "Musisz zaznaczyć czasy pracy",
   "areYouSureYouWantToDeleteSelectedWorkTimes": "Are you sure you want to delete selected work times?",
   "selectedWorkTimesRemoved": "Selected work times removed!",
-  "deleteSelectedWorkTimes": "Delete selected work times"
+  "deleteSelectedWorkTimes": "Delete selected work times",
+  "noMonthsWorked": "No months worked",
+  "noDaysWorkedInCurrentWorkplace": "Current workplace has no days worked yet",
+  "january": "Styczeń",
+  "february": "Luty",
+  "march": "Marzec",
+  "april": "Kwiecień",
+  "may": "Maj",
+  "june": "Czerwiec",
+  "july": "Lipiec",
+  "august": "Sierpień",
+  "september": "Wrzesień",
+  "october": "Październik",
+  "november": "Listopad",
+  "december": "Grudzień"
 }

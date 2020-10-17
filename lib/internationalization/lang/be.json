@@ -144,5 +144,19 @@
   "needToSelectWorkTimes": "You need to select work times",
   "areYouSureYouWantToDeleteSelectedWorkTimes": "Are you sure you want to delete selected work times?",
   "selectedWorkTimesRemoved": "Selected work times removed!",
-  "deleteSelectedWorkTimes": "Delete selected work times"
+  "deleteSelectedWorkTimes": "Delete selected work times",
+  "noMonthsWorked": "No months worked",
+  "noDaysWorkedInCurrentWorkplace": "Current workplace has no days worked yet",
+  "january": "Студзень",
+  "february": "Люты",
+  "march": "Сакавік",
+  "april": "Красавік",
+  "may": "Мая",
+  "june": "Чэрвень",
+  "july": "Ліпень",
+  "august": "Жнівень",
+  "september": "Верасень",
+  "october": "Кастрычніцкая",
+  "november": "Лістапада",
+  "december": "Снежань"
 }

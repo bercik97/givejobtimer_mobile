@@ -8,6 +8,7 @@ import 'package:givejobtimer_mobile/internationalization/localization/localizati
 import 'package:givejobtimer_mobile/manager/dto/create_workplace_dto.dart';
 import 'package:givejobtimer_mobile/manager/dto/update_workplace_dto.dart';
 import 'package:givejobtimer_mobile/manager/dto/workplace_dto.dart';
+import 'package:givejobtimer_mobile/manager/pages/workplace/workplace_dates_page.dart';
 import 'package:givejobtimer_mobile/manager/shared/manager_side_bar.dart';
 import 'package:givejobtimer_mobile/shared/app_bar.dart';
 import 'package:givejobtimer_mobile/shared/colors.dart';
@@ -169,7 +170,16 @@ class _WorkplacePageState extends State<WorkplacePage> {
                                         child: BouncingWidget(
                                           duration: Duration(milliseconds: 100),
                                           scaleFactor: 2,
-                                          onPressed: () => {},
+                                          onPressed: () => {
+                                            Navigator.push(
+                                              this.context,
+                                              MaterialPageRoute(
+                                                builder: (context) =>
+                                                    WorkplaceDatesPage(
+                                                        _user, workplace),
+                                              ),
+                                            ),
+                                          },
                                           child: Image(
                                             image: AssetImage(
                                                 'images/big-workplace-icon.png'),
