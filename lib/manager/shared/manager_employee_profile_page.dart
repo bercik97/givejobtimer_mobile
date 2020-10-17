@@ -88,7 +88,7 @@ class _ManagerEmployeeProfilePageState
                     SizedBox(height: 2.5),
                     text18White(getTranslated(context, 'employee') +
                         ' #' +
-                        _employee.id.toString()),
+                        _employee.employeeId.toString()),
                     SizedBox(height: 20),
                     text22WhiteBold(
                         getTranslated(context, 'statisticsForToday') +

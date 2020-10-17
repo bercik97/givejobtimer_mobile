@@ -1,14 +1,9 @@
-import 'dart:convert';
-
-import 'package:bouncing_widget/bouncing_widget.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:givejobtimer_mobile/employee/service/work_time_service.dart';
 import 'package:givejobtimer_mobile/internationalization/localization/localization_constants.dart';
-import 'package:givejobtimer_mobile/internationalization/util/language_util.dart';
+import 'package:givejobtimer_mobile/manager/dto/employee_dates_dto.dart';
 import 'package:givejobtimer_mobile/manager/dto/employee_dto.dart';
-import 'package:givejobtimer_mobile/manager/pages/employees/employee_dates_page.dart';
-import 'package:givejobtimer_mobile/manager/service/manager_service.dart';
-import 'package:givejobtimer_mobile/manager/shared/manager_employee_profile_page.dart';
 import 'package:givejobtimer_mobile/manager/shared/manager_side_bar.dart';
 import 'package:givejobtimer_mobile/shared/app_bar.dart';
 import 'package:givejobtimer_mobile/shared/colors.dart';
@@ -16,36 +11,40 @@ import 'package:givejobtimer_mobile/shared/constants.dart';
 import 'package:givejobtimer_mobile/shared/icons.dart';
 import 'package:givejobtimer_mobile/shared/model/user.dart';
 import 'package:givejobtimer_mobile/shared/texts.dart';
-import 'package:shimmer/shimmer.dart';
 
-class EmployeesPage extends StatefulWidget {
+class EmployeeDatesPage extends StatefulWidget {
   final User _user;
+  final EmployeeDto _employee;
 
-  EmployeesPage(this._user);
+  EmployeeDatesPage(this._user, this._employee);
 
   @override
-  _EmployeesPageState createState() => _EmployeesPageState();
+  _EmployeeDatesPageState createState() => _EmployeeDatesPageState();
 }
 
-class _EmployeesPageState extends State<EmployeesPage> {
-  ManagerService _managerService;
+class _EmployeeDatesPageState extends State<EmployeeDatesPage> {
+  WorkTimeService _workTimeService;
 
   User _user;
+  EmployeeDto _employee;
 
-  List<EmployeeDto> _employees = new List();
-  List<EmployeeDto> _filteredEmployees = new List();
+  List<EmployeeDatesDto> _employeeDates = new List();
+  List<EmployeeDatesDto> _filteredEmployeeDates = new List();
   bool _loading = false;
 
   @override
   void initState() {
     this._user = widget._user;
-    this._managerService = new ManagerService(_user.authHeader);
+    this._employee = widget._employee;
+    this._workTimeService = new WorkTimeService(_user.authHeader);
     super.initState();
     _loading = true;
-    _managerService.findAllEmployees(_user.managerId).then((res) {
+    _workTimeService
+        .findAllDatesWithTotalTimeByEmployeeId(_employee.employeeId)
+        .then((res) {
       setState(() {
-        _employees = res;
-        _filteredEmployees = _employees;
+        _employeeDates = res;
+        _filteredEmployeeDates = _employeeDates;
         _loading = false;
       });
     });
@@ -62,7 +61,8 @@ class _EmployeesPageState extends State<EmployeesPage> {
       debugShowCheckedModeBanner: false,
       home: Scaffold(
         backgroundColor: DARK,
-        appBar: appBar(context, _user, getTranslated(context, 'employees')),
+        appBar:
+            appBar(context, _user, _employee.name + ' ' + _employee.surname),
         drawer: managerSideBar(context, _user),
         body: Column(
           children: <Widget>[
@@ -85,8 +85,8 @@ class _EmployeesPageState extends State<EmployeesPage> {
                 onChanged: (string) {
                   setState(
                     () {
-                      _filteredEmployees = _employees
-                          .where((u) => ((u.name + ' ' + u.surname)
+                      _filteredEmployeeDates = _employeeDates
+                          .where((e) => ((e.date + ' ' + e.totalDateTime)
                               .toLowerCase()
                               .contains(string.toLowerCase())))
                           .toList();
@@ -95,18 +95,17 @@ class _EmployeesPageState extends State<EmployeesPage> {
                 },
               ),
             ),
-            _employees.isNotEmpty
+            _employeeDates.isNotEmpty
                 ? Expanded(
                     child: RefreshIndicator(
                       color: DARK,
                       backgroundColor: WHITE,
                       onRefresh: _refresh,
                       child: ListView.builder(
-                        itemCount: _filteredEmployees.length,
+                        itemCount: _filteredEmployeeDates.length,
                         itemBuilder: (BuildContext context, int index) {
-                          EmployeeDto employee = _filteredEmployees[index];
-                          String info = employee.name + ' ' + employee.surname;
-                          String nationality = employee.nationality;
+                          EmployeeDatesDto employeeDates =
+                              _filteredEmployeeDates[index];
                           return Card(
                             color: DARK,
                             child: Column(
@@ -116,43 +115,12 @@ class _EmployeesPageState extends State<EmployeesPage> {
                                 Card(
                                   color: BRIGHTER_DARK,
                                   child: InkWell(
+                                    onTap: () {},
                                     child: Column(
                                       children: <Widget>[
                                         ListTile(
-                                          leading: Tab(
-                                            icon: Container(
-                                              child: Shimmer.fromColors(
-                                                baseColor: GREEN,
-                                                highlightColor: WHITE,
-                                                child: BouncingWidget(
-                                                  duration: Duration(
-                                                      milliseconds: 100),
-                                                  scaleFactor: 2,
-                                                  onPressed: () => {
-                                                    Navigator.push(
-                                                      this.context,
-                                                      MaterialPageRoute(
-                                                        builder: (context) =>
-                                                            ManagerEmployeeProfilePage(
-                                                                _user,
-                                                                employee),
-                                                      ),
-                                                    ),
-                                                  },
-                                                  child: Image(
-                                                    image: AssetImage(
-                                                        'images/big-employee-icon.png'),
-                                                  ),
-                                                ),
-                                              ),
-                                            ),
-                                          ),
                                           title: text20WhiteBold(
-                                              utf8.decode(info.runes.toList()) +
-                                                  ' ' +
-                                                  LanguageUtil
-                                                      .findFlagByNationality(
-                                                          nationality)),
+                                              employeeDates.date),
                                           subtitle: Column(
                                             children: <Widget>[
                                               Align(
@@ -160,31 +128,20 @@ class _EmployeesPageState extends State<EmployeesPage> {
                                                     children: <Widget>[
                                                       textWhite(getTranslated(
                                                               this.context,
-                                                              'timeWorkedToday') +
+                                                              'totalTimeWorked') +
                                                           ': '),
-                                                      textGreenBold(employee
-                                                                  .timeWorkedToday !=
+                                                      textGreenBold(employeeDates
+                                                                  .totalDateTime !=
                                                               null
-                                                          ? employee
-                                                              .timeWorkedToday
-                                                          : getTranslated(
-                                                              this.context,
-                                                              'empty')),
+                                                          ? employeeDates
+                                                              .totalDateTime
+                                                          : '00:00:00'),
                                                     ],
                                                   ),
                                                   alignment: Alignment.topLeft),
                                             ],
                                           ),
-                                          onTap: () => {
-                                            Navigator.push(
-                                              this.context,
-                                              MaterialPageRoute(
-                                                builder: (context) =>
-                                                    EmployeeDatesPage(
-                                                        _user, employee),
-                                              ),
-                                            ),
-                                          },
+                                          onTap: () => {},
                                         ),
                                       ],
                                     ),
@@ -211,15 +168,15 @@ class _EmployeesPageState extends State<EmployeesPage> {
           padding: EdgeInsets.only(top: 10),
           child: Align(
             alignment: Alignment.center,
-            child: text20GreenBold(getTranslated(context, 'noEmployees')),
+            child: text20GreenBold(getTranslated(context, 'noDaysWorked')),
           ),
         ),
         Padding(
           padding: EdgeInsets.only(top: 10),
           child: Align(
             alignment: Alignment.center,
-            child:
-                textCenter19White(getTranslated(context, 'youHaveNoEmployees')),
+            child: textCenter19White(
+                getTranslated(context, 'noDaysWorkedOfCurrentEmployee')),
           ),
         ),
       ],
@@ -227,10 +184,12 @@ class _EmployeesPageState extends State<EmployeesPage> {
   }
 
   Future<Null> _refresh() {
-    return _managerService.findAllEmployees(_user.managerId).then((res) {
+    return _workTimeService
+        .findAllDatesWithTotalTimeByEmployeeId(_employee.employeeId)
+        .then((res) {
       setState(() {
-        _employees = res;
-        _filteredEmployees = _employees;
+        _employeeDates = res;
+        _filteredEmployeeDates = _employeeDates;
         _loading = false;
       });
     });

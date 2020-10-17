@@ -1,7 +1,7 @@
 import 'package:flutter/cupertino.dart';
 
 class EmployeeDto {
-  final int id;
+  final int employeeId;
   final String name;
   final String surname;
   final String nationality;
@@ -11,7 +11,7 @@ class EmployeeDto {
   final String whatsApp;
 
   EmployeeDto({
-    @required this.id,
+    @required this.employeeId,
     @required this.name,
     @required this.surname,
     @required this.nationality,
@@ -23,7 +23,7 @@ class EmployeeDto {
 
   factory EmployeeDto.fromJson(Map<String, dynamic> json) {
     return EmployeeDto(
-      id: json['id'] as int,
+      employeeId: json['employeeId'] as int,
       name: json['name'] as String,
       surname: json['surname'] as String,
       nationality: json['nationality'] as String,
