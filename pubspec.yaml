@@ -64,7 +64,11 @@ flutter:
     - images/big-manager-icon.png
     - images/big-employees-icon.png
     - images/big-workplace-icon.png
+    - images/big-employee-work-icon.png
+    - images/big-contact-with-manager-icon.png
     - images/small-employees-icon.png
     - images/small-workplace-icon.png
+    - images/play-icon.png
+    - images/stop-icon.png
     - docs/regulations.pdf
     - docs/privacy_policy.pdf

@@ -86,7 +86,7 @@ class _WorkingTimePageState extends State<WorkingTimePage> {
     return Center(
       child: Column(
         children: [
-          _buildBtn(Icons.pause, _showPauseWorkDialog),
+          _buildBtn('images/stop-icon.png', _showPauseWorkDialog),
           _buildPauseHint(),
           _displayWorkTimes(workTimes),
         ],
@@ -98,7 +98,7 @@ class _WorkingTimePageState extends State<WorkingTimePage> {
     return Center(
       child: Column(
         children: [
-          _buildBtn(Icons.play_arrow, _showEnterWorkplaceCode),
+          _buildBtn('images/play-icon.png', _showEnterWorkplaceCode),
           _buildStartHint(),
           _displayWorkTimes(workTimes),
         ],
@@ -106,22 +106,15 @@ class _WorkingTimePageState extends State<WorkingTimePage> {
     );
   }
 
-  Widget _buildBtn(IconData icon, Function() fun) {
+  Widget _buildBtn(String imgPath, Function() fun) {
     return Column(
       children: <Widget>[
         SizedBox(height: 20),
-        Container(
-          decoration: BoxDecoration(
-            border: Border.all(color: GREEN, width: 7.5),
-            color: WHITE,
-            shape: BoxShape.circle,
-          ),
-          child: BouncingWidget(
-            duration: Duration(milliseconds: 100),
-            scaleFactor: 2,
-            onPressed: () => fun(),
-            child: Icon(icon, size: 100),
-          ),
+        BouncingWidget(
+          duration: Duration(milliseconds: 100),
+          scaleFactor: 2,
+          onPressed: () => fun(),
+          child: Image(width: 100, height: 100, image: AssetImage(imgPath)),
         ),
       ],
     );
@@ -129,14 +122,14 @@ class _WorkingTimePageState extends State<WorkingTimePage> {
 
   Widget _buildStartHint() {
     return Padding(
-      padding: EdgeInsets.all(20),
+      padding: EdgeInsets.only(top: 10, bottom: 10, left: 20, right: 20),
       child: textCenter18Green(getTranslated(context, 'hintPressBtnToStart')),
     );
   }
 
   Widget _buildPauseHint() {
     return Padding(
-      padding: EdgeInsets.all(20),
+      padding: EdgeInsets.only(top: 10, bottom: 10, left: 20, right: 20),
       child: textCenter18Green(getTranslated(context, 'hintPressBtnToPause')),
     );
   }

@@ -91,7 +91,7 @@ class _EmployeePageState extends State<EmployeePage> {
                                       );
                                     },
                                     child: _buildScrollableContainer(
-                                        'images/big-employees-icon.png',
+                                        'images/big-employee-work-icon.png',
                                         'workingTime',
                                         'startFinishWork'),
                                   ),
@@ -110,7 +110,7 @@ class _EmployeePageState extends State<EmployeePage> {
                                           _user.managerWhatsApp),
                                     },
                                     child: _buildScrollableContainer(
-                                        'images/big-employees-icon.png',
+                                        'images/big-contact-with-manager-icon.png',
                                         'contact',
                                         'contactWithYourManager'),
                                   ),
