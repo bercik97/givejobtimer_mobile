@@ -415,6 +415,12 @@ class _WorkplacePageState extends State<WorkplacePage> {
                               this.context, 'selectedWorkplacesRemoved')),
                         })
                     .catchError((onError) {
+                  String errorMsg = onError.toString();
+                  if (errorMsg.substring(0, 17) == "EMPLOYEES_IN_WORK") {
+                    Navigator.pop(this.context);
+                    _showErrorDialog(errorMsg.substring(19));
+                    return;
+                  }
                   ToastService.showErrorToast(
                       getTranslated(this.context, 'smthWentWrong'));
                 }),
@@ -423,6 +429,45 @@ class _WorkplacePageState extends State<WorkplacePage> {
             FlatButton(
                 child: textWhite(getTranslated(this.context, 'no')),
                 onPressed: () => Navigator.of(this.context).pop()),
+          ],
+        );
+      },
+    );
+  }
+
+  void _showErrorDialog(String workplaceIds) {
+    showDialog(
+      barrierDismissible: false,
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          backgroundColor: DARK,
+          title: textWhite(getTranslated(context, 'failure')),
+          content: SingleChildScrollView(
+            child: ListBody(
+              children: <Widget>[
+                Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    textCenter20White(getTranslated(this.context,
+                        'cannotDeleteWorkplaceWhenSomeoneWorkingThere')),
+                    textCenter20GreenBold(workplaceIds),
+                  ],
+                ),
+              ],
+            ),
+          ),
+          actions: <Widget>[
+            MaterialButton(
+              elevation: 0,
+              height: 50,
+              minWidth: double.maxFinite,
+              shape: new RoundedRectangleBorder(
+                  borderRadius: new BorderRadius.circular(30.0)),
+              color: GREEN,
+              child: text20WhiteBold(getTranslated(context, 'close')),
+              onPressed: () => Navigator.of(context).pop(),
+            ),
           ],
         );
       },

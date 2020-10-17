@@ -158,5 +158,6 @@
   "september": "Wrzesień",
   "october": "Październik",
   "november": "Listopad",
-  "december": "Grudzień"
+  "december": "Grudzień",
+  "cannotDeleteWorkplaceWhenSomeoneWorkingThere": "Nie można usunąć wybranych miejsc pracy ponieważ niektórzy pracownicy aktualnie pracują w miejscach o kodach, które chcesz usunac."
 }

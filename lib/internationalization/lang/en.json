@@ -158,5 +158,6 @@
   "september": "September",
   "october": "October",
   "november": "November",
-  "december": "December"
+  "december": "December",
+  "cannotDeleteWorkplaceWhenSomeoneWorkingThere": "You cannot delete selected workplaces because some employees are currently working in places with the code you want to delete."
 }
