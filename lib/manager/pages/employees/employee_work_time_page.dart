@@ -94,7 +94,9 @@ class _EmployeeWorkTimePageState extends State<EmployeeWorkTimePage> {
                                 DataCell(textWhite(workTime.totalTime != null
                                     ? workTime.totalTime
                                     : '-')),
-                                DataCell(textWhite(workTime.workplaceId)),
+                                DataCell(textWhite(workTime.workplaceId != null
+                                    ? workTime.workplaceId
+                                    : '-')),
                               ],
                             ),
                         ],

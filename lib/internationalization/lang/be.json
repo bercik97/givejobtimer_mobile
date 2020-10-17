@@ -54,7 +54,7 @@
   "confirm": "Пацверджанне",
   "exitRegistrationContent": "Вы ўпэўнены, што хочаце выйсці з рэгістрацыйнай формы?",
   "exitAgree": "Так, я хачу выйсці",
-  "no":  "No",
+  "no": "No",
   "loginCodeIsRequired": "Патрабуецца ўвайсці код",
   "loginSuccessfully": "Уваход паспяхова",
   "wrongLoginCode": "Няправільны код уваходу",
