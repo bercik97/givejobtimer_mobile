@@ -9,51 +9,57 @@ import 'package:givejobtimer_mobile/shared/colors.dart';
 import 'package:givejobtimer_mobile/shared/model/user.dart';
 
 Widget navigateButton(BuildContext context, User _user) {
-  return SpeedDial(
+  return FloatingActionButton(
+    heroTag: "fdds",
+    tooltip: getTranslated(context, 'addWorkplace'),
     backgroundColor: GREEN,
-    animatedIcon: AnimatedIcons.view_list,
-    animatedIconTheme: IconThemeData(color: BRIGHTER_DARK),
-    curve: Curves.bounceIn,
-    children: [
-      SpeedDialChild(
-        backgroundColor: BRIGHTER_DARK,
-        child: Image(image: AssetImage('images/big-manager-icon.png')),
-        label: getTranslated(context, 'profile'),
-        labelBackgroundColor: BRIGHTER_DARK,
-        labelStyle: TextStyle(color: WHITE),
-        onTap: () {
-          Navigator.push(
-            context,
-            MaterialPageRoute(builder: (context) => ManagerPage(_user)),
-          );
-        },
-      ),
-      SpeedDialChild(
-        backgroundColor: BRIGHTER_DARK,
-        child: Image(image: AssetImage('images/small-employees-icon.png')),
-        label: getTranslated(context, 'employees'),
-        labelBackgroundColor: BRIGHTER_DARK,
-        labelStyle: TextStyle(color: WHITE),
-        onTap: () {
-          Navigator.push(
-            context,
-            MaterialPageRoute(builder: (context) => EmployeesPage(_user)),
-          );
-        },
-      ),
-      SpeedDialChild(
-        backgroundColor: BRIGHTER_DARK,
-        child: Image(image: AssetImage('images/small-workplace-icon.png')),
-        label: getTranslated(context, 'workplaces'),
-        labelBackgroundColor: BRIGHTER_DARK,
-        labelStyle: TextStyle(color: WHITE),
-        onTap: () {
-          Navigator.push(
-            context,
-            MaterialPageRoute(builder: (context) => WorkplacePage(_user)),
-          );
-        },
-      ),
-    ],
+    onPressed: () {  },
+    child: SpeedDial(
+      backgroundColor: GREEN,
+      animatedIcon: AnimatedIcons.view_list,
+      animatedIconTheme: IconThemeData(color: BRIGHTER_DARK),
+      curve: Curves.bounceIn,
+      children: [
+        SpeedDialChild(
+          backgroundColor: BRIGHTER_DARK,
+          child: Image(image: AssetImage('images/big-manager-icon.png')),
+          label: getTranslated(context, 'profile'),
+          labelBackgroundColor: BRIGHTER_DARK,
+          labelStyle: TextStyle(color: WHITE),
+          onTap: () {
+            Navigator.push(
+              context,
+              MaterialPageRoute(builder: (context) => ManagerPage(_user)),
+            );
+          },
+        ),
+        SpeedDialChild(
+          backgroundColor: BRIGHTER_DARK,
+          child: Image(image: AssetImage('images/small-employees-icon.png')),
+          label: getTranslated(context, 'employees'),
+          labelBackgroundColor: BRIGHTER_DARK,
+          labelStyle: TextStyle(color: WHITE),
+          onTap: () {
+            Navigator.push(
+              context,
+              MaterialPageRoute(builder: (context) => EmployeesPage(_user)),
+            );
+          },
+        ),
+        SpeedDialChild(
+          backgroundColor: BRIGHTER_DARK,
+          child: Image(image: AssetImage('images/small-workplace-icon.png')),
+          label: getTranslated(context, 'workplaces'),
+          labelBackgroundColor: BRIGHTER_DARK,
+          labelStyle: TextStyle(color: WHITE),
+          onTap: () {
+            Navigator.push(
+              context,
+              MaterialPageRoute(builder: (context) => WorkplacePage(_user)),
+            );
+          },
+        ),
+      ],
+    ),
   );
 }

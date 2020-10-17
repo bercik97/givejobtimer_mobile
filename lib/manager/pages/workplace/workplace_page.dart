@@ -70,169 +70,169 @@ class _WorkplacePageState extends State<WorkplacePage> {
       theme: ThemeData(primarySwatch: MaterialColor(0xffFFFFFF, WHITE_RGBO)),
       debugShowCheckedModeBanner: false,
       home: Scaffold(
-          backgroundColor: DARK,
-          appBar: appBar(context, _user, getTranslated(context, 'workplaces')),
-          drawer: managerSideBar(context, _user),
-          body: Column(
-            children: <Widget>[
-              Container(
-                padding:
-                    EdgeInsets.only(top: 20, left: 10, right: 10, bottom: 10),
-                child: TextFormField(
-                  autofocus: false,
-                  autocorrect: true,
-                  cursorColor: WHITE,
-                  style: TextStyle(color: WHITE),
-                  decoration: InputDecoration(
-                      enabledBorder: OutlineInputBorder(
-                          borderSide: BorderSide(color: WHITE, width: 2)),
-                      counterStyle: TextStyle(color: WHITE),
-                      border: OutlineInputBorder(),
-                      labelText: getTranslated(context, 'search'),
-                      prefixIcon: iconWhite(Icons.search),
-                      labelStyle: TextStyle(color: WHITE)),
-                  onChanged: (string) {
-                    setState(
-                      () {
-                        _filteredWorkplaces = _workplaces
-                            .where((w) => ((w.name + w.id)
-                                .toLowerCase()
-                                .contains(string.toLowerCase())))
-                            .toList();
-                      },
-                    );
-                  },
-                ),
+        backgroundColor: DARK,
+        appBar: appBar(context, _user, getTranslated(context, 'workplaces')),
+        drawer: managerSideBar(context, _user),
+        body: Column(
+          children: <Widget>[
+            Container(
+              padding:
+                  EdgeInsets.only(top: 20, left: 10, right: 10, bottom: 10),
+              child: TextFormField(
+                autofocus: false,
+                autocorrect: true,
+                cursorColor: WHITE,
+                style: TextStyle(color: WHITE),
+                decoration: InputDecoration(
+                    enabledBorder: OutlineInputBorder(
+                        borderSide: BorderSide(color: WHITE, width: 2)),
+                    counterStyle: TextStyle(color: WHITE),
+                    border: OutlineInputBorder(),
+                    labelText: getTranslated(context, 'search'),
+                    prefixIcon: iconWhite(Icons.search),
+                    labelStyle: TextStyle(color: WHITE)),
+                onChanged: (string) {
+                  setState(
+                    () {
+                      _filteredWorkplaces = _workplaces
+                          .where((w) => ((w.name + w.id)
+                              .toLowerCase()
+                              .contains(string.toLowerCase())))
+                          .toList();
+                    },
+                  );
+                },
               ),
-              ListTileTheme(
-                contentPadding: EdgeInsets.only(left: 3),
-                child: CheckboxListTile(
-                  title: textWhite(
-                      getTranslated(this.context, 'selectUnselectAll')),
-                  value: _isChecked,
-                  activeColor: GREEN,
-                  checkColor: WHITE,
-                  onChanged: (bool value) {
-                    setState(() {
-                      _isChecked = value;
-                      List<bool> l = new List();
-                      _checked.forEach((b) => l.add(value));
-                      _checked = l;
-                      if (value) {
-                        _selectedIds
-                            .addAll(_filteredWorkplaces.map((e) => e.id));
-                      } else
-                        _selectedIds.clear();
-                    });
-                  },
-                  controlAffinity: ListTileControlAffinity.leading,
-                ),
+            ),
+            ListTileTheme(
+              contentPadding: EdgeInsets.only(left: 3),
+              child: CheckboxListTile(
+                title:
+                    textWhite(getTranslated(this.context, 'selectUnselectAll')),
+                value: _isChecked,
+                activeColor: GREEN,
+                checkColor: WHITE,
+                onChanged: (bool value) {
+                  setState(() {
+                    _isChecked = value;
+                    List<bool> l = new List();
+                    _checked.forEach((b) => l.add(value));
+                    _checked = l;
+                    if (value) {
+                      _selectedIds.addAll(_filteredWorkplaces.map((e) => e.id));
+                    } else
+                      _selectedIds.clear();
+                  });
+                },
+                controlAffinity: ListTileControlAffinity.leading,
               ),
-              _workplaces.isEmpty
-                  ? _handleNoWorkplaces()
-                  : Expanded(
-                      child: ListView.builder(
-                        itemCount: _filteredWorkplaces.length,
-                        itemBuilder: (BuildContext context, int index) {
-                          WorkplaceDto workplace = _filteredWorkplaces[index];
-                          int foundIndex = 0;
-                          for (int i = 0; i < _workplaces.length; i++) {
-                            if (_workplaces[i].id == workplace.id) {
-                              foundIndex = i;
-                            }
+            ),
+            _workplaces.isEmpty
+                ? _handleNoWorkplaces()
+                : Expanded(
+                    child: ListView.builder(
+                      itemCount: _filteredWorkplaces.length,
+                      itemBuilder: (BuildContext context, int index) {
+                        WorkplaceDto workplace = _filteredWorkplaces[index];
+                        int foundIndex = 0;
+                        for (int i = 0; i < _workplaces.length; i++) {
+                          if (_workplaces[i].id == workplace.id) {
+                            foundIndex = i;
                           }
-                          String id = workplace.id;
-                          String name = workplace.name;
-                          if (name != null && name.length >= 30) {
-                            name = name.substring(0, 30) + ' ...';
-                          }
-                          return Card(
-                            color: DARK,
-                            child: Column(
-                              mainAxisAlignment: MainAxisAlignment.start,
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: <Widget>[
-                                Container(
-                                  color: BRIGHTER_DARK,
-                                  child: ListTileTheme(
-                                    contentPadding: EdgeInsets.only(right: 10),
-                                    child: CheckboxListTile(
-                                      controlAffinity:
-                                          ListTileControlAffinity.leading,
-                                      secondary: Padding(
-                                        child: IconButton(
-                                          icon: icon30Green(Icons.search),
-                                          onPressed: () =>
-                                              _editWorkplace(workplace),
-                                        ),
-                                        padding: EdgeInsets.all(4),
+                        }
+                        String id = workplace.id;
+                        String name = workplace.name;
+                        if (name != null && name.length >= 30) {
+                          name = name.substring(0, 30) + ' ...';
+                        }
+                        return Card(
+                          color: DARK,
+                          child: Column(
+                            mainAxisAlignment: MainAxisAlignment.start,
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: <Widget>[
+                              Container(
+                                color: BRIGHTER_DARK,
+                                child: ListTileTheme(
+                                  contentPadding: EdgeInsets.only(right: 10),
+                                  child: CheckboxListTile(
+                                    controlAffinity:
+                                        ListTileControlAffinity.leading,
+                                    secondary: Padding(
+                                      child: IconButton(
+                                        icon: icon30Green(Icons.search),
+                                        onPressed: () =>
+                                            _editWorkplace(workplace),
                                       ),
-                                      title: Row(
-                                        children: [
-                                          text18WhiteBold(getTranslated(
-                                                  this.context, 'code') +
-                                              ': '),
-                                          text18GreenBold(id),
-                                        ],
-                                      ),
-                                      subtitle: textWhite(name != null
-                                          ? utf8.decode(name.runes.toList())
-                                          : getTranslated(context, 'empty')),
-                                      activeColor: GREEN,
-                                      checkColor: WHITE,
-                                      value: _checked[foundIndex],
-                                      onChanged: (bool value) {
-                                        setState(() {
-                                          _checked[foundIndex] = value;
-                                          if (value) {
-                                            _selectedIds.add(
-                                                _workplaces[foundIndex].id);
-                                          } else {
-                                            _selectedIds.remove(
-                                                _workplaces[foundIndex].id);
-                                          }
-                                          int selectedIdsLength =
-                                              _selectedIds.length;
-                                          if (selectedIdsLength ==
-                                              _workplaces.length) {
-                                            _isChecked = true;
-                                          } else if (selectedIdsLength == 0) {
-                                            _isChecked = false;
-                                          }
-                                        });
-                                      },
+                                      padding: EdgeInsets.all(4),
                                     ),
+                                    title: Row(
+                                      children: [
+                                        text18WhiteBold(getTranslated(
+                                                this.context, 'code') +
+                                            ': '),
+                                        text18GreenBold(id),
+                                      ],
+                                    ),
+                                    subtitle: textWhite(name != null
+                                        ? utf8.decode(name.runes.toList())
+                                        : getTranslated(context, 'empty')),
+                                    activeColor: GREEN,
+                                    checkColor: WHITE,
+                                    value: _checked[foundIndex],
+                                    onChanged: (bool value) {
+                                      setState(() {
+                                        _checked[foundIndex] = value;
+                                        if (value) {
+                                          _selectedIds
+                                              .add(_workplaces[foundIndex].id);
+                                        } else {
+                                          _selectedIds.remove(
+                                              _workplaces[foundIndex].id);
+                                        }
+                                        int selectedIdsLength =
+                                            _selectedIds.length;
+                                        if (selectedIdsLength ==
+                                            _workplaces.length) {
+                                          _isChecked = true;
+                                        } else if (selectedIdsLength == 0) {
+                                          _isChecked = false;
+                                        }
+                                      });
+                                    },
                                   ),
-                                )
-                              ],
-                            ),
-                          );
-                        },
-                      ),
+                                ),
+                              )
+                            ],
+                          ),
+                        );
+                      },
                     ),
-            ],
-          ),
-          floatingActionButtonLocation: FloatingActionButtonLocation.endFloat,
-          floatingActionButton: Column(
-            mainAxisAlignment: MainAxisAlignment.end,
-            children: [
-              FloatingActionButton(
-                heroTag: "plusBtn",
-                tooltip: getTranslated(context, 'addWorkplace'),
-                backgroundColor: GREEN,
-                onPressed: () => _addWorkplace(context),
-                child: text25Dark('+'),
-              ),
-              SizedBox(height: 15),
-              FloatingActionButton(
-                heroTag: "deleteBtn",
-                tooltip: getTranslated(context, 'deleteSelectedWorkplaces'),
-                backgroundColor: Colors.red,
-                onPressed: () => _deleteByIdIn(_selectedIds),
-                child: Icon(Icons.delete),
-              ),
-            ],
-          )),
+                  ),
+          ],
+        ),
+        floatingActionButtonLocation: FloatingActionButtonLocation.endFloat,
+        floatingActionButton: Column(
+          mainAxisAlignment: MainAxisAlignment.end,
+          children: [
+            FloatingActionButton(
+              heroTag: "plusBtn",
+              tooltip: getTranslated(context, 'addWorkplace'),
+              backgroundColor: GREEN,
+              onPressed: () => _addWorkplace(context),
+              child: text25Dark('+'),
+            ),
+            SizedBox(height: 15),
+            FloatingActionButton(
+              heroTag: "deleteBtn",
+              tooltip: getTranslated(context, 'deleteSelectedWorkplaces'),
+              backgroundColor: Colors.red,
+              onPressed: () => _deleteByIdIn(_selectedIds),
+              child: Icon(Icons.delete),
+            ),
+          ],
+        ),
+      ),
     );
   }
 

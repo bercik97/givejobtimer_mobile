@@ -140,5 +140,9 @@
   "date": "Data",
   "workIsDoneStatus": "Praca jest skończona",
   "workIsInProgress": "Praca jest w toku",
-  "workDoNotStarted": "Nie zaczął pracy"
+  "workDoNotStarted": "Nie zaczął pracy",
+  "needToSelectWorkTimes": "Musisz zaznaczyć czasy pracy",
+  "areYouSureYouWantToDeleteSelectedWorkTimes": "Are you sure you want to delete selected work times?",
+  "selectedWorkTimesRemoved": "Selected work times removed!",
+  "deleteSelectedWorkTimes": "Delete selected work times"
 }

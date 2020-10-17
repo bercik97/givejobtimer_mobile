@@ -79,4 +79,12 @@ class WorkTimeService {
         });
     return res.statusCode == 200 ? res : Future.error(res.body);
   }
+
+  Future<dynamic> deleteByIdIn(List<int> ids) async {
+    Response res = await delete(_url + '/$ids', headers: {
+      HttpHeaders.authorizationHeader: authHeader,
+      'content-type': 'application/json'
+    });
+    return res.statusCode == 200 ? res : Future.error(res.body);
+  }
 }
