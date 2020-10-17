@@ -21,8 +21,7 @@ class RegisterPage extends StatefulWidget {
   RegisterPage(this._tokenId, this._role);
 
   @override
-  _RegisterPageState createState() =>
-      _RegisterPageState();
+  _RegisterPageState createState() => _RegisterPageState();
 }
 
 class _RegisterPageState extends State<RegisterPage> {
@@ -450,6 +449,7 @@ class _RegisterPageState extends State<RegisterPage> {
 
   _showSuccessDialog(String loginCode) {
     return showDialog(
+      barrierDismissible: false,
       context: context,
       builder: (BuildContext context) {
         return AlertDialog(

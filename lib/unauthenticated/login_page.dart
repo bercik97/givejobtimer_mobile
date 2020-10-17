@@ -363,8 +363,7 @@ class _LoginPageState extends State<LoginPage> {
                     pageBuilder: (BuildContext context,
                         Animation<double> animation,
                         Animation<double> secondaryAnimation) {
-                      return RegisterPage(
-                          _tokenController.text, role);
+                      return RegisterPage(_tokenController.text, role);
                     },
                     transitionsBuilder: (BuildContext context,
                         Animation<double> animation,
