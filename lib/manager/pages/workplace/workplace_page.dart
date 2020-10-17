@@ -1,6 +1,7 @@
 import 'dart:collection';
 import 'dart:convert';
 
+import 'package:bouncing_widget/bouncing_widget.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:givejobtimer_mobile/internationalization/localization/localization_constants.dart';
@@ -18,6 +19,7 @@ import 'package:givejobtimer_mobile/shared/service/workplace_service.dart';
 import 'package:givejobtimer_mobile/shared/texts.dart';
 import 'package:givejobtimer_mobile/shared/toastr.dart';
 import 'package:givejobtimer_mobile/shared/validator.dart';
+import 'package:shimmer/shimmer.dart';
 import 'package:slide_popup_dialog/slide_popup_dialog.dart' as slideDialog;
 
 class WorkplacePage extends StatefulWidget {
@@ -157,14 +159,22 @@ class _WorkplacePageState extends State<WorkplacePage> {
                                   contentPadding: EdgeInsets.only(right: 10),
                                   child: CheckboxListTile(
                                     controlAffinity:
-                                        ListTileControlAffinity.leading,
+                                        ListTileControlAffinity.trailing,
                                     secondary: Padding(
-                                      child: IconButton(
-                                        icon: icon30Green(Icons.search),
-                                        onPressed: () =>
-                                            _editWorkplace(workplace),
+                                      padding: EdgeInsets.only(left: 10),
+                                      child: Shimmer.fromColors(
+                                        baseColor: GREEN,
+                                        highlightColor: WHITE,
+                                        child: BouncingWidget(
+                                          duration: Duration(milliseconds: 100),
+                                          scaleFactor: 2,
+                                          onPressed: () => {},
+                                          child: Image(
+                                            image: AssetImage(
+                                                'images/big-workplace-icon.png'),
+                                          ),
+                                        ),
                                       ),
-                                      padding: EdgeInsets.all(4),
                                     ),
                                     title: Row(
                                       children: [
@@ -172,6 +182,11 @@ class _WorkplacePageState extends State<WorkplacePage> {
                                                 this.context, 'code') +
                                             ': '),
                                         text18GreenBold(id),
+                                        IconButton(
+                                          icon: icon30Green(Icons.border_color),
+                                          onPressed: () =>
+                                              _editWorkplace(workplace),
+                                        ),
                                       ],
                                     ),
                                     subtitle: textWhite(name != null
