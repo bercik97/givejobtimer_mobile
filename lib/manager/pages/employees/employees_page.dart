@@ -10,6 +10,7 @@ import 'package:givejobtimer_mobile/manager/pages/employees/employee_dates_page.
 import 'package:givejobtimer_mobile/manager/service/manager_service.dart';
 import 'package:givejobtimer_mobile/manager/shared/manager_employee_profile_page.dart';
 import 'package:givejobtimer_mobile/manager/shared/manager_side_bar.dart';
+import 'package:givejobtimer_mobile/manager/shared/navigate_button.dart';
 import 'package:givejobtimer_mobile/shared/app_bar.dart';
 import 'package:givejobtimer_mobile/shared/colors.dart';
 import 'package:givejobtimer_mobile/shared/constants.dart';
@@ -200,6 +201,8 @@ class _EmployeesPageState extends State<EmployeesPage> {
                 : _handleEmptyData()
           ],
         ),
+        floatingActionButtonLocation: FloatingActionButtonLocation.endFloat,
+        floatingActionButton: navigateButton(context, _user),
       ),
     );
   }
