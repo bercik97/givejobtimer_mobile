@@ -10,6 +10,7 @@ import 'package:givejobtimer_mobile/shared/app_bar.dart';
 import 'package:givejobtimer_mobile/shared/colors.dart';
 import 'package:givejobtimer_mobile/shared/constants.dart';
 import 'package:givejobtimer_mobile/shared/icons.dart';
+import 'package:givejobtimer_mobile/shared/loader_container.dart';
 import 'package:givejobtimer_mobile/shared/model/user.dart';
 import 'package:givejobtimer_mobile/shared/texts.dart';
 
@@ -56,7 +57,10 @@ class _EmployeeDatesPageState extends State<EmployeeDatesPage> {
   @override
   Widget build(BuildContext context) {
     if (_loading) {
-      return Container();
+      return loaderContainer(
+          context,
+          appBar(context, _user, getTranslated(context, 'loading')),
+          managerSideBar(context, _user));
     }
     return MaterialApp(
       title: APP_NAME,
