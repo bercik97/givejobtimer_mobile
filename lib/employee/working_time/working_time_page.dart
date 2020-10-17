@@ -35,6 +35,9 @@ class _WorkingTimePageState extends State<WorkingTimePage> {
 
   IsCurrentlyAtWorkWithWorkTimesDto _dto;
 
+  bool _isStartButtonTapped = false;
+  bool _isPauseButtonTapped = false;
+
   @override
   Widget build(BuildContext context) {
     this._user = widget._user;
@@ -135,7 +138,6 @@ class _WorkingTimePageState extends State<WorkingTimePage> {
   }
 
   _showPauseWorkDialog() {
-    FinishWorkTimeDto dto;
     return showDialog(
       barrierDismissible: false,
       context: context,
@@ -156,15 +158,7 @@ class _WorkingTimePageState extends State<WorkingTimePage> {
               children: [
                 FlatButton(
                   child: textWhite(getTranslated(context, 'workIsDone')),
-                  onPressed: () => {
-                    dto = new FinishWorkTimeDto(
-                        id: _dto.notFinishedWorkTimeId,
-                        endTime: DateTime.now().toString().substring(11, 19)),
-                    _workTimeService.finish(dto).then((res) => {
-                          _refresh(),
-                          Navigator.pop(context),
-                        })
-                  },
+                  onPressed: () => _isPauseButtonTapped ? null : _finishWork(),
                 ),
                 FlatButton(
                     child: textWhite(getTranslated(context, 'no')),
@@ -175,6 +169,20 @@ class _WorkingTimePageState extends State<WorkingTimePage> {
         );
       },
     );
+  }
+
+  _finishWork() {
+    setState(() => _isPauseButtonTapped = !_isPauseButtonTapped);
+    FinishWorkTimeDto dto = new FinishWorkTimeDto(
+        id: _dto.notFinishedWorkTimeId,
+        endTime: DateTime.now().toString().substring(11, 19));
+    _workTimeService.finish(dto).then(
+          (res) => {
+            _refresh(),
+            Navigator.pop(context),
+            setState(() => _isStartButtonTapped = false),
+          },
+        );
   }
 
   _showEnterWorkplaceCode() {
@@ -273,7 +281,6 @@ class _WorkingTimePageState extends State<WorkingTimePage> {
   }
 
   _resultWorkplaceCodeAlertDialog(bool isCorrect) {
-    CreateWorkTimeDto dto;
     String workplaceId = _workplaceCodeController.text;
     return showDialog(
       barrierDismissible: false,
@@ -307,20 +314,9 @@ class _WorkingTimePageState extends State<WorkingTimePage> {
                     children: [
                       FlatButton(
                         child: textWhite(getTranslated(context, 'yesImSure')),
-                        onPressed: () => {
-                          dto = new CreateWorkTimeDto(
-                              date: DateTime.now().toString().substring(0, 10),
-                              startTime:
-                                  DateTime.now().toString().substring(11, 19),
-                              workplaceId: workplaceId,
-                              employeeId: int.parse(_user.employeeId)),
-                          _workTimeService.create(dto).then(
-                                (value) => {
-                                  _refresh(),
-                                  Navigator.pop(context),
-                                },
-                              )
-                        },
+                        onPressed: () => _isStartButtonTapped
+                            ? null
+                            : _startWork(workplaceId),
                       ),
                       FlatButton(
                           child: textWhite(getTranslated(context, 'no')),
@@ -341,6 +337,22 @@ class _WorkingTimePageState extends State<WorkingTimePage> {
         );
       },
     );
+  }
+
+  _startWork(String workplaceId) {
+    setState(() => _isStartButtonTapped = !_isStartButtonTapped);
+    CreateWorkTimeDto dto = new CreateWorkTimeDto(
+        date: DateTime.now().toString().substring(0, 10),
+        startTime: DateTime.now().toString().substring(11, 19),
+        workplaceId: workplaceId,
+        employeeId: int.parse(_user.employeeId));
+    _workTimeService.create(dto).then(
+          (value) => {
+            _refresh(),
+            Navigator.pop(context),
+            setState(() => _isPauseButtonTapped = false),
+          },
+        );
   }
 
   _displayWorkTimes(List workTimes) {
