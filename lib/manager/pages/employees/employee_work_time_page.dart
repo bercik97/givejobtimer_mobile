@@ -4,6 +4,7 @@ import 'package:givejobtimer_mobile/employee/dto/work_time_dto.dart';
 import 'package:givejobtimer_mobile/employee/service/work_time_service.dart';
 import 'package:givejobtimer_mobile/employee/shared/employee_side_bar.dart';
 import 'package:givejobtimer_mobile/internationalization/localization/localization_constants.dart';
+import 'package:givejobtimer_mobile/manager/shared/manager_side_bar.dart';
 import 'package:givejobtimer_mobile/shared/app_bar.dart';
 import 'package:givejobtimer_mobile/shared/colors.dart';
 import 'package:givejobtimer_mobile/shared/constants.dart';
@@ -51,7 +52,7 @@ class _EmployeeWorkTimePageState extends State<EmployeeWorkTimePage> {
         home: Scaffold(
           backgroundColor: DARK,
           appBar: appBar(this.context, _user, _employeeInfo + ' / ' + _date),
-          drawer: employeeSideBar(this.context, _user),
+          drawer: managerSideBar(this.context, _user),
           body: SingleChildScrollView(
             child: FutureBuilder(
               future: _workTimeService.findAllByEmployeeIdAndDate(

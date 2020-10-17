@@ -6,6 +6,7 @@ import 'package:givejobtimer_mobile/employee/shared/employee_side_bar.dart';
 import 'package:givejobtimer_mobile/internationalization/localization/localization_constants.dart';
 import 'package:givejobtimer_mobile/manager/dto/work_place_dates_dto.dart';
 import 'package:givejobtimer_mobile/manager/dto/workplace_dto.dart';
+import 'package:givejobtimer_mobile/manager/shared/manager_side_bar.dart';
 import 'package:givejobtimer_mobile/manager/shared/navigate_button.dart';
 import 'package:givejobtimer_mobile/shared/app_bar.dart';
 import 'package:givejobtimer_mobile/shared/colors.dart';
@@ -52,7 +53,7 @@ class _WorkplaceWorkTimePageState extends State<WorkplaceWorkTimePage> {
             _workplace.year +
                 ' ' +
                 getTranslated(this.context, _workplace.month)),
-        drawer: employeeSideBar(this.context, _user),
+        drawer: managerSideBar(this.context, _user),
         body: Column(
           children: [
             Padding(
