@@ -452,25 +452,28 @@ class _RegisterPageState extends State<RegisterPage> {
       barrierDismissible: false,
       context: context,
       builder: (BuildContext context) {
-        return AlertDialog(
-          backgroundColor: DARK,
-          title: textGreen(getTranslated(this.context, 'success')),
-          content: SingleChildScrollView(
-            child: ListBody(
-              children: <Widget>[
-                textWhite(getTranslated(this.context, 'registerSuccess')),
-                SizedBox(height: 10),
-                text20GreenBold(
-                    getTranslated(this.context, 'loginCode') + ': $loginCode'),
-              ],
+        return WillPopScope(
+          child: AlertDialog(
+            backgroundColor: DARK,
+            title: textGreen(getTranslated(this.context, 'success')),
+            content: SingleChildScrollView(
+              child: ListBody(
+                children: <Widget>[
+                  textWhite(getTranslated(this.context, 'registerSuccess')),
+                  SizedBox(height: 10),
+                  text20GreenBold(getTranslated(this.context, 'loginCode') +
+                      ': $loginCode'),
+                ],
+              ),
             ),
+            actions: <Widget>[
+              FlatButton(
+                child: textWhite(getTranslated(this.context, 'goToLoginPage')),
+                onPressed: () => _resetAndOpenPage(),
+              ),
+            ],
           ),
-          actions: <Widget>[
-            FlatButton(
-              child: textWhite(getTranslated(this.context, 'goToLoginPage')),
-              onPressed: () => _resetAndOpenPage(),
-            ),
-          ],
+          onWillPop: _navigateToLoginPage,
         );
       },
     );
@@ -481,6 +484,11 @@ class _RegisterPageState extends State<RegisterPage> {
       MaterialPageRoute(builder: (BuildContext context) => LoginPage()),
       ModalRoute.withName('/'),
     );
+  }
+
+  Future<bool> _navigateToLoginPage() async {
+    _resetAndOpenPage();
+    return true;
   }
 
   Future<bool> _onWillPop() async {
