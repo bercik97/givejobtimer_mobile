@@ -9,6 +9,7 @@ import 'package:givejobtimer_mobile/internationalization/util/language_util.dart
 import 'package:givejobtimer_mobile/shared/app_bar.dart';
 import 'package:givejobtimer_mobile/shared/colors.dart';
 import 'package:givejobtimer_mobile/shared/constants.dart';
+import 'package:givejobtimer_mobile/shared/logout.dart';
 import 'package:givejobtimer_mobile/shared/model/user.dart';
 import 'package:givejobtimer_mobile/shared/texts.dart';
 import 'package:givejobtimer_mobile/widget/contact_section.dart';
@@ -29,101 +30,105 @@ class _EmployeePageState extends State<EmployeePage> {
   Widget build(BuildContext context) {
     this._user = widget._user;
     String _employeeInfo = _user.name + ' ' + _user.surname;
-    return MaterialApp(
-      title: APP_NAME,
-      theme: ThemeData(primarySwatch: MaterialColor(0xffFFFFFF, WHITE_RGBO)),
-      debugShowCheckedModeBanner: false,
-      home: Scaffold(
-        backgroundColor: DARK,
-        appBar: appBar(context, _user, getTranslated(context, 'profile')),
-        drawer: employeeSideBar(context, _user),
-        body: SingleChildScrollView(
-          child: Center(
-            child: Column(
-              children: <Widget>[
-                Container(
-                  width: 120,
-                  height: 120,
-                  decoration: BoxDecoration(
-                    shape: BoxShape.circle,
-                    image: DecorationImage(
-                        image: AssetImage('images/big-employee-icon.png')),
-                  ),
-                ),
-                Column(
-                  children: <Widget>[
-                    text25WhiteBold(utf8.decode(_employeeInfo != null
-                        ? _employeeInfo.runes.toList()
-                        : '-')),
-                    SizedBox(height: 2.5),
-                    text20White(LanguageUtil.convertShortNameToFullName(
-                            this.context, _user.nationality) +
-                        ' ' +
-                        LanguageUtil.findFlagByNationality(_user.nationality)),
-                    SizedBox(height: 2.5),
-                    text18White(getTranslated(context, 'employee') +
-                        ' #' +
-                        _user.id.toString()),
-                  ],
-                ),
-                SingleChildScrollView(
-                  child: Padding(
-                    padding: const EdgeInsets.all(12.0),
-                    child: Column(
-                      children: <Widget>[
-                        SizedBox(height: 10),
-                        Row(
-                          children: <Widget>[
-                            Expanded(
-                              child: Material(
-                                color: BRIGHTER_DARK,
-                                child: InkWell(
-                                  onTap: () {
-                                    Navigator.of(context).push(
-                                      CupertinoPageRoute<Null>(
-                                        builder: (BuildContext context) {
-                                          return WorkingTimePage(_user);
-                                        },
-                                      ),
-                                    );
-                                  },
-                                  child: _buildScrollableContainer(
-                                      'images/big-employees-icon.png',
-                                      'workingTime',
-                                      'startFinishWork'),
-                                ),
-                              ),
-                            ),
-                            SizedBox(width: 10),
-                            Expanded(
-                              child: Material(
-                                color: BRIGHTER_DARK,
-                                child: InkWell(
-                                  onTap: () => {
-                                    showContactDialog(
-                                        context,
-                                        _user.managerPhone,
-                                        _user.managerViber,
-                                        _user.managerWhatsApp),
-                                  },
-                                  child: _buildScrollableContainer(
-                                      'images/big-employees-icon.png',
-                                      'contact',
-                                      'contactWithYourManager'),
-                                ),
-                              ),
-                            ),
-                          ],
-                        ),
-                      ],
+    return WillPopScope(
+      child: MaterialApp(
+        title: APP_NAME,
+        theme: ThemeData(primarySwatch: MaterialColor(0xffFFFFFF, WHITE_RGBO)),
+        debugShowCheckedModeBanner: false,
+        home: Scaffold(
+          backgroundColor: DARK,
+          appBar: appBar(context, _user, getTranslated(context, 'profile')),
+          drawer: employeeSideBar(context, _user),
+          body: SingleChildScrollView(
+            child: Center(
+              child: Column(
+                children: <Widget>[
+                  Container(
+                    width: 120,
+                    height: 120,
+                    decoration: BoxDecoration(
+                      shape: BoxShape.circle,
+                      image: DecorationImage(
+                          image: AssetImage('images/big-employee-icon.png')),
                     ),
                   ),
-                ),
-              ],
+                  Column(
+                    children: <Widget>[
+                      text25WhiteBold(utf8.decode(_employeeInfo != null
+                          ? _employeeInfo.runes.toList()
+                          : '-')),
+                      SizedBox(height: 2.5),
+                      text20White(LanguageUtil.convertShortNameToFullName(
+                              this.context, _user.nationality) +
+                          ' ' +
+                          LanguageUtil.findFlagByNationality(
+                              _user.nationality)),
+                      SizedBox(height: 2.5),
+                      text18White(getTranslated(context, 'employee') +
+                          ' #' +
+                          _user.id.toString()),
+                    ],
+                  ),
+                  SingleChildScrollView(
+                    child: Padding(
+                      padding: const EdgeInsets.all(12.0),
+                      child: Column(
+                        children: <Widget>[
+                          SizedBox(height: 10),
+                          Row(
+                            children: <Widget>[
+                              Expanded(
+                                child: Material(
+                                  color: BRIGHTER_DARK,
+                                  child: InkWell(
+                                    onTap: () {
+                                      Navigator.of(context).push(
+                                        CupertinoPageRoute<Null>(
+                                          builder: (BuildContext context) {
+                                            return WorkingTimePage(_user);
+                                          },
+                                        ),
+                                      );
+                                    },
+                                    child: _buildScrollableContainer(
+                                        'images/big-employees-icon.png',
+                                        'workingTime',
+                                        'startFinishWork'),
+                                  ),
+                                ),
+                              ),
+                              SizedBox(width: 10),
+                              Expanded(
+                                child: Material(
+                                  color: BRIGHTER_DARK,
+                                  child: InkWell(
+                                    onTap: () => {
+                                      showContactDialog(
+                                          context,
+                                          _user.managerPhone,
+                                          _user.managerViber,
+                                          _user.managerWhatsApp),
+                                    },
+                                    child: _buildScrollableContainer(
+                                        'images/big-employees-icon.png',
+                                        'contact',
+                                        'contactWithYourManager'),
+                                  ),
+                                ),
+                              ),
+                            ],
+                          ),
+                        ],
+                      ),
+                    ),
+                  ),
+                ],
+              ),
             ),
           ),
         ),
       ),
+      onWillPop: _onWillPop,
     );
   }
 
@@ -145,5 +150,9 @@ class _EmployeePageState extends State<EmployeePage> {
         ),
       ),
     );
+  }
+
+  Future<bool> _onWillPop() async {
+    return Logout.logout(context) ?? false;
   }
 }
