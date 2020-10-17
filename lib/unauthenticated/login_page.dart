@@ -34,6 +34,9 @@ class _LoginPageState extends State<LoginPage> {
   final TextEditingController _loginCodeController = TextEditingController();
 
   bool _loginCodeVisible = false;
+  bool _isLoginButtonTapped = false;
+
+  ProgressDialog _progressDialog;
 
   @override
   void initState() {
@@ -43,8 +46,8 @@ class _LoginPageState extends State<LoginPage> {
 
   @override
   Widget build(BuildContext context) {
-    final ProgressDialog progressDialog = new ProgressDialog(context);
-    progressDialog.style(
+    _progressDialog = new ProgressDialog(context);
+    _progressDialog.style(
       message: '  ' + getTranslated(context, 'loading'),
       messageTextStyle: TextStyle(color: DARK),
       progressWidget: circularProgressIndicator(),
@@ -86,80 +89,7 @@ class _LoginPageState extends State<LoginPage> {
               height: 50,
               shape: new RoundedRectangleBorder(
                   borderRadius: new BorderRadius.circular(30.0)),
-              onPressed: () {
-                String loginCode = _loginCodeController.text;
-                String invalidMessage =
-                    ValidatorService.validateLoginCode(loginCode, context);
-                if (invalidMessage != null) {
-                  ToastService.showErrorToast(invalidMessage);
-                  return;
-                }
-                progressDialog.show();
-                _login(_loginCodeController.text).then((res) {
-                  FocusScope.of(context).unfocus();
-                  bool resNotNullOrEmpty = res.body != null && res.body != '{}';
-                  if (res.statusCode == 200 && resNotNullOrEmpty) {
-                    String authHeader = 'Basic ' +
-                        base64Encode(utf8.encode('$loginCode:$loginCode'));
-                    storage.write(key: 'authorization', value: authHeader);
-                    Map map = json.decode(res.body);
-                    User user = new User();
-                    user.id = map['id'];
-                    user.managerId = map['managerId'];
-                    user.employeeId = map['employeeId'];
-                    user.role = map['role'];
-                    user.name = map['name'];
-                    user.surname = map['surname'];
-                    user.nationality = map['nationality'];
-                    user.phone = map['phone'];
-                    user.viber = map['viber'];
-                    user.whatsApp = map['whatsApp'];
-                    user.managerPhone = map['managerPhone'];
-                    user.managerViber = map['managerViber'];
-                    user.managerWhatsApp = map['managerWhatsApp'];
-                    user.authHeader = authHeader;
-                    storage.write(key: 'id', value: user.id.toString());
-                    storage.write(
-                        key: 'managerId', value: user.managerId.toString());
-                    storage.write(
-                        key: 'employeeId', value: user.employeeId.toString());
-                    storage.write(key: 'role', value: user.role);
-                    storage.write(key: 'name', value: user.name);
-                    storage.write(key: 'surname', value: user.surname);
-                    storage.write(key: 'nationality', value: user.nationality);
-                    storage.write(key: 'phone', value: user.phone);
-                    storage.write(key: 'viber', value: user.viber);
-                    storage.write(key: 'whatsApp', value: user.whatsApp);
-                    storage.write(
-                        key: 'managerPhone', value: user.managerPhone);
-                    storage.write(
-                        key: 'managerViber', value: user.managerViber);
-                    storage.write(
-                        key: 'managerWhatsApp', value: user.managerWhatsApp);
-                    if (user.role == ROLE_EMPLOYEE) {
-                      Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                              builder: (context) => EmployeePage(user)));
-                    } else {
-                      Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                              builder: (context) => ManagerPage(user)));
-                    }
-                    ToastService.showSuccessToast(
-                        getTranslated(context, 'loginSuccessfully'));
-                  } else {
-                    progressDialog.hide();
-                    ToastService.showErrorToast(
-                        getTranslated(context, 'wrongLoginCode'));
-                  }
-                }, onError: (e) {
-                  progressDialog.hide();
-                  ToastService.showErrorToast(
-                      getTranslated(context, 'cannotConnectToServer'));
-                });
-              },
+              onPressed: () => _isLoginButtonTapped ? null : _handleLogin(),
               color: GREEN,
               child: text20White(getTranslated(context, 'login')),
               textColor: Colors.white,
@@ -179,6 +109,75 @@ class _LoginPageState extends State<LoginPage> {
         ),
       ),
     );
+  }
+
+  _handleLogin() {
+    setState(() => _isLoginButtonTapped = true);
+    String loginCode = _loginCodeController.text;
+    String invalidMessage =
+        ValidatorService.validateLoginCode(loginCode, context);
+    if (invalidMessage != null) {
+      ToastService.showErrorToast(invalidMessage);
+      setState(() => _isLoginButtonTapped = false);
+      return;
+    }
+    _progressDialog.show();
+    _login(_loginCodeController.text).then((res) {
+      FocusScope.of(context).unfocus();
+      bool resNotNullOrEmpty = res.body != null && res.body != '{}';
+      if (res.statusCode == 200 && resNotNullOrEmpty) {
+        String authHeader =
+            'Basic ' + base64Encode(utf8.encode('$loginCode:$loginCode'));
+        storage.write(key: 'authorization', value: authHeader);
+        Map map = json.decode(res.body);
+        User user = new User();
+        user.id = map['id'];
+        user.managerId = map['managerId'];
+        user.employeeId = map['employeeId'];
+        user.role = map['role'];
+        user.name = map['name'];
+        user.surname = map['surname'];
+        user.nationality = map['nationality'];
+        user.phone = map['phone'];
+        user.viber = map['viber'];
+        user.whatsApp = map['whatsApp'];
+        user.managerPhone = map['managerPhone'];
+        user.managerViber = map['managerViber'];
+        user.managerWhatsApp = map['managerWhatsApp'];
+        user.authHeader = authHeader;
+        storage.write(key: 'id', value: user.id.toString());
+        storage.write(key: 'managerId', value: user.managerId.toString());
+        storage.write(key: 'employeeId', value: user.employeeId.toString());
+        storage.write(key: 'role', value: user.role);
+        storage.write(key: 'name', value: user.name);
+        storage.write(key: 'surname', value: user.surname);
+        storage.write(key: 'nationality', value: user.nationality);
+        storage.write(key: 'phone', value: user.phone);
+        storage.write(key: 'viber', value: user.viber);
+        storage.write(key: 'whatsApp', value: user.whatsApp);
+        storage.write(key: 'managerPhone', value: user.managerPhone);
+        storage.write(key: 'managerViber', value: user.managerViber);
+        storage.write(key: 'managerWhatsApp', value: user.managerWhatsApp);
+        if (user.role == ROLE_EMPLOYEE) {
+          Navigator.push(context,
+              MaterialPageRoute(builder: (context) => EmployeePage(user)));
+        } else {
+          Navigator.push(context,
+              MaterialPageRoute(builder: (context) => ManagerPage(user)));
+        }
+        ToastService.showSuccessToast(
+            getTranslated(context, 'loginSuccessfully'));
+      } else {
+        _progressDialog.hide();
+        setState(() => _isLoginButtonTapped = false);
+        ToastService.showErrorToast(getTranslated(context, 'wrongLoginCode'));
+      }
+    }, onError: (e) {
+      setState(() => _isLoginButtonTapped = false);
+      _progressDialog.hide();
+      ToastService.showErrorToast(
+          getTranslated(context, 'cannotConnectToServer'));
+    });
   }
 
   Future<http.Response> _login(String loginCode) async {
