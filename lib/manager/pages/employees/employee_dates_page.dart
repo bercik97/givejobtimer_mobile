@@ -13,6 +13,8 @@ import 'package:givejobtimer_mobile/shared/icons.dart';
 import 'package:givejobtimer_mobile/shared/model/user.dart';
 import 'package:givejobtimer_mobile/shared/texts.dart';
 
+import 'employee_work_time_page.dart';
+
 class EmployeeDatesPage extends StatefulWidget {
   final User _user;
   final EmployeeDto _employee;
@@ -142,7 +144,22 @@ class _EmployeeDatesPageState extends State<EmployeeDatesPage> {
                                                   alignment: Alignment.topLeft),
                                             ],
                                           ),
-                                          onTap: () => {},
+                                          onTap: () => {
+                                            Navigator.of(this.context).push(
+                                              CupertinoPageRoute<Null>(
+                                                builder:
+                                                    (BuildContext context) {
+                                                  return EmployeeWorkTimePage(
+                                                      _user,
+                                                      _employee.employeeId,
+                                                      _employee.name +
+                                                          ' ' +
+                                                          _employee.surname,
+                                                      employeeDates.date);
+                                                },
+                                              ),
+                                            ),
+                                          },
                                         ),
                                       ],
                                     ),

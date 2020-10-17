@@ -149,5 +149,6 @@
   "workIsDone": "Yes, work is done",
   "totalTimeWorked": "Total time worked",
   "noDaysWorked": "No days worked",
-  "noDaysWorkedOfCurrentEmployee": "Current employee has no days worked yet"
+  "noDaysWorkedOfCurrentEmployee": "Current employee has no days worked yet",
+  "date": "Date"
 }
