@@ -137,5 +137,8 @@
   "totalTimeWorked": "Łączny przepracowany czas",
   "noDaysWorked": "Brak przepracowanych dni",
   "noDaysWorkedOfCurrentEmployee": "Wybrany pracownik nie posiada jeszcze przepracowanych dni",
-  "date": "Data"
+  "date": "Data",
+  "workIsDoneStatus": "Praca jest skończona",
+  "workIsInProgress": "Praca jest w toku",
+  "workDoNotStarted": "Nie zaczął pracy"
 }

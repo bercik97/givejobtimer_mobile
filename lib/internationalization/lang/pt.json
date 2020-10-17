@@ -137,5 +137,8 @@
   "totalTimeWorked": "მთლიანი დრო მუშაობდა",
   "noDaysWorked": "დღეები არ მუშაობდა",
   "noDaysWorkedOfCurrentEmployee": "ამჟამინდელ თანამშრომელს სამუშაო დღეები ჯერ არ აქვს",
-  "date": "თარიღი"
+  "date": "თარიღი",
+  "workIsDoneStatus": "Work is done",
+  "workIsInProgress": "Work is in progress",
+  "workDoNotStarted": "Didnt start work"
 }

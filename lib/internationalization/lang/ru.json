@@ -137,5 +137,8 @@
   "totalTimeWorked": "Общее отработанное время",
   "noDaysWorked": "Нет отработанных дней",
   "noDaysWorkedOfCurrentEmployee": "У текущего сотрудника еще нет отработанных дней",
-  "date": "Дата"
+  "date": "Дата",
+  "workIsDoneStatus": "Work is done",
+  "workIsInProgress": "Work is in progress",
+  "workDoNotStarted": "Didnt start work"
 }

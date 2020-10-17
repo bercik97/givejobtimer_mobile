@@ -178,6 +178,10 @@ class _EmployeesPageState extends State<EmployeesPage> {
                                                     ],
                                                   ),
                                                   alignment: Alignment.topLeft),
+                                              _handleWorkStatus(
+                                                  employee.workStatus,
+                                                  employee.workplace,
+                                                  employee.workplaceCode),
                                             ],
                                           ),
                                           onTap: () => {
@@ -209,6 +213,62 @@ class _EmployeesPageState extends State<EmployeesPage> {
         floatingActionButton: navigateButton(context, _user),
       ),
     );
+  }
+
+  Widget _handleWorkStatus(
+      String workStatus, String workplace, String workplaceCode) {
+    switch (workStatus) {
+      case 'Done':
+        return _buildWorkStatusRow(
+          iconGreen(Icons.check),
+          textGreen(getTranslated(context, 'workIsDoneStatus')),
+          textGreen(workplace != null ? workplace : '-'),
+          textGreen(workplaceCode != null ? workplaceCode : '-'),
+        );
+      case 'In progress':
+        return _buildWorkStatusRow(
+          iconOrange(Icons.timer),
+          textOrange(getTranslated(context, 'workIsInProgress')),
+          textOrange(workplace != null ? workplace : '-'),
+          textOrange(workplaceCode != null ? workplaceCode : '-'),
+        );
+      default:
+        return _buildWorkStatusRow(
+          iconRed(Icons.remove),
+          textRed(getTranslated(context, 'workDoNotStarted')),
+          textRed('-'),
+          textRed('-'),
+        );
+    }
+  }
+
+  Widget _buildWorkStatusRow(Icon icon, Widget workStatusWidget,
+      Widget workplaceWidget, Widget workplaceCodeWidget) {
+    return Align(
+        child: Column(
+          children: [
+            Row(
+              children: <Widget>[
+                textWhite('Status' + ': '),
+                icon,
+                workStatusWidget
+              ],
+            ),
+            Row(
+              children: <Widget>[
+                textWhite(getTranslated(context, 'workplace') + ': '),
+                workplaceWidget
+              ],
+            ),
+            Row(
+              children: <Widget>[
+                textWhite(getTranslated(context, 'workplaceId') + ': '),
+                workplaceCodeWidget
+              ],
+            ),
+          ],
+        ),
+        alignment: Alignment.topLeft);
   }
 
   Widget _handleEmptyData() {

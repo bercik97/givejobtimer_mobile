@@ -137,5 +137,8 @@
   "totalTimeWorked": "Агульны адпрацаваны час",
   "noDaysWorked": "Няма адпрацаваных дзён",
   "noDaysWorkedOfCurrentEmployee": "У бягучага супрацоўніка яшчэ няма адпрацаваных дзён",
-  "date": "Дата"
+  "date": "Дата",
+  "workIsDoneStatus": "Work is done",
+  "workIsInProgress": "Work is in progress",
+  "workDoNotStarted": "Didnt start work"
 }
