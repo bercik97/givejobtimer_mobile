@@ -144,6 +144,7 @@ class _WorkplacePageState extends State<WorkplacePage> {
                         }
                         String id = workplace.id;
                         String name = workplace.name;
+                        String totalTimeWorked = workplace.totalTimeWorked;
                         if (name != null && name.length >= 30) {
                           name = name.substring(0, 30) + ' ...';
                         }
@@ -189,9 +190,28 @@ class _WorkplacePageState extends State<WorkplacePage> {
                                         ),
                                       ],
                                     ),
-                                    subtitle: textWhite(name != null
-                                        ? utf8.decode(name.runes.toList())
-                                        : getTranslated(context, 'empty')),
+                                    subtitle: Column(
+                                      children: [
+                                        Align(
+                                          alignment: Alignment.topLeft,
+                                          child: textWhite(name != null
+                                              ? utf8.decode(name.runes.toList())
+                                              : getTranslated(
+                                                  this.context, 'empty')),
+                                        ),
+                                        Align(
+                                          alignment: Alignment.topLeft,
+                                          child: textWhite(
+                                            getTranslated(this.context,
+                                                    'totalTimeWorked') +
+                                                ': ' +
+                                                (totalTimeWorked != null
+                                                    ? totalTimeWorked
+                                                    : '00:00:00'),
+                                          ),
+                                        )
+                                      ],
+                                    ),
                                     activeColor: GREEN,
                                     checkColor: WHITE,
                                     value: _checked[foundIndex],
