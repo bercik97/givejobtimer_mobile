@@ -32,8 +32,6 @@ class _ManagerEmployeeProfilePageState
   EmployeeDto _employee;
   Widget _workInfo;
 
-  String _today = DateTime.now().toString().substring(0, 10);
-
   @override
   Widget build(BuildContext context) {
     this._user = widget._user;
@@ -94,8 +92,7 @@ class _ManagerEmployeeProfilePageState
                         _employee.employeeId.toString()),
                     SizedBox(height: 20),
                     textCenter20WhiteBold(
-                        getTranslated(context, 'statisticsForToday') +
-                            ' $_today'),
+                        getTranslated(context, 'statisticsForToday')),
                     ListTile(
                       title: textCenter18White(
                           getTranslated(this.context, 'timeWorkedToday')),

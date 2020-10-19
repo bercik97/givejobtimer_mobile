@@ -49,18 +49,14 @@ class _WorkingTimePageState extends State<WorkingTimePage> {
       debugShowCheckedModeBanner: false,
       home: Scaffold(
         backgroundColor: DARK,
-        appBar: appBar(
-            context,
-            _user,
-            getTranslated(context, 'workTime') +
-                ' / ' +
-                DateTime.now().toString().substring(0, 10)),
+        appBar:
+            appBar(context, _user, getTranslated(context, 'workTimeForToday')),
         drawer: employeeSideBar(context, _user),
         body: SingleChildScrollView(
           child: FutureBuilder(
             future: _workTimeService
                 .checkIfIsCurrentlyAtWorkAndFindAllByEmployeeIdAndDateOrEndTimeIsNull(
-                    _user.employeeId, DateTime.now()),
+                    _user.employeeId),
             builder: (BuildContext context,
                 AsyncSnapshot<IsCurrentlyAtWorkWithWorkTimesDto> snapshot) {
               if (snapshot.connectionState == ConnectionState.waiting ||
@@ -173,9 +169,8 @@ class _WorkingTimePageState extends State<WorkingTimePage> {
 
   _finishWork() {
     setState(() => _isPauseButtonTapped = !_isPauseButtonTapped);
-    FinishWorkTimeDto dto = new FinishWorkTimeDto(
-        id: _dto.notFinishedWorkTimeId,
-        endTime: DateTime.now().toString().substring(11, 19));
+    FinishWorkTimeDto dto =
+        new FinishWorkTimeDto(id: _dto.notFinishedWorkTimeId);
     _workTimeService.finish(dto).then(
           (res) => {
             _refresh(),
@@ -342,10 +337,7 @@ class _WorkingTimePageState extends State<WorkingTimePage> {
   _startWork(String workplaceId) {
     setState(() => _isStartButtonTapped = !_isStartButtonTapped);
     CreateWorkTimeDto dto = new CreateWorkTimeDto(
-        date: DateTime.now().toString().substring(0, 10),
-        startTime: DateTime.now().toString().substring(11, 19),
-        workplaceId: workplaceId,
-        employeeId: int.parse(_user.employeeId));
+        workplaceId: workplaceId, employeeId: int.parse(_user.employeeId));
     _workTimeService.create(dto).then(
           (value) => {
             _refresh(),
@@ -400,7 +392,7 @@ class _WorkingTimePageState extends State<WorkingTimePage> {
   Future<Null> _refresh() {
     return _workTimeService
         .checkIfIsCurrentlyAtWorkAndFindAllByEmployeeIdAndDateOrEndTimeIsNull(
-            _user.employeeId, DateTime.now())
+            _user.employeeId)
         .then((res) {
       setState(() {
         _dto = res;
