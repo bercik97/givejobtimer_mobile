@@ -44,6 +44,9 @@ class _WorkplacePageState extends State<WorkplacePage> {
   List<bool> _checked = new List();
   LinkedHashSet<String> _selectedIds = new LinkedHashSet();
 
+  bool _isAddButtonTapped = false;
+  bool _isDeleteButtonTapped = false;
+
   @override
   void initState() {
     this._user = widget._user;
@@ -272,7 +275,9 @@ class _WorkplacePageState extends State<WorkplacePage> {
               heroTag: "deleteBtn",
               tooltip: getTranslated(context, 'deleteSelectedWorkplaces'),
               backgroundColor: Colors.red,
-              onPressed: () => _deleteByIdIn(_selectedIds),
+              onPressed: () => _isDeleteButtonTapped
+                  ? null
+                  : _handleDeleteByIdIn(_selectedIds),
               child: Icon(Icons.delete),
             ),
           ],
@@ -355,27 +360,9 @@ class _WorkplacePageState extends State<WorkplacePage> {
                           children: <Widget>[iconWhite(Icons.check)],
                         ),
                         color: GREEN,
-                        onPressed: () {
-                          String workplace = _workplaceController.text;
-                          String invalidMessage =
-                              ValidatorService.validateWorkplace(
-                                  workplace, context);
-                          if (invalidMessage != null) {
-                            ToastService.showErrorToast(invalidMessage);
-                            return;
-                          }
-                          CreateWorkplaceDto dto = new CreateWorkplaceDto(
-                              managerId: int.parse(_user.managerId),
-                              name: workplace);
-                          _workplaceService.create(dto).then((res) {
-                            Navigator.pop(context);
-                            _refresh();
-                            _showSuccessDialog(res);
-                          }).catchError((onError) {
-                            ToastService.showErrorToast(
-                                getTranslated(context, 'smthWentWrong'));
-                          });
-                        },
+                        onPressed: () => _isAddButtonTapped
+                            ? null
+                            : _handleAddWorkplace(_workplaceController.text),
                       ),
                     ],
                   ),
@@ -388,7 +375,28 @@ class _WorkplacePageState extends State<WorkplacePage> {
     );
   }
 
-  _deleteByIdIn(LinkedHashSet<String> ids) {
+  _handleAddWorkplace(String workplace) {
+    setState(() => _isAddButtonTapped = true);
+    String invalidMessage =
+        ValidatorService.validateWorkplace(workplace, context);
+    if (invalidMessage != null) {
+      setState(() => _isAddButtonTapped = false);
+      ToastService.showErrorToast(invalidMessage);
+      return;
+    }
+    CreateWorkplaceDto dto = new CreateWorkplaceDto(
+        managerId: int.parse(_user.managerId), name: workplace);
+    _workplaceService.create(dto).then((res) {
+      Navigator.pop(context);
+      _refresh();
+      _showSuccessDialog(res);
+    }).catchError((onError) {
+      setState(() => _isAddButtonTapped = false);
+      ToastService.showErrorToast(getTranslated(context, 'smthWentWrong'));
+    });
+  }
+
+  _handleDeleteByIdIn(LinkedHashSet<String> ids) {
     if (ids.isEmpty) {
       _showHint();
       return;
@@ -408,27 +416,33 @@ class _WorkplacePageState extends State<WorkplacePage> {
                 _workplaceService
                     .deleteByIdIn(ids.toList())
                     .then((res) => {
-                          _uncheckAll(),
-                          Navigator.pop(this.context),
-                          _refresh(),
+                          Navigator.of(context).pushAndRemoveUntil(
+                            MaterialPageRoute(
+                                builder: (BuildContext context) =>
+                                    WorkplacePage(_user)),
+                            ModalRoute.withName('/'),
+                          ),
                           ToastService.showSuccessToast(getTranslated(
                               this.context, 'selectedWorkplacesRemoved')),
                         })
                     .catchError((onError) {
                   String errorMsg = onError.toString();
                   if (errorMsg.substring(0, 17) == "EMPLOYEES_IN_WORK") {
+                    setState(() => _isDeleteButtonTapped = false);
                     Navigator.pop(this.context);
                     _showErrorDialog(errorMsg.substring(19));
                     return;
                   }
+                  setState(() => _isDeleteButtonTapped = false);
                   ToastService.showErrorToast(
                       getTranslated(this.context, 'smthWentWrong'));
                 }),
               },
             ),
             FlatButton(
-                child: textWhite(getTranslated(this.context, 'no')),
-                onPressed: () => Navigator.of(this.context).pop()),
+              child: textWhite(getTranslated(this.context, 'no')),
+              onPressed: () => Navigator.of(this.context).pop(),
+            ),
           ],
         );
       },
@@ -663,6 +677,8 @@ class _WorkplacePageState extends State<WorkplacePage> {
     _loading = true;
     return _workplaceService.findAllByManagerId(_user.managerId).then((res) {
       setState(() {
+        _isAddButtonTapped = false;
+        _isDeleteButtonTapped = false;
         _workplaces = res;
         _workplaces.forEach((e) => _checked.add(false));
         _filteredWorkplaces = _workplaces;

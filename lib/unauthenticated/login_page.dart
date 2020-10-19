@@ -169,15 +169,14 @@ class _LoginPageState extends State<LoginPage> {
             getTranslated(context, 'loginSuccessfully'));
       } else {
         _progressDialog.hide();
-        setState(() => _isLoginButtonTapped = false);
         ToastService.showErrorToast(getTranslated(context, 'wrongLoginCode'));
       }
     }, onError: (e) {
-      setState(() => _isLoginButtonTapped = false);
       _progressDialog.hide();
       ToastService.showErrorToast(
           getTranslated(context, 'cannotConnectToServer'));
     });
+    setState(() => _isLoginButtonTapped = false);
   }
 
   Future<http.Response> _login(String loginCode) async {
