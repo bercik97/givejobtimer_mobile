@@ -17,8 +17,9 @@ import 'package:givejobtimer_mobile/widget/contact_section.dart';
 class ManagerEmployeeProfilePage extends StatefulWidget {
   final User _user;
   final EmployeeDto _employee;
+  final Widget _workInfo;
 
-  ManagerEmployeeProfilePage(this._user, this._employee);
+  ManagerEmployeeProfilePage(this._user, this._employee, this._workInfo);
 
   @override
   _ManagerEmployeeProfilePageState createState() =>
@@ -29,6 +30,7 @@ class _ManagerEmployeeProfilePageState
     extends State<ManagerEmployeeProfilePage> {
   User _user;
   EmployeeDto _employee;
+  Widget _workInfo;
 
   String _today = DateTime.now().toString().substring(0, 10);
 
@@ -36,6 +38,7 @@ class _ManagerEmployeeProfilePageState
   Widget build(BuildContext context) {
     this._user = widget._user;
     this._employee = widget._employee;
+    this._workInfo = widget._workInfo;
     String _employeeInfo = _employee.name + ' ' + _employee.surname;
     return MaterialApp(
       title: APP_NAME,
@@ -90,18 +93,16 @@ class _ManagerEmployeeProfilePageState
                         ' #' +
                         _employee.employeeId.toString()),
                     SizedBox(height: 20),
-                    text22WhiteBold(
+                    textCenter20WhiteBold(
                         getTranslated(context, 'statisticsForToday') +
                             ' $_today'),
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: <Widget>[
-                        text18White(
-                            getTranslated(this.context, 'timeWorkedToday') +
-                                ': '),
-                        text18GreenBold(_employee.timeWorkedToday),
-                      ],
+                    ListTile(
+                      title: textCenter18White(
+                          getTranslated(this.context, 'timeWorkedToday')),
+                      subtitle:
+                          textCenter18GreenBold(_employee.timeWorkedToday),
                     ),
+                    _workInfo,
                   ],
                 )
               ],

@@ -140,7 +140,16 @@ class _EmployeesPageState extends State<EmployeesPage> {
                                                         builder: (context) =>
                                                             ManagerEmployeeProfilePage(
                                                                 _user,
-                                                                employee),
+                                                                employee,
+                                                                _handleWorkStatus(
+                                                                    MainAxisAlignment
+                                                                        .center,
+                                                                    employee
+                                                                        .workStatus,
+                                                                    employee
+                                                                        .workplace,
+                                                                    employee
+                                                                        .workplaceCode)),
                                                       ),
                                                     ),
                                                   },
@@ -179,6 +188,7 @@ class _EmployeesPageState extends State<EmployeesPage> {
                                                   ),
                                                   alignment: Alignment.topLeft),
                                               _handleWorkStatus(
+                                                  MainAxisAlignment.start,
                                                   employee.workStatus,
                                                   employee.workplace,
                                                   employee.workplaceCode),
@@ -215,11 +225,12 @@ class _EmployeesPageState extends State<EmployeesPage> {
     );
   }
 
-  Widget _handleWorkStatus(
-      String workStatus, String workplace, String workplaceCode) {
+  Widget _handleWorkStatus(MainAxisAlignment alignment, String workStatus,
+      String workplace, String workplaceCode) {
     switch (workStatus) {
       case 'Done':
         return _buildWorkStatusRow(
+          alignment,
           iconGreen(Icons.check),
           textGreen(getTranslated(context, 'workIsDoneStatus')),
           textGreen(workplace != null ? workplace : '-'),
@@ -227,6 +238,7 @@ class _EmployeesPageState extends State<EmployeesPage> {
         );
       case 'In progress':
         return _buildWorkStatusRow(
+          alignment,
           iconOrange(Icons.timer),
           textOrange(getTranslated(context, 'workIsInProgress')),
           textOrange(workplace != null ? workplace : '-'),
@@ -234,6 +246,7 @@ class _EmployeesPageState extends State<EmployeesPage> {
         );
       default:
         return _buildWorkStatusRow(
+          alignment,
           iconRed(Icons.remove),
           textRed(getTranslated(context, 'workDoNotStarted')),
           textRed('-'),
@@ -242,33 +255,40 @@ class _EmployeesPageState extends State<EmployeesPage> {
     }
   }
 
-  Widget _buildWorkStatusRow(Icon icon, Widget workStatusWidget,
-      Widget workplaceWidget, Widget workplaceCodeWidget) {
+  Widget _buildWorkStatusRow(
+      MainAxisAlignment alignment,
+      Icon icon,
+      Widget workStatusWidget,
+      Widget workplaceWidget,
+      Widget workplaceCodeWidget) {
     return Align(
-        child: Column(
-          children: [
-            Row(
-              children: <Widget>[
-                textWhite('Status' + ': '),
-                icon,
-                workStatusWidget
-              ],
-            ),
-            Row(
-              children: <Widget>[
-                textWhite(getTranslated(context, 'workplace') + ': '),
-                workplaceWidget
-              ],
-            ),
-            Row(
-              children: <Widget>[
-                textWhite(getTranslated(context, 'workplaceId') + ': '),
-                workplaceCodeWidget
-              ],
-            ),
-          ],
-        ),
-        alignment: Alignment.topLeft);
+      child: Column(
+        children: [
+          Row(
+            mainAxisAlignment: alignment,
+            children: <Widget>[
+              textWhite('Status' + ': '),
+              icon,
+              workStatusWidget
+            ],
+          ),
+          Row(
+            mainAxisAlignment: alignment,
+            children: <Widget>[
+              textWhite(getTranslated(context, 'workplace') + ': '),
+              workplaceWidget
+            ],
+          ),
+          Row(
+            mainAxisAlignment: alignment,
+            children: <Widget>[
+              textWhite(getTranslated(context, 'workplaceId') + ': '),
+              workplaceCodeWidget
+            ],
+          ),
+        ],
+      ),
+    );
   }
 
   Widget _handleEmptyData() {

@@ -49,6 +49,7 @@ Text textCenterWhite(String text) { return Text(text, textAlign: TextAlign.cente
 Text textCenter13White(String text) { return Text(text, textAlign: TextAlign.center, style: TextStyle(fontSize: 13, color: WHITE)); }
 Text textCenter14White(String text) { return Text(text, textAlign: TextAlign.center, style: TextStyle(fontSize: 14, color: WHITE)); }
 Text textCenter16White(String text) { return Text(text, textAlign: TextAlign.center, style: TextStyle(fontSize: 16, color: WHITE)); }
+Text textCenter18White(String text) { return Text(text, textAlign: TextAlign.center, style: TextStyle(fontSize: 18, color: WHITE)); }
 Text textCenter19White(String text) { return Text(text, textAlign: TextAlign.center, style: TextStyle(fontSize: 19, color: WHITE)); }
 Text textCenter20White(String text) { return Text(text, textAlign: TextAlign.center, style: TextStyle(fontSize: 20, color: WHITE)); }
 Text textCenter28White(String text) { return Text(text, textAlign: TextAlign.center, style: TextStyle(fontSize: 28, color: WHITE)); }
@@ -59,6 +60,7 @@ Text textCenter30White(String text) { return Text(text, textAlign: TextAlign.cen
 /*TEXT CENTER WHITE BOLD*/
 /////////////////////////
 Text textCenter18WhiteBold(String text) { return Text(text, textAlign: TextAlign.center, style: TextStyle(fontSize: 18, color: WHITE, fontWeight: FontWeight.bold)); }
+Text textCenter20WhiteBold(String text) { return Text(text, textAlign: TextAlign.center, style: TextStyle(fontSize: 20, color: WHITE, fontWeight: FontWeight.bold)); }
 
 
 /////////////////////
@@ -105,6 +107,7 @@ Text textCenter20Green(String text) { return Text(text, textAlign: TextAlign.cen
 /* TEXT CENTER GREEN BOLD */
 ////////////////////////////
 Text textCenter16GreenBold(String text) { return Text(text, textAlign: TextAlign.center, style: TextStyle(fontSize: 16, color: GREEN, fontWeight: FontWeight.bold)); }
+Text textCenter18GreenBold(String text) { return Text(text, textAlign: TextAlign.center, style: TextStyle(fontSize: 18, color: GREEN, fontWeight: FontWeight.bold)); }
 Text textCenter20GreenBold(String text) { return Text(text, textAlign: TextAlign.center, style: TextStyle(fontSize: 20, color: GREEN, fontWeight: FontWeight.bold)); }
 Text textCenter28GreenBold(String text) { return Text(text, textAlign: TextAlign.center, style: TextStyle(fontSize: 28, color: GREEN, fontWeight: FontWeight.bold)); }
 
