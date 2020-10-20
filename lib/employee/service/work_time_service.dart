@@ -2,10 +2,10 @@ import 'dart:convert';
 import 'dart:io';
 
 import 'package:givejobtimer_mobile/employee/dto/create_work_time_dto.dart';
+import 'package:givejobtimer_mobile/employee/dto/employee_work_time_date_dto.dart';
 import 'package:givejobtimer_mobile/employee/dto/employee_work_time_dto.dart';
 import 'package:givejobtimer_mobile/employee/dto/finish_work_time_dto.dart';
 import 'package:givejobtimer_mobile/employee/dto/is_currently_at_work_with_work_times_dto.dart';
-import 'package:givejobtimer_mobile/employee/dto/work_time_dto.dart';
 import 'package:givejobtimer_mobile/manager/dto/employee_dates_dto.dart';
 import 'package:givejobtimer_mobile/shared/constants.dart';
 import 'package:http/http.dart';
@@ -41,14 +41,14 @@ class WorkTimeService {
     }
   }
 
-  Future<List<WorkTimeDto>> findAllByEmployeeIdAndDate(
+  Future<List<EmployeeWorkTimeDateDto>> findAllByEmployeeIdAndDateIn(
       int employeeId, String date) async {
     String url = _url + '/$employeeId/$date';
     Response res =
         await get(url, headers: {HttpHeaders.authorizationHeader: authHeader});
     if (res.statusCode == 200) {
       return (json.decode(res.body) as List)
-          .map((data) => WorkTimeDto.fromJson(data))
+          .map((data) => EmployeeWorkTimeDateDto.fromJson(data))
           .toList();
     } else {
       return Future.error(res.body);

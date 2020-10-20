@@ -162,7 +162,7 @@ class _EmployeeDatesPageState extends State<EmployeeDatesPage> {
                                                       _employee.name +
                                                           ' ' +
                                                           _employee.surname,
-                                                      employeeDates.year);
+                                                      employeeDates);
                                                 },
                                               ),
                                             ),

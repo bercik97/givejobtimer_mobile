@@ -67,7 +67,8 @@ class _WorkplaceDatesPageState extends State<WorkplaceDatesPage> {
       debugShowCheckedModeBanner: false,
       home: Scaffold(
         backgroundColor: DARK,
-        appBar: appBar(context, _user, 'Workplace id: ' + _workplace.id),
+        appBar: appBar(context, _user,
+            getTranslated(context, 'workplace') + ': ' + _workplace.id),
         drawer: managerSideBar(context, _user),
         body: Column(
           children: <Widget>[
