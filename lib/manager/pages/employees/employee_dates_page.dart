@@ -93,7 +93,7 @@ class _EmployeeDatesPageState extends State<EmployeeDatesPage> {
                   setState(
                     () {
                       _filteredEmployeeDates = _employeeDates
-                          .where((e) => ((e.date + ' ' + e.totalDateTime)
+                          .where((e) => ((e.year + ' ' + e.totalDateTime)
                               .toLowerCase()
                               .contains(string.toLowerCase())))
                           .toList();
@@ -127,7 +127,10 @@ class _EmployeeDatesPageState extends State<EmployeeDatesPage> {
                                       children: <Widget>[
                                         ListTile(
                                           title: text20WhiteBold(
-                                              employeeDates.date),
+                                              employeeDates.year +
+                                                  ' ' +
+                                                  getTranslated(this.context,
+                                                      employeeDates.month)),
                                           subtitle: Column(
                                             children: <Widget>[
                                               Align(
@@ -159,7 +162,7 @@ class _EmployeeDatesPageState extends State<EmployeeDatesPage> {
                                                       _employee.name +
                                                           ' ' +
                                                           _employee.surname,
-                                                      employeeDates.date);
+                                                      employeeDates.year);
                                                 },
                                               ),
                                             ),

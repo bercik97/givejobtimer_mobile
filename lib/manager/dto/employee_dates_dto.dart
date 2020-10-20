@@ -1,17 +1,20 @@
 import 'package:flutter/cupertino.dart';
 
 class EmployeeDatesDto {
-  final String date;
+  final String year;
+  final String month;
   final String totalDateTime;
 
   EmployeeDatesDto({
-    @required this.date,
+    @required this.year,
+    @required this.month,
     @required this.totalDateTime,
   });
 
   factory EmployeeDatesDto.fromJson(Map<String, dynamic> json) {
     return EmployeeDatesDto(
-      date: json['date'] as String,
+      year: json['year'] as String,
+      month: json['month'] as String,
       totalDateTime: json['totalDateTime'] as String,
     );
   }
