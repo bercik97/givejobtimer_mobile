@@ -1,7 +1,7 @@
 name: givejobtimer_mobile
 description: GiveJobTimer
 
-version: 1.0.0+1
+version: 1.0.0
 
 environment:
   sdk: ">=2.2.2 <3.0.0"
@@ -55,6 +55,7 @@ flutter:
     - lib/internationalization/lang/ru.json
     - lib/internationalization/lang/uk.json
     - images/logo.png
+    - images/plumko-logo.png
     - images/givejob-medica-logo.png
     - images/facebook-logo.png
     - images/instagram-logo.png

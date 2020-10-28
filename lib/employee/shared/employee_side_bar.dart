@@ -1,5 +1,4 @@
 import 'package:flutter/cupertino.dart';
-import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:givejobtimer_mobile/employee/employee_page.dart';
 import 'package:givejobtimer_mobile/internationalization/localization/localization_constants.dart';
@@ -10,7 +9,6 @@ import 'package:givejobtimer_mobile/shared/icons.dart';
 import 'package:givejobtimer_mobile/shared/logout.dart';
 import 'package:givejobtimer_mobile/shared/model/user.dart';
 import 'package:givejobtimer_mobile/shared/texts.dart';
-import 'package:givejobtimer_mobile/shared/url_util.dart';
 import 'package:open_appstore/open_appstore.dart';
 
 Drawer employeeSideBar(BuildContext context, User user) {
@@ -45,23 +43,7 @@ Drawer employeeSideBar(BuildContext context, User user) {
                           fit: BoxFit.fill),
                     ),
                   ),
-                  RichText(
-                    text: TextSpan(
-                      children: [
-                        TextSpan(
-                          text: 'www.givejob.pl',
-                          style: TextStyle(
-                              fontSize: 22,
-                              color: DARK,
-                              fontWeight: FontWeight.bold,
-                              decoration: TextDecoration.underline),
-                          recognizer: TapGestureRecognizer()
-                            ..onTap = () async => UrlUtil.launchURL(
-                                context, 'https://www.givejob.pl'),
-                        ),
-                      ],
-                    ),
-                  ),
+                  text25Dark(APP_NAME),
                 ],
               ),
             ),

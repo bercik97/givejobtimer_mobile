@@ -160,5 +160,6 @@
   "november": "ნოემბერი",
   "december": "დეკემბერი",
   "cannotDeleteWorkplaceWhenSomeoneWorkingThere": "თქვენ ვერ წაშლით შერჩეულ სამუშაო ადგილებს, რადგან ზოგიერთი თანამშრომელი ამჟამად მუშაობს კოდში, რომლის წაშლაც გსურთ.",
-  "workTimeForToday": "დღევანდელი სამუშაო დრო"
+  "workTimeForToday": "დღევანდელი სამუშაო დრო",
+  "graphics": "გრაფიკა"
 }

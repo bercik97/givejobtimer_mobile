@@ -125,14 +125,17 @@ class _SettingsPageState extends State<SettingsPage> {
                 margin: EdgeInsets.only(left: 25),
                 alignment: Alignment.centerLeft,
                 height: 30,
-                child: text13White(
-                    getTranslated(context, 'version') + ': 1.0')),
+                child:
+                    text13White(getTranslated(context, 'version') + ': 1.0.0')),
+            _titleContainer(getTranslated(context, 'graphics')),
+            _socialMediaInkWell('https://plumko.business.site/ ', 'Plumko',
+                'images/plumko-logo.png'),
             _titleContainer(getTranslated(context, 'followUs')),
             SizedBox(height: 5.0),
             _socialMediaInkWell(
                 'https://www.givejob.pl', 'GiveJob', 'images/logo.png'),
-            _socialMediaInkWell(
-                'https://www.medica.givejob.pl', 'GiveJob Medica', 'images/givejob-medica-logo.png'),
+            _socialMediaInkWell('https://www.medica.givejob.pl',
+                'GiveJob Medica', 'images/givejob-medica-logo.png'),
             _socialMediaInkWell('https://www.facebook.com/givejobb', 'Facebook',
                 'images/facebook-logo.png'),
             _socialMediaInkWell('https://www.instagram.com/give_job',
