@@ -23,13 +23,13 @@ Widget buildContactSection(
       mainAxisAlignment: MainAxisAlignment.center,
       crossAxisAlignment: CrossAxisAlignment.center,
       children: <Widget>[
-        phone != null
+        phone != null && phone != ''
             ? _buildPhoneNumber(context, phone)
             : _buildEmptyListTile(context, 'phone'),
-        viber != null
+        viber != null && viber != ''
             ? _buildViber(context, viber)
             : _buildEmptyListTile(context, 'viber'),
-        whatsApp != null
+        whatsApp != null && whatsApp != ''
             ? _buildWhatsApp(context, whatsApp)
             : _buildEmptyListTile(context, 'whatsApp'),
       ],
