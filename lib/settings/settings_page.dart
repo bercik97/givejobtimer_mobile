@@ -126,7 +126,7 @@ class _SettingsPageState extends State<SettingsPage> {
                 alignment: Alignment.centerLeft,
                 height: 30,
                 child:
-                    text13White(getTranslated(context, 'version') + ': 1.0.0')),
+                    text13White(getTranslated(context, 'version') + ': 1.0.2')),
             _titleContainer(getTranslated(context, 'graphics')),
             _socialMediaInkWell('https://plumko.business.site/ ', 'Plumko',
                 'images/plumko-logo.png'),
