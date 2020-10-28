@@ -161,5 +161,9 @@
   "december": "December",
   "cannotDeleteWorkplaceWhenSomeoneWorkingThere": "You cannot delete selected workplaces because some employees are currently working in places with the code you want to delete.",
   "workTimeForToday": "Today's working time",
-  "graphics": "GRAPHICS"
+  "graphics": "GRAPHICS",
+  "edit": "Edit",
+  "informationAboutYou": "Information about you",
+  "update": "Update",
+  "successfullyUpdatedInformationAboutYou": "Successfully updated information about you"
 }

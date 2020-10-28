@@ -1,3 +1,5 @@
+import 'package:givejobtimer_mobile/shared/dto/update_user_dto.dart';
+
 class User {
   String id;
   String managerId;
@@ -32,5 +34,14 @@ class User {
     managerWhatsApp = data['managerWhatsApp'];
     authHeader = data['authorization'];
     return this;
+  }
+
+  void update(UpdateUserDto dto) {
+    name = dto.name;
+    surname = dto.surname;
+    nationality = dto.nationality;
+    phone = dto.phone;
+    viber = dto.viber;
+    whatsApp = dto.whatsApp;
   }
 }

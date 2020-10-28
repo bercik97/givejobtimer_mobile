@@ -10,8 +10,10 @@ import 'package:givejobtimer_mobile/manager/shared/manager_side_bar.dart';
 import 'package:givejobtimer_mobile/shared/app_bar.dart';
 import 'package:givejobtimer_mobile/shared/colors.dart';
 import 'package:givejobtimer_mobile/shared/constants.dart';
+import 'package:givejobtimer_mobile/shared/icons.dart';
 import 'package:givejobtimer_mobile/shared/logout.dart';
 import 'package:givejobtimer_mobile/shared/model/user.dart';
+import 'package:givejobtimer_mobile/shared/page/edit_user.dart';
 import 'package:givejobtimer_mobile/shared/texts.dart';
 
 class ManagerPage extends StatefulWidget {
@@ -43,14 +45,31 @@ class _ManagerPageState extends State<ManagerPage> {
             child: Center(
               child: Column(
                 children: <Widget>[
-                  Container(
-                    width: 120,
-                    height: 120,
-                    decoration: BoxDecoration(
-                      shape: BoxShape.circle,
-                      image: DecorationImage(
-                          image: AssetImage('images/big-manager-icon.png')),
-                    ),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Container(
+                        width: 120,
+                        height: 120,
+                        decoration: BoxDecoration(
+                          shape: BoxShape.circle,
+                          image: DecorationImage(
+                              image: AssetImage('images/big-manager-icon.png')),
+                        ),
+                      ),
+                      Ink(
+                        decoration: ShapeDecoration(
+                            color: GREEN, shape: CircleBorder()),
+                        child: IconButton(
+                          icon: iconDark(Icons.border_color),
+                          onPressed: () => Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                                builder: (context) => EditUserPage(_user)),
+                          ),
+                        ),
+                      ),
+                    ],
                   ),
                   Column(
                     children: <Widget>[

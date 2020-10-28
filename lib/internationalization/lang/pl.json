@@ -161,5 +161,9 @@
   "december": "Grudzień",
   "cannotDeleteWorkplaceWhenSomeoneWorkingThere": "Nie można usunąć wybranych miejsc pracy ponieważ niektórzy pracownicy aktualnie pracują w miejscach o kodach, które chcesz usunac.",
   "workTimeForToday": "Dzisiejszy czas pracy",
-  "graphics": "GRAFIKA"
+  "graphics": "GRAFIKA",
+  "edit": "Edycja",
+  "informationAboutYou": "Informacje o Tobie",
+  "update": "Zaktualizuj",
+  "successfullyUpdatedInformationAboutYou": "Pomyślnie zaktualizowano informacje o Tobie"
 }

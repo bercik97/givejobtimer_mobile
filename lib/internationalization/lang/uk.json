@@ -161,5 +161,9 @@
   "december": "Грудень",
   "cannotDeleteWorkplaceWhenSomeoneWorkingThere": "Ви не можете видалити вибрані робочі місця, оскільки деякі працівники зараз працюють там, де є код, який ви хочете видалити.",
   "workTimeForToday": "Сьогоднішній робочий час",
-  "graphics": "ГРАФІКА"
+  "graphics": "ГРАФІКА",
+  "edit": "Редагувати",
+  "informationAboutYou": "Інформація про вас",
+  "update": "Оновити",
+  "successfullyUpdatedInformationAboutYou": "Успішно оновлена інформація про вас"
 }
