@@ -4,10 +4,11 @@ import 'dart:convert';
 import 'package:bouncing_widget/bouncing_widget.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:givejobtimer_mobile/api/shared/service_initializer.dart';
+import 'package:givejobtimer_mobile/api/workplace/dto/create_workplace_dto.dart';
+import 'package:givejobtimer_mobile/api/workplace/dto/workplace_dto.dart';
+import 'package:givejobtimer_mobile/api/workplace/service/workplace_service.dart';
 import 'package:givejobtimer_mobile/internationalization/localization/localization_constants.dart';
-import 'package:givejobtimer_mobile/manager/dto/create_workplace_dto.dart';
-import 'package:givejobtimer_mobile/manager/dto/update_workplace_dto.dart';
-import 'package:givejobtimer_mobile/manager/dto/workplace_dto.dart';
 import 'package:givejobtimer_mobile/manager/pages/workplace/workplace_dates_page.dart';
 import 'package:givejobtimer_mobile/manager/shared/manager_side_bar.dart';
 import 'package:givejobtimer_mobile/shared/app_bar.dart';
@@ -16,7 +17,6 @@ import 'package:givejobtimer_mobile/shared/constants.dart';
 import 'package:givejobtimer_mobile/shared/icons.dart';
 import 'package:givejobtimer_mobile/shared/loader_container.dart';
 import 'package:givejobtimer_mobile/shared/model/user.dart';
-import 'package:givejobtimer_mobile/shared/service/workplace_service.dart';
 import 'package:givejobtimer_mobile/shared/texts.dart';
 import 'package:givejobtimer_mobile/shared/toastr.dart';
 import 'package:givejobtimer_mobile/shared/validator.dart';
@@ -50,7 +50,8 @@ class _WorkplacePageState extends State<WorkplacePage> {
   @override
   void initState() {
     this._user = widget._user;
-    this._workplaceService = new WorkplaceService(_user.authHeader);
+    this._workplaceService =
+        ServiceInitializer.initialize(_user.authHeader, WorkplaceService);
     super.initState();
     _loading = true;
     _workplaceService.findAllByManagerId(_user.managerId).then((res) {
@@ -507,7 +508,8 @@ class _WorkplacePageState extends State<WorkplacePage> {
                 children: <Widget>[
                   Padding(
                       padding: EdgeInsets.only(top: 50),
-                      child: text20GreenBold('Edit workplace')),
+                      child: text20GreenBold(
+                          getTranslated(context, 'editWorkplace'))),
                   SizedBox(height: 20),
                   Padding(
                     padding: EdgeInsets.only(left: 25, right: 25),
@@ -569,16 +571,15 @@ class _WorkplacePageState extends State<WorkplacePage> {
                             ToastService.showErrorToast(invalidMessage);
                             return;
                           }
-                          UpdateWorkplaceDto dto = new UpdateWorkplaceDto(
-                              id: int.parse(workplace.id), name: name);
-                          _workplaceService.update(dto).then((res) {
+                          _workplaceService
+                              .update(workplace.id, {'name': name}).then((res) {
                             Navigator.pop(context);
                             _refresh();
-                            ToastService.showSuccessToast(
-                                'Workplace updated successfully' +
-                                    ' (' +
-                                    workplace.id +
-                                    ')');
+                            ToastService.showSuccessToast(getTranslated(
+                                    context, 'successfullyUpdatedWorkplace') +
+                                ' (' +
+                                workplace.id +
+                                ')');
                           }).catchError((onError) {
                             ToastService.showErrorToast(
                                 getTranslated(context, 'smthWentWrong'));

@@ -165,5 +165,7 @@
   "edit": "Edit",
   "informationAboutYou": "Information about you",
   "update": "Update",
-  "successfullyUpdatedInformationAboutYou": "Successfully updated information about you"
+  "successfullyUpdatedInformationAboutYou": "Successfully updated information about you",
+  "successfullyUpdatedWorkplace": "Workplace updated successfully",
+  "editWorkplace": "Edit workplace"
 }

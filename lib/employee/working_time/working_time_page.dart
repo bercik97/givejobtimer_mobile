@@ -1,10 +1,11 @@
 import 'package:bouncing_widget/bouncing_widget.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:givejobtimer_mobile/employee/dto/create_work_time_dto.dart';
-import 'package:givejobtimer_mobile/employee/dto/finish_work_time_dto.dart';
-import 'package:givejobtimer_mobile/employee/dto/is_currently_at_work_with_work_times_dto.dart';
-import 'package:givejobtimer_mobile/employee/service/work_time_service.dart';
+import 'package:givejobtimer_mobile/api/shared/service_initializer.dart';
+import 'package:givejobtimer_mobile/api/work_time/dto/create_work_time_dto.dart';
+import 'package:givejobtimer_mobile/api/work_time/dto/is_currently_at_work_with_work_times_dto.dart';
+import 'package:givejobtimer_mobile/api/work_time/service/work_time_service.dart';
+import 'package:givejobtimer_mobile/api/workplace/service/workplace_service.dart';
 import 'package:givejobtimer_mobile/employee/shared/employee_side_bar.dart';
 import 'package:givejobtimer_mobile/internationalization/localization/localization_constants.dart';
 import 'package:givejobtimer_mobile/shared/app_bar.dart';
@@ -12,7 +13,6 @@ import 'package:givejobtimer_mobile/shared/colors.dart';
 import 'package:givejobtimer_mobile/shared/constants.dart';
 import 'package:givejobtimer_mobile/shared/icons.dart';
 import 'package:givejobtimer_mobile/shared/model/user.dart';
-import 'package:givejobtimer_mobile/shared/service/workplace_service.dart';
 import 'package:givejobtimer_mobile/shared/texts.dart';
 import 'package:givejobtimer_mobile/widget/circular_progress_indicator.dart';
 import 'package:pin_code_text_field/pin_code_text_field.dart';
@@ -41,8 +41,10 @@ class _WorkingTimePageState extends State<WorkingTimePage> {
   @override
   Widget build(BuildContext context) {
     this._user = widget._user;
-    _workplaceService = new WorkplaceService(_user.authHeader);
-    _workTimeService = new WorkTimeService(_user.authHeader);
+    this._workplaceService =
+        ServiceInitializer.initialize(_user.authHeader, WorkplaceService);
+    _workTimeService =
+        ServiceInitializer.initialize(_user.authHeader, WorkTimeService);
     return MaterialApp(
       title: APP_NAME,
       theme: ThemeData(primarySwatch: MaterialColor(0xffFFFFFF, WHITE_RGBO)),
@@ -169,9 +171,7 @@ class _WorkingTimePageState extends State<WorkingTimePage> {
 
   _finishWork() {
     setState(() => _isPauseButtonTapped = !_isPauseButtonTapped);
-    FinishWorkTimeDto dto =
-        new FinishWorkTimeDto(id: _dto.notFinishedWorkTimeId);
-    _workTimeService.finish(dto).then(
+    _workTimeService.finish(_dto.notFinishedWorkTimeId).then(
           (res) => {
             _refresh(),
             Navigator.pop(context),

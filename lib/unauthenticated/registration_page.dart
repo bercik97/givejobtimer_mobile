@@ -3,15 +3,15 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:form_field_validator/form_field_validator.dart';
+import 'package:givejobtimer_mobile/api/user/service/user_service.dart';
 import 'package:givejobtimer_mobile/internationalization/localization/localization_constants.dart';
 import 'package:givejobtimer_mobile/internationalization/util/language_util.dart';
 import 'package:givejobtimer_mobile/settings/documents_page.dart';
 import 'package:givejobtimer_mobile/shared/colors.dart';
 import 'package:givejobtimer_mobile/shared/icons.dart';
 import 'package:givejobtimer_mobile/shared/texts.dart';
-import 'package:givejobtimer_mobile/unauthenticated/service/register_service.dart';
 
-import 'dto/create_user_dto.dart';
+import '../api/user/dto/create_user_dto.dart';
 import 'login_page.dart';
 
 class RegisterPage extends StatefulWidget {
@@ -26,7 +26,7 @@ class RegisterPage extends StatefulWidget {
 
 class _RegisterPageState extends State<RegisterPage> {
   CreateUserDto dto;
-  RegisterService _registerService = RegisterService();
+  UserService _userService = UserService({});
   GlobalKey<FormState> formKey = GlobalKey<FormState>();
   final TextEditingController _nameController = TextEditingController();
   final TextEditingController _surnameController = TextEditingController();
@@ -404,7 +404,7 @@ class _RegisterPageState extends State<RegisterPage> {
                     whatsApp: _whatsAppController.text,
                     tokenId: widget._tokenId,
                     role: widget._role),
-                _registerService.registerUser(dto).then((res) {
+                _userService.create(dto).then((res) {
                   _showSuccessDialog(res);
                 }).catchError((onError) {
                   _errorDialog(

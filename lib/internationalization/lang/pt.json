@@ -165,5 +165,7 @@
   "edit": "რედაქტირება",
   "informationAboutYou": "ინფორმაცია შენ შესახებ",
   "update": "განახლება",
-  "successfullyUpdatedInformationAboutYou": "წარმატებით განახლდა ინფორმაცია თქვენს შესახებ"
+  "successfullyUpdatedInformationAboutYou": "წარმატებით განახლდა ინფორმაცია თქვენს შესახებ",
+  "successfullyUpdatedWorkplace": "სამუშაო ადგილი წარმატებით განახლდა",
+  "editWorkplace": "სამუშაო ადგილის რედაქტირება"
 }

@@ -146,7 +146,7 @@
   "selectedWorkTimesRemoved": "Wybrane czasy pracy usunięte!",
   "deleteSelectedWorkTimes": "Usuń wybrane czasy pracy",
   "noMonthsWorked": "Brak przepracowanych miesięcy",
-  "noDaysWorkedInCurrentWorkplace": "Wybrane miejsce pracy nie posFiada przepracowanych czasów",
+  "noDaysWorkedInCurrentWorkplace": "Wybrane miejsce pracy nie posiada przepracowanych czasów",
   "january": "Styczeń",
   "february": "Luty",
   "march": "Marzec",
@@ -165,5 +165,7 @@
   "edit": "Edycja",
   "informationAboutYou": "Informacje o Tobie",
   "update": "Zaktualizuj",
-  "successfullyUpdatedInformationAboutYou": "Pomyślnie zaktualizowano informacje o Tobie"
+  "successfullyUpdatedInformationAboutYou": "Pomyślnie zaktualizowano informacje o Tobie",
+  "successfullyUpdatedWorkplace": "Pomyślnie zaktualizowano miejsce pracy",
+  "editWorkplace": "Edytuj miejsce pracy"
 }

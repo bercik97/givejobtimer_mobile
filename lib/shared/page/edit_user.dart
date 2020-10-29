@@ -3,13 +3,13 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:form_field_validator/form_field_validator.dart';
+import 'package:givejobtimer_mobile/api/shared/service_initializer.dart';
+import 'package:givejobtimer_mobile/api/user/service/user_service.dart';
 import 'package:givejobtimer_mobile/employee/shared/employee_side_bar.dart';
 import 'package:givejobtimer_mobile/internationalization/localization/localization_constants.dart';
 import 'package:givejobtimer_mobile/internationalization/util/language_util.dart';
 import 'package:givejobtimer_mobile/manager/shared/manager_side_bar.dart';
-import 'package:givejobtimer_mobile/shared/dto/update_user_dto.dart';
 import 'package:givejobtimer_mobile/shared/model/user.dart';
-import 'package:givejobtimer_mobile/shared/service/user_service.dart';
 import 'package:givejobtimer_mobile/shared/toastr.dart';
 
 import '../app_bar.dart';
@@ -30,7 +30,7 @@ class EditUserPage extends StatefulWidget {
 class _EditUserPageState extends State<EditUserPage> {
   User _user;
 
-  UpdateUserDto dto;
+  Map<String, Object> _fieldsValues;
   UserService _userService;
 
   GlobalKey<FormState> formKey = GlobalKey<FormState>();
@@ -46,7 +46,9 @@ class _EditUserPageState extends State<EditUserPage> {
   void initState() {
     super.initState();
     this._user = widget._user;
-    this._userService = new UserService(_user.authHeader);
+    this._fieldsValues = new Map();
+    this._userService =
+        ServiceInitializer.initialize(_user.authHeader, UserService);
     this._nameController.text = _user.name;
     this._surnameController.text = _user.surname;
     this._phoneController.text = _user.phone;
@@ -289,15 +291,26 @@ class _EditUserPageState extends State<EditUserPage> {
               }
             else
               {
-                dto = new UpdateUserDto(
-                    name: _nameController.text,
-                    surname: _surnameController.text,
-                    nationality: _nationality,
-                    phone: _phoneController.text,
-                    viber: _viberController.text,
-                    whatsApp: _whatsAppController.text),
-                _userService.update(_user.id, dto).then((res) {
-                  _user.update(dto);
+                _fieldsValues = {
+                  "name": _nameController.text,
+                  "surname": _surnameController.text,
+                  "nationality": _nationality,
+                  "phone": _phoneController.text,
+                  "viber": _viberController.text,
+                  "whatsApp": _whatsAppController.text,
+                },
+                _userService.update(
+                  _user.id,
+                  {
+                    "name": _nameController.text,
+                    "surname": _surnameController.text,
+                    "nationality": _nationality,
+                    "phone": _phoneController.text,
+                    "viber": _viberController.text,
+                    "whatsApp": _whatsAppController.text,
+                  },
+                ).then((res) {
+                  _user.update(_fieldsValues);
                   ToastService.showSuccessToast(getTranslated(
                       context, 'successfullyUpdatedInformationAboutYou'));
                 }).catchError((onError) {

@@ -1,9 +1,10 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:givejobtimer_mobile/employee/service/work_time_service.dart';
+import 'package:givejobtimer_mobile/api/shared/service_initializer.dart';
+import 'package:givejobtimer_mobile/api/work_time/service/work_time_service.dart';
 import 'package:givejobtimer_mobile/internationalization/localization/localization_constants.dart';
-import 'package:givejobtimer_mobile/manager/dto/employee_dates_dto.dart';
-import 'package:givejobtimer_mobile/manager/dto/employee_dto.dart';
+import 'package:givejobtimer_mobile/api/work_time/dto/work_time_dates_dto.dart';
+import 'package:givejobtimer_mobile/api/employee/dto/employee_dto.dart';
 import 'package:givejobtimer_mobile/manager/shared/manager_side_bar.dart';
 import 'package:givejobtimer_mobile/manager/shared/navigate_button.dart';
 import 'package:givejobtimer_mobile/shared/app_bar.dart';
@@ -32,15 +33,16 @@ class _EmployeeDatesPageState extends State<EmployeeDatesPage> {
   User _user;
   EmployeeDto _employee;
 
-  List<EmployeeDatesDto> _employeeDates = new List();
-  List<EmployeeDatesDto> _filteredEmployeeDates = new List();
+  List<WorkTimeDatesDto> _employeeDates = new List();
+  List<WorkTimeDatesDto> _filteredEmployeeDates = new List();
   bool _loading = false;
 
   @override
   void initState() {
     this._user = widget._user;
     this._employee = widget._employee;
-    this._workTimeService = new WorkTimeService(_user.authHeader);
+    this._workTimeService =
+        ServiceInitializer.initialize(_user.authHeader, WorkTimeService);
     super.initState();
     _loading = true;
     _workTimeService
@@ -111,7 +113,7 @@ class _EmployeeDatesPageState extends State<EmployeeDatesPage> {
                       child: ListView.builder(
                         itemCount: _filteredEmployeeDates.length,
                         itemBuilder: (BuildContext context, int index) {
-                          EmployeeDatesDto employeeDates =
+                          WorkTimeDatesDto employeeDates =
                               _filteredEmployeeDates[index];
                           return Card(
                             color: DARK,

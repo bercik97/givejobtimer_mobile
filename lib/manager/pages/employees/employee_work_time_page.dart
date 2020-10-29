@@ -1,10 +1,11 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:givejobtimer_mobile/employee/dto/employee_work_time_date_dto.dart';
-import 'package:givejobtimer_mobile/employee/service/work_time_service.dart';
+import 'package:givejobtimer_mobile/api/shared/service_initializer.dart';
+import 'package:givejobtimer_mobile/api/work_time/dto/work_time_employee_date_dto.dart';
+import 'package:givejobtimer_mobile/api/work_time/service/work_time_service.dart';
 import 'package:givejobtimer_mobile/employee/shared/employee_side_bar.dart';
 import 'package:givejobtimer_mobile/internationalization/localization/localization_constants.dart';
-import 'package:givejobtimer_mobile/manager/dto/employee_dates_dto.dart';
+import 'package:givejobtimer_mobile/api/work_time/dto/work_time_dates_dto.dart';
 import 'package:givejobtimer_mobile/manager/shared/manager_side_bar.dart';
 import 'package:givejobtimer_mobile/shared/app_bar.dart';
 import 'package:givejobtimer_mobile/shared/colors.dart';
@@ -19,7 +20,7 @@ class EmployeeWorkTimePage extends StatefulWidget {
   final User _user;
   final int _employeeId;
   final String _employeeInfo;
-  final EmployeeDatesDto _dto;
+  final WorkTimeDatesDto _dto;
 
   EmployeeWorkTimePage(
       this._user, this._employeeId, this._employeeInfo, this._dto);
@@ -32,12 +33,12 @@ class _EmployeeWorkTimePageState extends State<EmployeeWorkTimePage> {
   User _user;
   int _employeeId;
   String _employeeInfo;
-  EmployeeDatesDto _employeeDates;
+  WorkTimeDatesDto _employeeDates;
   WorkTimeService _workTimeService;
 
   String _date;
 
-  List<EmployeeWorkTimeDateDto> _workTimes = new List();
+  List<WorkTimeDateEmployeeDto> _workTimes = new List();
   Set<int> selectedIds = new Set();
 
   @override
@@ -46,7 +47,8 @@ class _EmployeeWorkTimePageState extends State<EmployeeWorkTimePage> {
     this._employeeId = widget._employeeId;
     this._employeeInfo = widget._employeeInfo;
     this._employeeDates = widget._dto;
-    _workTimeService = new WorkTimeService(_user.authHeader);
+    this._workTimeService =
+        ServiceInitializer.initialize(_user.authHeader, WorkTimeService);
     _date = _employeeDates.year + ' ' + _employeeDates.month;
     if (_workTimes.isEmpty) {
       return MaterialApp(
@@ -62,7 +64,7 @@ class _EmployeeWorkTimePageState extends State<EmployeeWorkTimePage> {
               future: _workTimeService.findAllByEmployeeIdAndDateIn(
                   _employeeId, _date),
               builder: (BuildContext context,
-                  AsyncSnapshot<List<EmployeeWorkTimeDateDto>> snapshot) {
+                  AsyncSnapshot<List<WorkTimeDateEmployeeDto>> snapshot) {
                 if (snapshot.connectionState == ConnectionState.waiting ||
                     snapshot.data == null) {
                   return Padding(

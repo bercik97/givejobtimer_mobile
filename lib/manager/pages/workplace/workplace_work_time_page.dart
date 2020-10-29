@@ -1,11 +1,11 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:givejobtimer_mobile/employee/dto/employee_work_time_dto.dart';
-import 'package:givejobtimer_mobile/employee/service/work_time_service.dart';
-import 'package:givejobtimer_mobile/employee/shared/employee_side_bar.dart';
+import 'package:givejobtimer_mobile/api/shared/service_initializer.dart';
+import 'package:givejobtimer_mobile/api/work_time/service/work_time_service.dart';
+import 'package:givejobtimer_mobile/api/work_time/dto/work_time_employee_dto.dart';
 import 'package:givejobtimer_mobile/internationalization/localization/localization_constants.dart';
-import 'package:givejobtimer_mobile/manager/dto/work_place_dates_dto.dart';
-import 'package:givejobtimer_mobile/manager/dto/workplace_dto.dart';
+import 'package:givejobtimer_mobile/api/workplace/dto/workplace_dates_dto.dart';
+import 'package:givejobtimer_mobile/api/workplace/dto/workplace_dto.dart';
 import 'package:givejobtimer_mobile/manager/shared/manager_side_bar.dart';
 import 'package:givejobtimer_mobile/manager/shared/navigate_button.dart';
 import 'package:givejobtimer_mobile/shared/app_bar.dart';
@@ -33,14 +33,15 @@ class _WorkplaceWorkTimePageState extends State<WorkplaceWorkTimePage> {
 
   WorkTimeService _workTimeService;
 
-  List<EmployeeWorkTimeDto> _workTimes = new List();
+  List<WorkTimeEmployeeDto> _workTimes = new List();
 
   @override
   Widget build(BuildContext context) {
     this._user = widget._user;
     this._workplace = widget._workplace;
     this._workplaceDto = widget._workplaceDto;
-    _workTimeService = new WorkTimeService(_user.authHeader);
+    this._workTimeService =
+        ServiceInitializer.initialize(_user.authHeader, WorkTimeService);
     return MaterialApp(
       title: APP_NAME,
       theme: ThemeData(primarySwatch: MaterialColor(0xffFFFFFF, WHITE_RGBO)),
@@ -82,7 +83,7 @@ class _WorkplaceWorkTimePageState extends State<WorkplaceWorkTimePage> {
                 future: _workTimeService
                     .findAllDatesWithTotalTimeByWorkplaceId(_workplaceDto.id),
                 builder: (BuildContext context,
-                    AsyncSnapshot<List<EmployeeWorkTimeDto>> snapshot) {
+                    AsyncSnapshot<List<WorkTimeEmployeeDto>> snapshot) {
                   if (snapshot.connectionState == ConnectionState.waiting ||
                       snapshot.data == null) {
                     return Padding(

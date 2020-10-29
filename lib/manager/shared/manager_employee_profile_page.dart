@@ -2,9 +2,9 @@ import 'dart:convert';
 
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:givejobtimer_mobile/api/employee/dto/employee_dto.dart';
 import 'package:givejobtimer_mobile/internationalization/localization/localization_constants.dart';
 import 'package:givejobtimer_mobile/internationalization/util/language_util.dart';
-import 'package:givejobtimer_mobile/manager/dto/employee_dto.dart';
 import 'package:givejobtimer_mobile/manager/shared/manager_side_bar.dart';
 import 'package:givejobtimer_mobile/shared/app_bar.dart';
 import 'package:givejobtimer_mobile/shared/colors.dart';
@@ -87,12 +87,12 @@ class _ManagerEmployeeProfilePageState
                         LanguageUtil.findFlagByNationality(
                             _employee.nationality)),
                     SizedBox(height: 2.5),
-                    text18White(getTranslated(context, 'employee') +
+                    text18White(getTranslated(this.context, 'employee') +
                         ' #' +
                         _employee.employeeId.toString()),
                     SizedBox(height: 20),
                     textCenter20WhiteBold(
-                        getTranslated(context, 'statisticsForToday')),
+                        getTranslated(this.context, 'statisticsForToday')),
                     ListTile(
                       title: textCenter18White(
                           getTranslated(this.context, 'timeWorkedToday')),

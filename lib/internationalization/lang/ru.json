@@ -165,5 +165,7 @@
   "edit": "Редактировать",
   "informationAboutYou": "Информация о вас",
   "update": "Обновить",
-  "successfullyUpdatedInformationAboutYou": "Информация о вас успешно обновлена"
+  "successfullyUpdatedInformationAboutYou": "Информация о вас успешно обновлена",
+  "successfullyUpdatedWorkplace": "Рабочее место успешно обновлено",
+  "editWorkplace": "Редактировать рабочее место"
 }

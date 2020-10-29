@@ -3,11 +3,12 @@ import 'dart:convert';
 import 'package:bouncing_widget/bouncing_widget.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:givejobtimer_mobile/api/employee/dto/employee_dto.dart';
+import 'package:givejobtimer_mobile/api/employee/service/employee_service.dart';
+import 'package:givejobtimer_mobile/api/shared/service_initializer.dart';
 import 'package:givejobtimer_mobile/internationalization/localization/localization_constants.dart';
 import 'package:givejobtimer_mobile/internationalization/util/language_util.dart';
-import 'package:givejobtimer_mobile/manager/dto/employee_dto.dart';
 import 'package:givejobtimer_mobile/manager/pages/employees/employee_dates_page.dart';
-import 'package:givejobtimer_mobile/manager/service/manager_service.dart';
 import 'package:givejobtimer_mobile/manager/shared/manager_employee_profile_page.dart';
 import 'package:givejobtimer_mobile/manager/shared/manager_side_bar.dart';
 import 'package:givejobtimer_mobile/manager/shared/navigate_button.dart';
@@ -30,7 +31,7 @@ class EmployeesPage extends StatefulWidget {
 }
 
 class _EmployeesPageState extends State<EmployeesPage> {
-  ManagerService _managerService;
+  EmployeeService _employeeService;
 
   User _user;
 
@@ -41,10 +42,11 @@ class _EmployeesPageState extends State<EmployeesPage> {
   @override
   void initState() {
     this._user = widget._user;
-    this._managerService = new ManagerService(_user.authHeader);
+    this._employeeService =
+        ServiceInitializer.initialize(_user.authHeader, EmployeeService);
     super.initState();
     _loading = true;
-    _managerService.findAllEmployees(_user.managerId).then((res) {
+    _employeeService.findAllByManagerId(_user.managerId).then((res) {
       setState(() {
         _employees = res;
         _filteredEmployees = _employees;
@@ -267,7 +269,7 @@ class _EmployeesPageState extends State<EmployeesPage> {
           Row(
             mainAxisAlignment: alignment,
             children: <Widget>[
-              textWhite('Status' + ': '),
+              textWhite(getTranslated(context, 'status') + ': '),
               icon,
               workStatusWidget
             ],
@@ -314,7 +316,7 @@ class _EmployeesPageState extends State<EmployeesPage> {
   }
 
   Future<Null> _refresh() {
-    return _managerService.findAllEmployees(_user.managerId).then((res) {
+    return _employeeService.findAllByManagerId(_user.managerId).then((res) {
       setState(() {
         _employees = res;
         _filteredEmployees = _employees;

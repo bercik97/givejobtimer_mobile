@@ -6,7 +6,6 @@ import 'colors.dart';
 // WHITE //
 Icon iconWhite(IconData iconData) { return Icon(iconData, color: WHITE); }
 Icon icon30White(IconData iconData) { return Icon(iconData, size: 30, color: WHITE); }
-Icon icon50White(IconData iconData) { return Icon(iconData, size: 50, color: WHITE); }
 
 
 // DARK //
@@ -19,10 +18,6 @@ Icon iconRed(IconData iconData) { return Icon(iconData, color: Colors.red); }
 
 // ORANGE //
 Icon iconOrange(IconData iconData) { return Icon(iconData, color: Colors.orange); }
-
-
-// YELLOW //
-Icon iconYellow(IconData iconData) { return Icon(iconData, color: Colors.yellow); }
 
 
 // GREEN //

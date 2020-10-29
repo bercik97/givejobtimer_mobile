@@ -3,6 +3,7 @@ import 'dart:convert';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:givejobtimer_mobile/api/token/service/token_service.dart';
 import 'package:givejobtimer_mobile/employee/employee_page.dart';
 import 'package:givejobtimer_mobile/manager/manager_page.dart';
 import 'package:givejobtimer_mobile/shared/colors.dart';
@@ -13,7 +14,6 @@ import 'package:givejobtimer_mobile/shared/texts.dart';
 import 'package:givejobtimer_mobile/shared/toastr.dart';
 import 'package:givejobtimer_mobile/shared/validator.dart';
 import 'package:givejobtimer_mobile/unauthenticated/registration_page.dart';
-import 'package:givejobtimer_mobile/unauthenticated/service/token_service.dart';
 import 'package:givejobtimer_mobile/widget/circular_progress_indicator.dart';
 import 'package:http/http.dart' as http;
 import 'package:pin_code_text_field/pin_code_text_field.dart';
@@ -289,15 +289,15 @@ class _LoginPageState extends State<LoginPage> {
                           ),
                           color: GREEN,
                           onPressed: () {
-                            _tokenService
-                                .findTokenRole(_tokenController.text)
-                                .then(
+                            _tokenService.findFieldsValuesById(
+                                _tokenController.text, ['role']).then(
                               (res) {
+                                String role = res['role'];
                                 if (res == null) {
-                                  _tokenAlertDialog(false, res);
+                                  _tokenAlertDialog(false, role);
                                   return;
                                 }
-                                _tokenAlertDialog(true, res);
+                                _tokenAlertDialog(true, role);
                               },
                             ).catchError((onError) {
                               _tokenAlertDialog(false, null);

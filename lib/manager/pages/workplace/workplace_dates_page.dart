@@ -1,8 +1,10 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:givejobtimer_mobile/api/shared/service_initializer.dart';
+import 'package:givejobtimer_mobile/api/workplace/service/workplace_service.dart';
 import 'package:givejobtimer_mobile/internationalization/localization/localization_constants.dart';
-import 'package:givejobtimer_mobile/manager/dto/work_place_dates_dto.dart';
-import 'package:givejobtimer_mobile/manager/dto/workplace_dto.dart';
+import 'package:givejobtimer_mobile/api/workplace/dto/workplace_dates_dto.dart';
+import 'package:givejobtimer_mobile/api/workplace/dto/workplace_dto.dart';
 import 'package:givejobtimer_mobile/manager/pages/workplace/workplace_work_time_page.dart';
 import 'package:givejobtimer_mobile/manager/shared/manager_side_bar.dart';
 import 'package:givejobtimer_mobile/manager/shared/navigate_button.dart';
@@ -12,7 +14,6 @@ import 'package:givejobtimer_mobile/shared/constants.dart';
 import 'package:givejobtimer_mobile/shared/icons.dart';
 import 'package:givejobtimer_mobile/shared/loader_container.dart';
 import 'package:givejobtimer_mobile/shared/model/user.dart';
-import 'package:givejobtimer_mobile/shared/service/workplace_service.dart';
 import 'package:givejobtimer_mobile/shared/texts.dart';
 
 class WorkplaceDatesPage extends StatefulWidget {
@@ -39,7 +40,8 @@ class _WorkplaceDatesPageState extends State<WorkplaceDatesPage> {
   void initState() {
     this._user = widget._user;
     this._workplace = widget._workplace;
-    this._workplaceService = new WorkplaceService(_user.authHeader);
+    this._workplaceService =
+        ServiceInitializer.initialize(_user.authHeader, WorkplaceService);
     super.initState();
     _loading = true;
     _workplaceService
