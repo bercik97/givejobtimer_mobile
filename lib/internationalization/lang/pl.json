@@ -37,9 +37,7 @@
   "termsOfUseIsRequired": "Zaakceptuj regulamin i politykę prywatności, aby zakończyć rejestrację.",
   "seeDocumentsHint": "Aby wyświetlić dokumenty, kliknij poniżej.",
   "seeDocuments": "Zobacz dokumenty",
-  "acceptRegulations": "Akceptuję regulamin",
   "acceptRegulationsIsRequired": "Wymagane jest potwierdzenie regulaminu.",
-  "acceptPrivacyPolicy": "Akceptuję politykę prywatności",
   "acceptPrivacyPolicyIsRequired": "Wymagane jest potwierdzenie polityki prywatności.",
   "regulations": "Regulamin",
   "privacyPolicy": "Polityka prywatności",
@@ -167,5 +165,16 @@
   "update": "Zaktualizuj",
   "successfullyUpdatedInformationAboutYou": "Pomyślnie zaktualizowano informacje o Tobie",
   "successfullyUpdatedWorkplace": "Pomyślnie zaktualizowano miejsce pracy",
-  "editWorkplace": "Edytuj miejsce pracy"
+  "editWorkplace": "Edytuj miejsce pracy",
+  "accountExpired": "Konto wygasło",
+  "yourAccountProbablyExpired": "Twoje konto prawdopodobnie wygasło. Skontaktuj się z administratorem, aby uzyskać więcej informacji.",
+  "accept": "Akceptuję",
+  "updateTitle": "Aktualizacja",
+  "newVersionOfApp": "Nowa wersja aplikacji GiveJob jest dostępna!",
+  "prompt": "Proszę zaktualizuj aplikację, ponieważ niektóre funkcjonalności mogą nie działać z Twoją aktualną wersją.",
+  "ignore": "IGNORUJ",
+  "updateNow": "ZAKTUALIZUJ",
+  "tokenIsRequired": "Token jest wymagany",
+  "regulationsLowerCase": "regulamin",
+  "privacyPolicyLowerCase": "politykę prywatności"
 }

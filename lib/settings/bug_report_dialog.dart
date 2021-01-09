@@ -14,19 +14,10 @@ bugReportDialog(BuildContext context) {
         children: <Widget>[
           text20GreenBold(getTranslated(context, 'bugReport')),
           SizedBox(height: 10),
-          textCenter20White(
-              getTranslated(context, 'somethingWrongWithApplication')),
-          textCenter20White(
-              getTranslated(context, 'contactWithUsByGivenEmail')),
+          textCenter20White(getTranslated(context, 'somethingWrongWithApplication')),
+          textCenter20White(getTranslated(context, 'contactWithUsByGivenEmail')),
           SizedBox(height: 15),
-          SelectableText(
-            'givejob.software@gmail.com',
-            style: TextStyle(
-                fontStyle: FontStyle.italic,
-                fontWeight: FontWeight.bold,
-                fontSize: 17,
-                color: WHITE),
-          ),
+          SelectableText('givejob.software@gmail.com', style: TextStyle(fontStyle: FontStyle.italic, fontWeight: FontWeight.bold, fontSize: 17, color: WHITE)),
         ],
       ),
     ),

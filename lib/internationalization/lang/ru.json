@@ -37,9 +37,7 @@
   "termsOfUseIsRequired": "Примите правила и политику конфиденциальности для завершения регистрации.",
   "seeDocumentsHint": "Чтобы просмотреть документы, щелкните ссылку ниже.",
   "seeDocuments": "Просмотреть документы",
-  "acceptRegulations": "Я принимаю правила",
   "acceptRegulationsIsRequired": "Требуется подтверждение правил.",
-  "acceptPrivacyPolicy": "Я принимаю политику конфиденциальности",
   "acceptPrivacyPolicyIsRequired": "Требуется подтверждение политики конфиденциальности.",
   "regulations": "Положение",
   "privacyPolicy": "Политика конфиденциальности",
@@ -167,5 +165,16 @@
   "update": "Обновить",
   "successfullyUpdatedInformationAboutYou": "Информация о вас успешно обновлена",
   "successfullyUpdatedWorkplace": "Рабочее место успешно обновлено",
-  "editWorkplace": "Редактировать рабочее место"
+  "editWorkplace": "Редактировать рабочее место",
+  "accountExpired": "Срок действия учетной записи истек",
+  "yourAccountProbablyExpired": "Вероятно, срок действия вашей учетной записи истек. Вы можете связаться с администратором для получения дополнительной информации.",
+  "accept": "Я принимаю Я согласен",
+  "updateTitle": "Обновить",
+  "newVersionOfApp": "Доступна новая версия GiveJob!",
+  "prompt": "Обновите приложение, так как некоторые функции могут не работать с вашей текущей версией.",
+  "ignore": "ИГНОРИРОВАТЬ",
+  "updateNow": "ОБНОВИТЬ СЕЙЧАС",
+  "tokenIsRequired": "Требуется токен",
+  "regulationsLowerCase": "нормативные документы",
+  "privacyPolicyLowerCase": "политика конфиденциальности"
 }

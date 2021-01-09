@@ -33,6 +33,7 @@ Text textWhiteBoldUnderline(String text) { return Text(text, style: TextStyle(co
 /////////////////////
 /*TEXT CENTER WHITE*/
 /////////////////////
+Text textCenterWhite(String text) { return Text(text, textAlign: TextAlign.center, style: TextStyle(color: WHITE)); }
 Text textCenter13White(String text) { return Text(text, textAlign: TextAlign.center, style: TextStyle(fontSize: 13, color: WHITE)); }
 Text textCenter14White(String text) { return Text(text, textAlign: TextAlign.center, style: TextStyle(fontSize: 14, color: WHITE)); }
 Text textCenter16White(String text) { return Text(text, textAlign: TextAlign.center, style: TextStyle(fontSize: 16, color: WHITE)); }

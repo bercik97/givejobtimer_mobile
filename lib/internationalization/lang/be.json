@@ -37,9 +37,7 @@
   "termsOfUseIsRequired": "Прыміце правілы і палітыку прыватнасці, каб завяршыць рэгістрацыю.",
   "seeDocumentsHint": "Для прагляду дакументаў націсніце на спасылку ніжэй.",
   "seeDocuments": "Праглядзець дакументы",
-  "acceptRegulations": "Я прымаю правілы",
   "acceptRegulationsIsRequired": "Патрабуецца пацверджанне правілаў.",
-  "acceptPrivacyPolicy": "Я прымаю палітыку прыватнасці",
   "acceptPrivacyPolicyIsRequired": "Патрабуецца пацверджанне палітыкі прыватнасці.",
   "regulations": "Палажэнне",
   "privacyPolicy": "Палітыка прыватнасці",
@@ -167,5 +165,11 @@
   "update": "Абнавіць",
   "successfullyUpdatedInformationAboutYou": "Паспяхова абноўлена інфармацыя пра вас",
   "successfullyUpdatedWorkplace": "Працоўнае месца паспяхова абноўлена",
-  "editWorkplace": "Рэдагаваць працоўнае месца"
+  "editWorkplace": "Рэдагаваць працоўнае месца",
+  "accountExpired": "Тэрмін дзеяння ўліковага запісу скончыўся",
+  "yourAccountProbablyExpired": "Магчыма, ваш уліковы запіс скончыўся. Вы можаце звязацца з адміністратарам для атрымання дадатковай інфармацыі.",
+  "accept": "Я прымаю",
+  "tokenIsRequired": "Неабходны токен",
+  "regulationsLowerCase": "правілы",
+  "privacyPolicyLowerCase": "Палітыка прыватнасці"
 }

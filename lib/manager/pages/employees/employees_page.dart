@@ -7,7 +7,6 @@ import 'package:givejobtimer_mobile/api/employee/dto/employee_dto.dart';
 import 'package:givejobtimer_mobile/api/employee/service/employee_service.dart';
 import 'package:givejobtimer_mobile/api/shared/service_initializer.dart';
 import 'package:givejobtimer_mobile/internationalization/localization/localization_constants.dart';
-import 'package:givejobtimer_mobile/internationalization/util/language_util.dart';
 import 'package:givejobtimer_mobile/manager/pages/employees/employee_dates_page.dart';
 import 'package:givejobtimer_mobile/manager/shared/manager_employee_profile_page.dart';
 import 'package:givejobtimer_mobile/manager/shared/manager_side_bar.dart';
@@ -19,6 +18,7 @@ import 'package:givejobtimer_mobile/shared/icons.dart';
 import 'package:givejobtimer_mobile/shared/loader_container.dart';
 import 'package:givejobtimer_mobile/shared/model/user.dart';
 import 'package:givejobtimer_mobile/shared/texts.dart';
+import 'package:givejobtimer_mobile/shared/util/language_util.dart';
 import 'package:shimmer/shimmer.dart';
 
 class EmployeesPage extends StatefulWidget {
@@ -42,8 +42,7 @@ class _EmployeesPageState extends State<EmployeesPage> {
   @override
   void initState() {
     this._user = widget._user;
-    this._employeeService =
-        ServiceInitializer.initialize(_user.authHeader, EmployeeService);
+    this._employeeService = ServiceInitializer.initialize(context, _user.authHeader, EmployeeService);
     super.initState();
     _loading = true;
     _employeeService.findAllByManagerId(_user.managerId).then((res) {
@@ -58,10 +57,7 @@ class _EmployeesPageState extends State<EmployeesPage> {
   @override
   Widget build(BuildContext context) {
     if (_loading) {
-      return loaderContainer(
-          context,
-          appBar(context, _user, getTranslated(context, 'loading')),
-          managerSideBar(context, _user));
+      return loader(appBar(context, _user, getTranslated(context, 'loading')), managerSideBar(context, _user));
     }
     return MaterialApp(
       title: APP_NAME,
@@ -74,29 +70,24 @@ class _EmployeesPageState extends State<EmployeesPage> {
         body: Column(
           children: <Widget>[
             Container(
-              padding:
-                  EdgeInsets.only(top: 20, left: 10, right: 10, bottom: 10),
+              padding: EdgeInsets.only(top: 20, left: 10, right: 10, bottom: 10),
               child: TextFormField(
                 autofocus: false,
                 autocorrect: true,
                 cursorColor: WHITE,
                 style: TextStyle(color: WHITE),
                 decoration: InputDecoration(
-                    enabledBorder: OutlineInputBorder(
-                        borderSide: BorderSide(color: WHITE, width: 2)),
-                    counterStyle: TextStyle(color: WHITE),
-                    border: OutlineInputBorder(),
-                    labelText: getTranslated(context, 'search'),
-                    prefixIcon: iconWhite(Icons.search),
-                    labelStyle: TextStyle(color: WHITE)),
+                  enabledBorder: OutlineInputBorder(borderSide: BorderSide(color: WHITE, width: 2)),
+                  counterStyle: TextStyle(color: WHITE),
+                  border: OutlineInputBorder(),
+                  labelText: getTranslated(context, 'search'),
+                  prefixIcon: iconWhite(Icons.search),
+                  labelStyle: TextStyle(color: WHITE),
+                ),
                 onChanged: (string) {
                   setState(
                     () {
-                      _filteredEmployees = _employees
-                          .where((u) => ((u.name + ' ' + u.surname)
-                              .toLowerCase()
-                              .contains(string.toLowerCase())))
-                          .toList();
+                      _filteredEmployees = _employees.where((u) => ((u.name + ' ' + u.surname).toLowerCase().contains(string.toLowerCase()))).toList();
                     },
                   );
                 },
@@ -132,77 +123,46 @@ class _EmployeesPageState extends State<EmployeesPage> {
                                                 baseColor: GREEN,
                                                 highlightColor: WHITE,
                                                 child: BouncingWidget(
-                                                  duration: Duration(
-                                                      milliseconds: 100),
+                                                  duration: Duration(milliseconds: 100),
                                                   scaleFactor: 2,
                                                   onPressed: () => {
                                                     Navigator.push(
                                                       this.context,
                                                       MaterialPageRoute(
-                                                        builder: (context) =>
-                                                            ManagerEmployeeProfilePage(
-                                                                _user,
-                                                                employee,
-                                                                _handleWorkStatus(
-                                                                    MainAxisAlignment
-                                                                        .center,
-                                                                    employee
-                                                                        .workStatus,
-                                                                    employee
-                                                                        .workplace,
-                                                                    employee
-                                                                        .workplaceCode)),
+                                                        builder: (context) => ManagerEmployeeProfilePage(
+                                                          _user,
+                                                          employee,
+                                                          _handleWorkStatus(MainAxisAlignment.center, employee.workStatus, employee.workplace, employee.workplaceCode),
+                                                        ),
                                                       ),
                                                     ),
                                                   },
                                                   child: Image(
-                                                    image: AssetImage(
-                                                        'images/big-employee-icon.png'),
+                                                    image: AssetImage('images/big-employee-icon.png'),
                                                   ),
                                                 ),
                                               ),
                                             ),
                                           ),
-                                          title: text20WhiteBold(
-                                              utf8.decode(info.runes.toList()) +
-                                                  ' ' +
-                                                  LanguageUtil
-                                                      .findFlagByNationality(
-                                                          nationality)),
+                                          title: text20WhiteBold(utf8.decode(info.runes.toList()) + ' ' + LanguageUtil.findFlagByNationality(nationality)),
                                           subtitle: Column(
                                             children: <Widget>[
                                               Align(
                                                   child: Row(
                                                     children: <Widget>[
-                                                      textWhite(getTranslated(
-                                                              this.context,
-                                                              'timeWorkedToday') +
-                                                          ': '),
-                                                      textGreenBold(employee
-                                                                  .timeWorkedToday !=
-                                                              null
-                                                          ? employee
-                                                              .timeWorkedToday
-                                                          : getTranslated(
-                                                              this.context,
-                                                              'empty')),
+                                                      textWhite(getTranslated(this.context, 'timeWorkedToday') + ': '),
+                                                      textGreenBold(employee.timeWorkedToday != null ? employee.timeWorkedToday : getTranslated(this.context, 'empty')),
                                                     ],
                                                   ),
                                                   alignment: Alignment.topLeft),
-                                              _handleWorkStatus(
-                                                  MainAxisAlignment.start,
-                                                  employee.workStatus,
-                                                  employee.workplace,
-                                                  employee.workplaceCode),
+                                              _handleWorkStatus(MainAxisAlignment.start, employee.workStatus, employee.workplace, employee.workplaceCode),
                                             ],
                                           ),
                                           onTap: () => {
                                             Navigator.push(
                                               this.context,
                                               MaterialPageRoute(
-                                                builder: (context) =>
-                                                    EmployeeDatesPage(
-                                                        _user, employee),
+                                                builder: (context) => EmployeeDatesPage(_user, employee),
                                               ),
                                             ),
                                           },
@@ -227,8 +187,7 @@ class _EmployeesPageState extends State<EmployeesPage> {
     );
   }
 
-  Widget _handleWorkStatus(MainAxisAlignment alignment, String workStatus,
-      String workplace, String workplaceCode) {
+  Widget _handleWorkStatus(MainAxisAlignment alignment, String workStatus, String workplace, String workplaceCode) {
     switch (workStatus) {
       case 'Done':
         return _buildWorkStatusRow(
@@ -257,36 +216,21 @@ class _EmployeesPageState extends State<EmployeesPage> {
     }
   }
 
-  Widget _buildWorkStatusRow(
-      MainAxisAlignment alignment,
-      Icon icon,
-      Widget workStatusWidget,
-      Widget workplaceWidget,
-      Widget workplaceCodeWidget) {
+  Widget _buildWorkStatusRow(MainAxisAlignment alignment, Icon icon, Widget workStatusWidget, Widget workplaceWidget, Widget workplaceCodeWidget) {
     return Align(
       child: Column(
         children: [
           Row(
             mainAxisAlignment: alignment,
-            children: <Widget>[
-              textWhite(getTranslated(context, 'status') + ': '),
-              icon,
-              workStatusWidget
-            ],
+            children: <Widget>[textWhite(getTranslated(context, 'status') + ': '), icon, workStatusWidget],
           ),
           Row(
             mainAxisAlignment: alignment,
-            children: <Widget>[
-              textWhite(getTranslated(context, 'workplace') + ': '),
-              workplaceWidget
-            ],
+            children: <Widget>[textWhite(getTranslated(context, 'workplace') + ': '), workplaceWidget],
           ),
           Row(
             mainAxisAlignment: alignment,
-            children: <Widget>[
-              textWhite(getTranslated(context, 'workplaceId') + ': '),
-              workplaceCodeWidget
-            ],
+            children: <Widget>[textWhite(getTranslated(context, 'workplaceId') + ': '), workplaceCodeWidget],
           ),
         ],
       ),
@@ -307,8 +251,7 @@ class _EmployeesPageState extends State<EmployeesPage> {
           padding: EdgeInsets.only(top: 10),
           child: Align(
             alignment: Alignment.center,
-            child:
-                textCenter19White(getTranslated(context, 'youHaveNoEmployees')),
+            child: textCenter19White(getTranslated(context, 'youHaveNoEmployees')),
           ),
         ),
       ],

@@ -37,9 +37,7 @@
   "termsOfUseIsRequired": "Прийміть правила та політику конфіденційності, щоб завершити реєстрацію.",
   "seeDocumentsHint": "Щоб переглянути документи, натисніть на посилання нижче.",
   "seeDocuments": "Переглянути документи",
-  "acceptRegulations": "Я приймаю правила",
   "acceptRegulationsIsRequired": "Потрібне підтвердження правил.",
-  "acceptPrivacyPolicy": "Я приймаю політику конфіденційності",
   "acceptPrivacyPolicyIsRequired": "Потрібно підтвердити політику конфіденційності.",
   "regulations": "Нормативні акти",
   "privacyPolicy": "Політика конфіденційності",
@@ -167,5 +165,16 @@
   "update": "Оновити",
   "successfullyUpdatedInformationAboutYou": "Успішно оновлена інформація про вас",
   "successfullyUpdatedWorkplace": "Робоче місце успішно оновлено",
-  "editWorkplace": "Редагувати робоче місце"
+  "editWorkplace": "Редагувати робоче місце",
+  "accountExpired": "Рахунок закінчився",
+  "yourAccountProbablyExpired": "Ваш обліковий запис, ймовірно, закінчився. Ви можете зв'язатися з адміністратором для отримання додаткової інформації.",
+  "accept": "я приймаю",
+  "updateTitle": "Оновлення",
+  "newVersionOfApp": "Доступна нова версія GiveJob!",
+  "prompt": "Оновіть програму, оскільки деякі функції можуть не працювати з поточною версією.",
+  "ignore": "ІГНОРУВАТИ",
+  "updateNow": "ОНОВИТИ ЗАРАЗ",
+  "tokenIsRequired": "Потрібен жетон",
+  "regulationsLowerCase": "нормативних актів",
+  "privacyPolicyLowerCase": "політика конфіденційності"
 }

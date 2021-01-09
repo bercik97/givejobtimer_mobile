@@ -37,9 +37,7 @@
   "termsOfUseIsRequired": "რეგისტრაციის დასრულებისთვის მიიღე წესები და კონფიდენციალურობის პოლიტიკა.",
   "seeDocumentsHint": "დოკუმენტების სანახავად დააჭირეთ ქვემოთ მოცემულ ბმულს.",
   "seeDocuments": "იხილეთ დოკუმენტები",
-  "acceptRegulations": "მე ვიღებ დებულებებს",
   "acceptRegulationsIsRequired": "საჭიროა დებულებების დადასტურება.",
-  "acceptPrivacyPolicy": "მე ვეთანხმები კონფიდენციალურობის დებულებას",
   "acceptPrivacyPolicyIsRequired": "საჭიროა კონფიდენციალურობის დებულების დადასტურება.",
   "regulations": "დებულება",
   "privacyPolicy": "კონფიდენციალურობის პოლიტიკა",
@@ -167,5 +165,16 @@
   "update": "განახლება",
   "successfullyUpdatedInformationAboutYou": "წარმატებით განახლდა ინფორმაცია თქვენს შესახებ",
   "successfullyUpdatedWorkplace": "სამუშაო ადგილი წარმატებით განახლდა",
-  "editWorkplace": "სამუშაო ადგილის რედაქტირება"
+  "editWorkplace": "სამუშაო ადგილის რედაქტირება",
+  "accountExpired": "ანგარიშს ვადა გაუვიდა",
+  "yourAccountProbablyExpired": "თქვენს ანგარიშს ალბათ ვადა გაუვიდა. დამატებითი ინფორმაციისთვის შეგიძლიათ დაუკავშირდეთ ადმინისტრატორს.",
+  "accept": "მე ვღებულობ",
+  "updateTitle": "განახლება",
+  "newVersionOfApp": "GiveJob– ის ახალი ვერსია ხელმისაწვდომია!",
+  "prompt": "გთხოვთ განაახლოთ პროგრამა, რადგან ზოგიერთმა ფუნქციამ შეიძლება არ იმუშაოს თქვენს ამჟამინდელ ვერსიასთან.",
+  "ignore": "არ ვიცი",
+  "updateNow": "განაახლეთ ახლა",
+  "tokenIsRequired": "ნიშანი არის საჭირო",
+  "regulationsLowerCase": "რეგულაციები",
+  "privacyPolicyLowerCase": "კონფიდენციალურობის პოლიტიკა"
 }

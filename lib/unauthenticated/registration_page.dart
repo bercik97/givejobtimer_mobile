@@ -2,14 +2,17 @@ import 'package:dropdown_formfield/dropdown_formfield.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_progress_dialog/flutter_progress_dialog.dart';
 import 'package:form_field_validator/form_field_validator.dart';
+import 'package:givejobtimer_mobile/api/shared/service_initializer.dart';
 import 'package:givejobtimer_mobile/api/user/service/user_service.dart';
 import 'package:givejobtimer_mobile/internationalization/localization/localization_constants.dart';
-import 'package:givejobtimer_mobile/internationalization/util/language_util.dart';
-import 'package:givejobtimer_mobile/settings/documents_page.dart';
 import 'package:givejobtimer_mobile/shared/colors.dart';
 import 'package:givejobtimer_mobile/shared/icons.dart';
+import 'package:givejobtimer_mobile/shared/pdf_viewer_from_asset.dart';
+import 'package:givejobtimer_mobile/shared/service/dialog_service.dart';
 import 'package:givejobtimer_mobile/shared/texts.dart';
+import 'package:givejobtimer_mobile/shared/util/language_util.dart';
 
 import '../api/user/dto/create_user_dto.dart';
 import 'login_page.dart';
@@ -26,13 +29,19 @@ class RegisterPage extends StatefulWidget {
 
 class _RegisterPageState extends State<RegisterPage> {
   CreateUserDto dto;
-  UserService _userService = UserService({});
+  UserService _userService;
   GlobalKey<FormState> formKey = GlobalKey<FormState>();
+  bool _isRegisterButtonTapped;
+
+  String _tokenId;
+  String _role;
+
   final TextEditingController _nameController = TextEditingController();
   final TextEditingController _surnameController = TextEditingController();
   final TextEditingController _phoneController = TextEditingController();
   final TextEditingController _viberController = TextEditingController();
   final TextEditingController _whatsAppController = TextEditingController();
+
   String _nationality;
   bool _regulationsCheckbox = false;
   bool _privacyPolicyCheckbox = false;
@@ -40,12 +49,16 @@ class _RegisterPageState extends State<RegisterPage> {
   @override
   void initState() {
     super.initState();
+    _userService = ServiceInitializer.initialize(context, null, UserService);
+    _tokenId = widget._tokenId;
+    _role = widget._role;
+    _isRegisterButtonTapped = false;
     _nationality = '';
   }
 
   @override
   Widget build(BuildContext context) {
-    if (widget._tokenId == null) {
+    if (_tokenId == null) {
       return LoginPage();
     }
     return WillPopScope(
@@ -56,23 +69,16 @@ class _RegisterPageState extends State<RegisterPage> {
           backgroundColor: Colors.transparent,
           elevation: 0,
           automaticallyImplyLeading: true,
-          leading: IconButton(
-            icon: iconWhite(Icons.arrow_back),
-            onPressed: () => _exitDialog(),
-          ),
+          leading: IconButton(icon: iconWhite(Icons.arrow_back), onPressed: () => _exitDialog()),
         ),
         body: Padding(
-          padding: EdgeInsets.fromLTRB(25, 0, 25, 25),
+          padding: EdgeInsets.fromLTRB(20, 0, 20, 20),
           child: Center(
             child: Form(
               autovalidate: true,
               key: formKey,
               child: Column(
                 children: <Widget>[
-                  textCenter28GreenBold(
-                      getTranslated(context, 'registrationForm')),
-                  Divider(color: WHITE),
-                  SizedBox(height: 10),
                   Expanded(
                     child: SingleChildScrollView(
                       child: Column(
@@ -101,9 +107,9 @@ class _RegisterPageState extends State<RegisterPage> {
 
   Widget _buildLoginSection() {
     return Align(
-        alignment: Alignment.topLeft,
-        child: textCenter20GreenBold(
-            getTranslated(context, 'loginCodeWillBeDisplayed')));
+      alignment: Alignment.topLeft,
+      child: textCenter20GreenBold(getTranslated(context, 'loginCodeWillBeDisplayed')),
+    );
   }
 
   Widget _buildBasicSection() {
@@ -165,71 +171,59 @@ class _RegisterPageState extends State<RegisterPage> {
           getTranslated(context, 'termsOfUse'),
           getTranslated(context, 'termsOfUseIsRequired'),
         ),
-        GestureDetector(
-          onTap: () {
-            Navigator.of(context).push(
-              CupertinoPageRoute<Null>(
-                builder: (BuildContext context) {
-                  return DocumentsPage(null);
-                },
-              ),
-            );
-          },
-          child: Column(
-            children: <Widget>[
-              Align(
-                alignment: Alignment.topLeft,
-                child: textWhite(
-                  getTranslated(context, 'seeDocumentsHint'),
-                ),
-              ),
-              SizedBox(height: 1),
-              Align(
-                alignment: Alignment.topLeft,
-                child: textWhiteBoldUnderline(
-                  getTranslated(context, 'seeDocuments'),
-                ),
-              )
-            ],
-          ),
-        ),
         ListTileTheme(
           contentPadding: EdgeInsets.all(0),
           child: CheckboxListTile(
-            title: textWhite(
-              getTranslated(context, 'acceptRegulations'),
+            title: Row(
+              children: [
+                textWhite(getTranslated(context, 'accept') + ' '),
+                GestureDetector(
+                  child: textWhiteBoldUnderline(getTranslated(context, 'regulationsLowerCase')),
+                  onTap: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute<dynamic>(
+                        builder: (_) => PDFViewerFromAsset(
+                          title: getTranslated(context, 'regulations'),
+                          pdfAssetPath: 'docs/regulations.pdf',
+                        ),
+                      ),
+                    );
+                  },
+                )
+              ],
             ),
-            subtitle: !_regulationsCheckbox
-                ? text13Red(
-                    getTranslated(context, 'acceptRegulationsIsRequired'),
-                  )
-                : null,
+            subtitle: !_regulationsCheckbox ? text13Red(getTranslated(context, 'acceptRegulationsIsRequired')) : null,
             value: _regulationsCheckbox,
-            onChanged: (value) {
-              setState(() {
-                _regulationsCheckbox = value;
-              });
-            },
+            onChanged: (value) => setState(() => _regulationsCheckbox = value),
             controlAffinity: ListTileControlAffinity.leading,
           ),
         ),
         ListTileTheme(
           contentPadding: EdgeInsets.all(0),
           child: CheckboxListTile(
-            title: textWhite(
-              getTranslated(context, 'acceptPrivacyPolicy'),
+            title: Row(
+              children: [
+                textWhite(getTranslated(context, 'accept') + ' '),
+                GestureDetector(
+                  child: textWhiteBoldUnderline(getTranslated(context, 'privacyPolicyLowerCase')),
+                  onTap: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute<dynamic>(
+                        builder: (_) => PDFViewerFromAsset(
+                          title: getTranslated(context, 'privacyPolicy'),
+                          pdfAssetPath: 'docs/privacy_policy.pdf',
+                        ),
+                      ),
+                    );
+                  },
+                )
+              ],
             ),
-            subtitle: !_privacyPolicyCheckbox
-                ? text13Red(
-                    getTranslated(context, 'acceptPrivacyPolicyIsRequired'),
-                  )
-                : null,
+            subtitle: !_privacyPolicyCheckbox ? text13Red(getTranslated(context, 'acceptPrivacyPolicyIsRequired')) : null,
             value: _privacyPolicyCheckbox,
-            onChanged: (value) {
-              setState(() {
-                _privacyPolicyCheckbox = value;
-              });
-            },
+            onChanged: (value) => setState(() => _privacyPolicyCheckbox = value),
             controlAffinity: ListTileControlAffinity.leading,
           ),
         )
@@ -249,8 +243,7 @@ class _RegisterPageState extends State<RegisterPage> {
     );
   }
 
-  Widget _buildRequiredTextField(TextEditingController controller,
-      int maxLength, String labelText, String errorText, IconData icon) {
+  Widget _buildRequiredTextField(TextEditingController controller, int maxLength, String labelText, String errorText, IconData icon) {
     return Column(
       children: <Widget>[
         TextFormField(
@@ -259,14 +252,7 @@ class _RegisterPageState extends State<RegisterPage> {
           cursorColor: WHITE,
           maxLength: maxLength,
           style: TextStyle(color: WHITE),
-          decoration: InputDecoration(
-              enabledBorder: OutlineInputBorder(
-                  borderSide: BorderSide(color: WHITE, width: 2)),
-              counterStyle: TextStyle(color: WHITE),
-              border: OutlineInputBorder(),
-              labelText: labelText,
-              prefixIcon: iconWhite(icon),
-              labelStyle: TextStyle(color: WHITE)),
+          decoration: InputDecoration(enabledBorder: OutlineInputBorder(borderSide: BorderSide(color: WHITE, width: 2)), counterStyle: TextStyle(color: WHITE), border: OutlineInputBorder(), labelText: labelText, prefixIcon: iconWhite(icon), labelStyle: TextStyle(color: WHITE)),
           validator: RequiredValidator(errorText: errorText),
         ),
         SizedBox(height: 10),
@@ -274,8 +260,7 @@ class _RegisterPageState extends State<RegisterPage> {
     );
   }
 
-  Widget _buildContactNumField(
-      TextEditingController controller, String labelText, IconData icon) {
+  Widget _buildContactNumField(TextEditingController controller, String labelText, IconData icon) {
     String validate(String value) {
       String phone = _phoneController.text;
       String viber = _viberController.text;
@@ -295,17 +280,8 @@ class _RegisterPageState extends State<RegisterPage> {
           controller: controller,
           style: TextStyle(color: WHITE),
           keyboardType: TextInputType.number,
-          inputFormatters: <TextInputFormatter>[
-            WhitelistingTextInputFormatter.digitsOnly
-          ],
-          decoration: InputDecoration(
-              enabledBorder: OutlineInputBorder(
-                  borderSide: BorderSide(color: WHITE, width: 2)),
-              counterStyle: TextStyle(color: WHITE),
-              border: OutlineInputBorder(),
-              labelText: labelText,
-              prefixIcon: iconWhite(icon),
-              labelStyle: TextStyle(color: WHITE)),
+          inputFormatters: <TextInputFormatter>[WhitelistingTextInputFormatter.digitsOnly],
+          decoration: InputDecoration(enabledBorder: OutlineInputBorder(borderSide: BorderSide(color: WHITE, width: 2)), counterStyle: TextStyle(color: WHITE), border: OutlineInputBorder(), labelText: labelText, prefixIcon: iconWhite(icon), labelStyle: TextStyle(color: WHITE)),
           validator: (value) => validate(value),
         ),
         SizedBox(height: 10),
@@ -335,36 +311,12 @@ class _RegisterPageState extends State<RegisterPage> {
                 });
               },
               dataSource: [
-                {
-                  'display':
-                      'Беларус ' + LanguageUtil.findFlagByNationality('BE'),
-                  'value': 'BE'
-                },
-                {
-                  'display':
-                      'English ' + LanguageUtil.findFlagByNationality('EN'),
-                  'value': 'EN'
-                },
-                {
-                  'display':
-                      'ქართული ' + LanguageUtil.findFlagByNationality('GE'),
-                  'value': 'GE'
-                },
-                {
-                  'display':
-                      'Polska ' + LanguageUtil.findFlagByNationality('PL'),
-                  'value': 'PL'
-                },
-                {
-                  'display':
-                      'русский ' + LanguageUtil.findFlagByNationality('RU'),
-                  'value': 'RU'
-                },
-                {
-                  'display':
-                      'Українська ' + LanguageUtil.findFlagByNationality('UK'),
-                  'value': 'UK'
-                },
+                {'display': 'Беларус ' + LanguageUtil.findFlagByNationality('BE'), 'value': 'BE'},
+                {'display': 'English ' + LanguageUtil.findFlagByNationality('EN'), 'value': 'EN'},
+                {'display': 'ქართული ' + LanguageUtil.findFlagByNationality('GE'), 'value': 'GE'},
+                {'display': 'Polska ' + LanguageUtil.findFlagByNationality('PL'), 'value': 'PL'},
+                {'display': 'русский ' + LanguageUtil.findFlagByNationality('RU'), 'value': 'RU'},
+                {'display': 'Українська ' + LanguageUtil.findFlagByNationality('UK'), 'value': 'UK'},
               ],
               textField: 'display',
               valueField: 'value',
@@ -386,39 +338,46 @@ class _RegisterPageState extends State<RegisterPage> {
           elevation: 0,
           minWidth: double.maxFinite,
           height: 50,
-          shape: new RoundedRectangleBorder(
-              borderRadius: new BorderRadius.circular(30.0)),
-          onPressed: () => {
-            if (!_isValid() || !_regulationsCheckbox || !_privacyPolicyCheckbox)
-              {
-                _errorDialog(getTranslated(context, 'correctInvalidFields')),
-              }
-            else
-              {
-                dto = new CreateUserDto(
-                    name: _nameController.text,
-                    surname: _surnameController.text,
-                    nationality: _nationality,
-                    phone: _phoneController.text,
-                    viber: _viberController.text,
-                    whatsApp: _whatsAppController.text,
-                    tokenId: widget._tokenId,
-                    role: widget._role),
-                _userService.create(dto).then((res) {
-                  _showSuccessDialog(res);
-                }).catchError((onError) {
-                  _errorDialog(
-                    getTranslated(context, 'smthWentWrong'),
-                  );
-                }),
-              }
-          },
+          shape: new RoundedRectangleBorder(borderRadius: new BorderRadius.circular(30.0)),
+          onPressed: () => _isRegisterButtonTapped ? null : _handleRegisterButton(),
           color: GREEN,
           child: text20White(getTranslated(context, 'register')),
           textColor: Colors.white,
         ),
       ],
     );
+  }
+
+  _handleRegisterButton() {
+    setState(() => _isRegisterButtonTapped = true);
+    if (!_isValid() || !_regulationsCheckbox || !_privacyPolicyCheckbox) {
+      DialogService.showCustomDialog(
+        context: context,
+        titleWidget: textRed(getTranslated(context, 'error')),
+        content: getTranslated(context, 'correctInvalidFields'),
+      );
+      setState(() => _isRegisterButtonTapped = false);
+      return;
+    }
+    showProgressDialog(context: context, loadingText: getTranslated(context, 'loading'));
+    dto = new CreateUserDto(
+      name: _nameController.text,
+      surname: _surnameController.text,
+      nationality: _nationality,
+      phone: _phoneController.text,
+      viber: _viberController.text,
+      whatsApp: _whatsAppController.text,
+      tokenId: _tokenId,
+      role: _role,
+    );
+    _userService.create(dto).then((res) {
+      Future.delayed(Duration(microseconds: 1), () => dismissProgressDialog()).whenComplete(() => _showSuccessDialog(res));
+    }).catchError((onError) {
+      Future.delayed(Duration(microseconds: 1), () => dismissProgressDialog()).whenComplete(() {
+        _errorDialog(getTranslated(context, 'smthWentWrong'));
+        setState(() => _isRegisterButtonTapped = false);
+      });
+    });
   }
 
   _errorDialog(String content) {
@@ -461,8 +420,7 @@ class _RegisterPageState extends State<RegisterPage> {
                 children: <Widget>[
                   textWhite(getTranslated(this.context, 'registerSuccess')),
                   SizedBox(height: 10),
-                  text20GreenBold(getTranslated(this.context, 'loginCode') +
-                      ': $loginCode'),
+                  text20GreenBold(getTranslated(this.context, 'loginCode') + ': $loginCode'),
                 ],
               ),
             ),
@@ -512,8 +470,10 @@ class _RegisterPageState extends State<RegisterPage> {
           actions: <Widget>[
             FlatButton(
               child: textWhite(getTranslated(context, 'exitAgree')),
-              onPressed: () =>
-                  {Navigator.of(context).pop(), _resetAndOpenPage()},
+              onPressed: () {
+                Navigator.of(context).pop();
+                _resetAndOpenPage();
+              },
             ),
             FlatButton(
               child: textWhite(getTranslated(context, 'no')),

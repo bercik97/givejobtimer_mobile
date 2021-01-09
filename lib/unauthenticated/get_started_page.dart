@@ -1,7 +1,8 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_progress_dialog/flutter_progress_dialog.dart';
 import 'package:givejobtimer_mobile/internationalization/localization/localization_constants.dart';
-import 'package:givejobtimer_mobile/internationalization/util/language_util.dart';
+import 'package:givejobtimer_mobile/shared/util/language_util.dart';
 import 'package:givejobtimer_mobile/shared/colors.dart';
 import 'package:givejobtimer_mobile/shared/constants.dart';
 import 'package:givejobtimer_mobile/shared/icons.dart';
@@ -31,10 +32,7 @@ class _GetStartedPageState extends State<GetStartedPage> {
   List<DropdownMenuItem<Language>> buildDropdownMenuItems(List languages) {
     List<DropdownMenuItem<Language>> items = List();
     for (Language language in languages) {
-      items.add(
-        DropdownMenuItem(
-            value: language, child: Text(language.name + ' ' + language.flag)),
-      );
+      items.add(DropdownMenuItem(value: language, child: Text(language.name + ' ' + language.flag)));
     }
     return items;
   }
@@ -42,11 +40,12 @@ class _GetStartedPageState extends State<GetStartedPage> {
   @override
   Widget build(BuildContext context) {
     void _changeLanguage(Language language, BuildContext context) async {
-      setState(() {
-        _selectedLanguage = language;
-      });
+      showProgressDialog(context: context, loadingText: getTranslated(context, 'loading'));
       Locale _temp = await setLocale(language.languageCode);
-      MyApp.setLocale(context, _temp);
+      Future.delayed(Duration(microseconds: 1), () => dismissProgressDialog()).whenComplete(() {
+        MyApp.setLocale(context, _temp);
+        setState(() => _selectedLanguage = language);
+      });
     }
 
     return Scaffold(
@@ -56,19 +55,16 @@ class _GetStartedPageState extends State<GetStartedPage> {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: <Widget>[
-            Image.asset('images/logo.png', height: 125),
-            SizedBox(height: 20),
+            SizedBox(height: MediaQuery.of(context).size.height * 0.08),
+            Image.asset('images/logo.png', height: 100),
+            SizedBox(height: MediaQuery.of(context).size.height * 0.01),
             textCenter30White(getTranslated(context, 'getStartedTitle')),
-            textCenter30White('$APP_NAME!'),
-            SizedBox(height: 30),
-            Container(
-                child: textCenter19White(
-                    getTranslated(context, 'getStartedDescription'))),
-            SizedBox(height: 30),
-            Center(
-                child: textCenter19White(
-                    getTranslated(context, 'getStartedLanguage'))),
-            SizedBox(height: 5),
+            textCenter30White('$APP_NAME !'),
+            SizedBox(height: MediaQuery.of(context).size.height * 0.02),
+            Container(child: textCenter19White(getTranslated(context, 'getStartedDescription'))),
+            SizedBox(height: MediaQuery.of(context).size.height * 0.02),
+            Center(child: textCenter19White(getTranslated(context, 'getStartedLanguage'))),
+            SizedBox(height: MediaQuery.of(context).size.height * 0.01),
             Container(
               child: Center(
                 child: Theme(
@@ -76,13 +72,13 @@ class _GetStartedPageState extends State<GetStartedPage> {
                   child: Column(
                     children: <Widget>[
                       DropdownButtonHideUnderline(
-                          child: DropdownButton(
-                              style:
-                                  TextStyle(color: Colors.white, fontSize: 25),
-                              value: _selectedLanguage,
-                              items: _dropdownMenuItems,
-                              onChanged: (Language language) =>
-                                  (_changeLanguage(language, context)))),
+                        child: DropdownButton(
+                          style: TextStyle(color: Colors.white, fontSize: 25),
+                          value: _selectedLanguage,
+                          items: _dropdownMenuItems,
+                          onChanged: (Language language) => (_changeLanguage(language, context)),
+                        ),
+                      ),
                       SizedBox(height: 20),
                     ],
                   ),
@@ -92,22 +88,16 @@ class _GetStartedPageState extends State<GetStartedPage> {
             MaterialButton(
               elevation: 0,
               height: 50,
-              shape: new RoundedRectangleBorder(
-                  borderRadius: new BorderRadius.circular(30.0)),
+              shape: new RoundedRectangleBorder(borderRadius: new BorderRadius.circular(30.0)),
               onPressed: () {
                 storage.write(key: 'getStartedClick', value: 'click');
                 Navigator.push(
                   context,
                   PageRouteBuilder(
-                    pageBuilder: (BuildContext context,
-                        Animation<double> animation,
-                        Animation<double> secondaryAnimation) {
+                    pageBuilder: (BuildContext context, Animation<double> animation, Animation<double> secondaryAnimation) {
                       return LoginPage();
                     },
-                    transitionsBuilder: (BuildContext context,
-                        Animation<double> animation,
-                        Animation<double> secondaryAnimation,
-                        Widget child) {
+                    transitionsBuilder: (BuildContext context, Animation<double> animation, Animation<double> secondaryAnimation, Widget child) {
                       return SlideTransition(
                         position: new Tween<Offset>(
                           begin: const Offset(-1.0, 0.0),
@@ -129,7 +119,7 @@ class _GetStartedPageState extends State<GetStartedPage> {
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: <Widget>[
                   text20White(getTranslated(context, 'getStarted')),
-                  iconWhite(Icons.arrow_forward_ios)
+                  iconWhite(Icons.arrow_forward_ios),
                 ],
               ),
             ),

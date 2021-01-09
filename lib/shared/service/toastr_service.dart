@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 
-import 'colors.dart';
+import '../colors.dart';
 
 class ToastService {
   static showSuccessToast(String msg) {

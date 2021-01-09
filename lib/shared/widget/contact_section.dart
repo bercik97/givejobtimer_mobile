@@ -5,33 +5,22 @@ import 'package:givejobtimer_mobile/internationalization/localization/localizati
 import 'package:givejobtimer_mobile/shared/colors.dart';
 import 'package:givejobtimer_mobile/shared/icons.dart';
 import 'package:givejobtimer_mobile/shared/texts.dart';
-import 'package:givejobtimer_mobile/shared/url_util.dart';
+import 'package:givejobtimer_mobile/shared/util/url_util.dart';
 import 'package:slide_popup_dialog/slide_popup_dialog.dart' as slideDialog;
 
-void showContactDialog(
-    BuildContext context, String phone, String viber, String whatsApp) {
-  slideDialog.showSlideDialog(
-      context: context,
-      backgroundColor: DARK,
-      child: buildContactSection(context, phone, viber, whatsApp));
+void showContactDialog(BuildContext context, String phone, String viber, String whatsApp) {
+  slideDialog.showSlideDialog(context: context, backgroundColor: DARK, child: buildContactSection(context, phone, viber, whatsApp));
 }
 
-Widget buildContactSection(
-    BuildContext context, String phone, String viber, String whatsApp) {
+Widget buildContactSection(BuildContext context, String phone, String viber, String whatsApp) {
   return SingleChildScrollView(
     child: Column(
       mainAxisAlignment: MainAxisAlignment.center,
       crossAxisAlignment: CrossAxisAlignment.center,
       children: <Widget>[
-        phone != null && phone != ''
-            ? _buildPhoneNumber(context, phone)
-            : _buildEmptyListTile(context, 'phone'),
-        viber != null && viber != ''
-            ? _buildViber(context, viber)
-            : _buildEmptyListTile(context, 'viber'),
-        whatsApp != null && whatsApp != ''
-            ? _buildWhatsApp(context, whatsApp)
-            : _buildEmptyListTile(context, 'whatsApp'),
+        phone != null && phone != '' ? _buildPhoneNumber(context, phone) : _buildEmptyListTile(context, 'phone'),
+        viber != null && viber != '' ? _buildViber(context, viber) : _buildEmptyListTile(context, 'viber'),
+        whatsApp != null && whatsApp != '' ? _buildWhatsApp(context, whatsApp) : _buildEmptyListTile(context, 'whatsApp'),
       ],
     ),
   );
@@ -43,8 +32,7 @@ Widget _buildPhoneNumber(BuildContext context, String phoneNumber) {
     subtitle: Row(
       mainAxisAlignment: MainAxisAlignment.center,
       children: <Widget>[
-        SelectableText(phoneNumber,
-            style: TextStyle(fontSize: 16, color: WHITE)),
+        SelectableText(phoneNumber, style: TextStyle(fontSize: 16, color: WHITE)),
         SizedBox(width: 5),
         IconButton(
           icon: icon30White(Icons.phone),
@@ -65,8 +53,7 @@ Widget _buildViber(BuildContext context, String viberNumber) {
     subtitle: Row(
       mainAxisAlignment: MainAxisAlignment.center,
       children: <Widget>[
-        SelectableText(viberNumber,
-            style: TextStyle(fontSize: 16, color: WHITE)),
+        SelectableText(viberNumber, style: TextStyle(fontSize: 16, color: WHITE)),
         SizedBox(width: 5),
         SizedBox(width: 7.5),
         Padding(
@@ -96,8 +83,7 @@ Widget _buildWhatsApp(BuildContext context, String whatsAppNumber) {
     subtitle: Row(
       mainAxisAlignment: MainAxisAlignment.center,
       children: <Widget>[
-        SelectableText(whatsAppNumber,
-            style: TextStyle(fontSize: 16, color: WHITE)),
+        SelectableText(whatsAppNumber, style: TextStyle(fontSize: 16, color: WHITE)),
         SizedBox(width: 7.5),
         Padding(
           padding: EdgeInsets.all(4),

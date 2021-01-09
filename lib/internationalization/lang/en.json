@@ -167,5 +167,16 @@
   "update": "Update",
   "successfullyUpdatedInformationAboutYou": "Successfully updated information about you",
   "successfullyUpdatedWorkplace": "Workplace updated successfully",
-  "editWorkplace": "Edit workplace"
+  "editWorkplace": "Edit workplace",
+  "accountExpired": "Account expired",
+  "yourAccountProbablyExpired": "Your account probably expired. You can contact administrator for more info.",
+  "accept": "I accept the",
+  "updateTitle": "Update",
+  "newVersionOfApp": "A new version of GiveJob is available!",
+  "prompt": "Please update the application as some functionalities may not work with your current version.",
+  "ignore": "IGNORE",
+  "updateNow": "UPDATE NOW",
+  "tokenIsRequired": "Token is required",
+  "regulationsLowerCase": "regulations",
+  "privacyPolicyLowerCase": "privacy policy"
 }

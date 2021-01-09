@@ -1,6 +1,7 @@
 import 'package:bouncing_widget/bouncing_widget.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_progress_dialog/flutter_progress_dialog.dart';
 import 'package:givejobtimer_mobile/api/shared/service_initializer.dart';
 import 'package:givejobtimer_mobile/api/work_time/dto/create_work_time_dto.dart';
 import 'package:givejobtimer_mobile/api/work_time/dto/is_currently_at_work_with_work_times_dto.dart';
@@ -13,8 +14,9 @@ import 'package:givejobtimer_mobile/shared/colors.dart';
 import 'package:givejobtimer_mobile/shared/constants.dart';
 import 'package:givejobtimer_mobile/shared/icons.dart';
 import 'package:givejobtimer_mobile/shared/model/user.dart';
+import 'package:givejobtimer_mobile/shared/service/dialog_service.dart';
 import 'package:givejobtimer_mobile/shared/texts.dart';
-import 'package:givejobtimer_mobile/widget/circular_progress_indicator.dart';
+import 'package:givejobtimer_mobile/shared/widget/circular_progress_indicator.dart';
 import 'package:pin_code_text_field/pin_code_text_field.dart';
 
 class WorkingTimePage extends StatefulWidget {
@@ -41,28 +43,21 @@ class _WorkingTimePageState extends State<WorkingTimePage> {
   @override
   Widget build(BuildContext context) {
     this._user = widget._user;
-    this._workplaceService =
-        ServiceInitializer.initialize(_user.authHeader, WorkplaceService);
-    _workTimeService =
-        ServiceInitializer.initialize(_user.authHeader, WorkTimeService);
+    this._workplaceService = ServiceInitializer.initialize(context, _user.authHeader, WorkplaceService);
+    _workTimeService = ServiceInitializer.initialize(context, _user.authHeader, WorkTimeService);
     return MaterialApp(
       title: APP_NAME,
       theme: ThemeData(primarySwatch: MaterialColor(0xffFFFFFF, WHITE_RGBO)),
       debugShowCheckedModeBanner: false,
       home: Scaffold(
         backgroundColor: DARK,
-        appBar:
-            appBar(context, _user, getTranslated(context, 'workTimeForToday')),
+        appBar: appBar(context, _user, getTranslated(context, 'workTimeForToday')),
         drawer: employeeSideBar(context, _user),
         body: SingleChildScrollView(
           child: FutureBuilder(
-            future: _workTimeService
-                .checkIfIsCurrentlyAtWorkAndFindAllByEmployeeIdAndDateOrEndTimeIsNull(
-                    _user.employeeId),
-            builder: (BuildContext context,
-                AsyncSnapshot<IsCurrentlyAtWorkWithWorkTimesDto> snapshot) {
-              if (snapshot.connectionState == ConnectionState.waiting ||
-                  snapshot.data == null) {
+            future: _workTimeService.checkIfIsCurrentlyAtWorkAndFindAllByEmployeeIdAndDateOrEndTimeIsNull(_user.employeeId),
+            builder: (BuildContext context, AsyncSnapshot<IsCurrentlyAtWorkWithWorkTimesDto> snapshot) {
+              if (snapshot.connectionState == ConnectionState.waiting || snapshot.data == null) {
                 return Padding(
                   padding: EdgeInsets.only(top: 50),
                   child: Center(child: circularProgressIndicator()),
@@ -145,10 +140,7 @@ class _WorkingTimePageState extends State<WorkingTimePage> {
           title: textGreen(getTranslated(context, 'confirmation')),
           content: SingleChildScrollView(
             child: ListBody(
-              children: <Widget>[
-                textCenter20Green(
-                    getTranslated(context, 'pauseWorkConfirmation'))
-              ],
+              children: <Widget>[textCenter20Green(getTranslated(context, 'pauseWorkConfirmation'))],
             ),
           ),
           actions: <Widget>[
@@ -158,9 +150,7 @@ class _WorkingTimePageState extends State<WorkingTimePage> {
                   child: textWhite(getTranslated(context, 'workIsDone')),
                   onPressed: () => _isPauseButtonTapped ? null : _finishWork(),
                 ),
-                FlatButton(
-                    child: textWhite(getTranslated(context, 'no')),
-                    onPressed: () => Navigator.of(context).pop()),
+                FlatButton(child: textWhite(getTranslated(context, 'no')), onPressed: () => Navigator.of(context).pop()),
               ],
             ),
           ],
@@ -171,13 +161,23 @@ class _WorkingTimePageState extends State<WorkingTimePage> {
 
   _finishWork() {
     setState(() => _isPauseButtonTapped = !_isPauseButtonTapped);
-    _workTimeService.finish(_dto.notFinishedWorkTimeId).then(
-          (res) => {
-            _refresh(),
-            Navigator.pop(context),
-            setState(() => _isStartButtonTapped = false),
-          },
+    showProgressDialog(context: context, loadingText: getTranslated(context, 'loading'));
+    _workTimeService.finish(_dto.notFinishedWorkTimeId).then((res) {
+      Future.delayed(Duration(microseconds: 1), () => dismissProgressDialog()).whenComplete(() {
+        _refresh();
+        Navigator.pop(context);
+        setState(() => _isStartButtonTapped = false);
+      });
+    }).catchError((onError) {
+      Future.delayed(Duration(microseconds: 1), () => dismissProgressDialog()).whenComplete(() {
+        DialogService.showCustomDialog(
+          context: context,
+          titleWidget: textRed(getTranslated(context, 'error')),
+          content: getTranslated(context, 'smthWentWrong'),
         );
+        setState(() => _isStartButtonTapped = false);
+      });
+    });
   }
 
   _showEnterWorkplaceCode() {
@@ -195,8 +195,7 @@ class _WorkingTimePageState extends State<WorkingTimePage> {
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: <Widget>[
-                  textCenter20GreenBold(
-                      getTranslated(context, 'enterWorkplaceCodePopupTitle')),
+                  textCenter20GreenBold(getTranslated(context, 'enterWorkplaceCodePopupTitle')),
                   SizedBox(height: 30),
                   PinCodeTextField(
                     autofocus: true,
@@ -208,13 +207,10 @@ class _WorkingTimePageState extends State<WorkingTimePage> {
                     maxLength: 4,
                     pinBoxWidth: 50,
                     pinBoxHeight: 64,
-                    pinBoxDecoration:
-                        ProvidedPinBoxDecoration.defaultPinBoxDecoration,
+                    pinBoxDecoration: ProvidedPinBoxDecoration.defaultPinBoxDecoration,
                     pinTextStyle: TextStyle(fontSize: 22, color: WHITE),
-                    pinTextAnimatedSwitcherTransition:
-                        ProvidedPinBoxTextAnimation.scalingTransition,
-                    pinTextAnimatedSwitcherDuration:
-                        Duration(milliseconds: 300),
+                    pinTextAnimatedSwitcherTransition: ProvidedPinBoxTextAnimation.scalingTransition,
+                    pinTextAnimatedSwitcherDuration: Duration(milliseconds: 300),
                     keyboardType: TextInputType.number,
                   ),
                   SizedBox(height: 20),
@@ -225,8 +221,7 @@ class _WorkingTimePageState extends State<WorkingTimePage> {
                         elevation: 0,
                         height: 50,
                         minWidth: 40,
-                        shape: new RoundedRectangleBorder(
-                            borderRadius: new BorderRadius.circular(30.0)),
+                        shape: new RoundedRectangleBorder(borderRadius: new BorderRadius.circular(30.0)),
                         child: Row(
                           mainAxisAlignment: MainAxisAlignment.center,
                           children: <Widget>[iconWhite(Icons.close)],
@@ -241,26 +236,29 @@ class _WorkingTimePageState extends State<WorkingTimePage> {
                       MaterialButton(
                         elevation: 0,
                         height: 50,
-                        shape: new RoundedRectangleBorder(
-                            borderRadius: new BorderRadius.circular(30.0)),
+                        shape: new RoundedRectangleBorder(borderRadius: new BorderRadius.circular(30.0)),
                         child: Row(
                           mainAxisAlignment: MainAxisAlignment.center,
                           children: <Widget>[iconWhite(Icons.check)],
                         ),
                         color: GREEN,
                         onPressed: () {
-                          _workplaceService
-                              .isCorrectByIdAndManagerId(
-                                  _workplaceCodeController.text,
-                                  _user.managerId)
-                              .then(
-                            (res) {
+                          showProgressDialog(context: context, loadingText: getTranslated(context, 'loading'));
+                          _workplaceService.isCorrectByIdAndManagerId(_workplaceCodeController.text, _user.managerId).then((res) {
+                            Future.delayed(Duration(microseconds: 1), () => dismissProgressDialog()).whenComplete(() {
                               Navigator.pop(context);
                               _resultWorkplaceCodeAlertDialog(res);
-                            },
-                          ).catchError((onError) {
-                            Navigator.pop(context);
-                            _resultWorkplaceCodeAlertDialog(false);
+                            });
+                          }).catchError((onError) {
+                            Future.delayed(Duration(microseconds: 1), () => dismissProgressDialog()).whenComplete(() {
+                              DialogService.showCustomDialog(
+                                context: context,
+                                titleWidget: textRed(getTranslated(context, 'error')),
+                                content: getTranslated(context, 'smthWentWrong'),
+                              );
+                              Navigator.pop(context);
+                              _resultWorkplaceCodeAlertDialog(false);
+                            });
                           });
                         },
                       ),
@@ -283,9 +281,7 @@ class _WorkingTimePageState extends State<WorkingTimePage> {
       builder: (BuildContext context) {
         return AlertDialog(
           backgroundColor: DARK,
-          title: isCorrect
-              ? textGreen(getTranslated(context, 'correctWorkplaceCode'))
-              : textWhite(getTranslated(context, 'failure')),
+          title: isCorrect ? textGreen(getTranslated(context, 'correctWorkplaceCode')) : textWhite(getTranslated(context, 'failure')),
           content: SingleChildScrollView(
             child: ListBody(
               children: <Widget>[
@@ -293,13 +289,11 @@ class _WorkingTimePageState extends State<WorkingTimePage> {
                     ? Column(
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
-                          textCenter20White(
-                              getTranslated(context, 'startTimeConfirmation')),
+                          textCenter20White(getTranslated(context, 'startTimeConfirmation')),
                           textCenter20GreenBold(workplaceId + '?'),
                         ],
                       )
-                    : textWhite(
-                        getTranslated(context, 'workplaceCodeIsIncorrect'))
+                    : textWhite(getTranslated(context, 'workplaceCodeIsIncorrect'))
               ],
             ),
           ),
@@ -309,21 +303,16 @@ class _WorkingTimePageState extends State<WorkingTimePage> {
                     children: [
                       FlatButton(
                         child: textWhite(getTranslated(context, 'yesImSure')),
-                        onPressed: () => _isStartButtonTapped
-                            ? null
-                            : _startWork(workplaceId),
+                        onPressed: () => _isStartButtonTapped ? null : _startWork(workplaceId),
                       ),
-                      FlatButton(
-                          child: textWhite(getTranslated(context, 'no')),
-                          onPressed: () => Navigator.of(context).pop()),
+                      FlatButton(child: textWhite(getTranslated(context, 'no')), onPressed: () => Navigator.of(context).pop()),
                     ],
                   )
                 : MaterialButton(
                     elevation: 0,
                     height: 50,
                     minWidth: double.maxFinite,
-                    shape: new RoundedRectangleBorder(
-                        borderRadius: new BorderRadius.circular(30.0)),
+                    shape: new RoundedRectangleBorder(borderRadius: new BorderRadius.circular(30.0)),
                     color: GREEN,
                     child: text20WhiteBold(getTranslated(context, 'close')),
                     onPressed: () => Navigator.of(context).pop(),
@@ -336,15 +325,24 @@ class _WorkingTimePageState extends State<WorkingTimePage> {
 
   _startWork(String workplaceId) {
     setState(() => _isStartButtonTapped = !_isStartButtonTapped);
-    CreateWorkTimeDto dto = new CreateWorkTimeDto(
-        workplaceId: workplaceId, employeeId: int.parse(_user.employeeId));
-    _workTimeService.create(dto).then(
-          (value) => {
-            _refresh(),
-            Navigator.pop(context),
-            setState(() => _isPauseButtonTapped = false),
-          },
+    CreateWorkTimeDto dto = new CreateWorkTimeDto(workplaceId: workplaceId, employeeId: int.parse(_user.employeeId));
+    showProgressDialog(context: context, loadingText: getTranslated(context, 'loading'));
+    _workTimeService.create(dto).then((value) {
+      Future.delayed(Duration(microseconds: 1), () => dismissProgressDialog()).whenComplete(() {
+        _refresh();
+        Navigator.pop(context);
+        setState(() => _isPauseButtonTapped = false);
+      });
+    }).catchError((onError) {
+      Future.delayed(Duration(microseconds: 1), () => dismissProgressDialog()).whenComplete(() {
+        DialogService.showCustomDialog(
+          context: context,
+          titleWidget: textRed(getTranslated(context, 'error')),
+          content: getTranslated(context, 'smthWentWrong'),
         );
+        setState(() => _isPauseButtonTapped = false);
+      });
+    });
   }
 
   _displayWorkTimes(List workTimes) {
@@ -353,33 +351,23 @@ class _WorkingTimePageState extends State<WorkingTimePage> {
       child: SingleChildScrollView(
         scrollDirection: Axis.horizontal,
         child: Theme(
-          data:
-              Theme.of(this.context).copyWith(dividerColor: MORE_BRIGHTER_DARK),
+          data: Theme.of(this.context).copyWith(dividerColor: MORE_BRIGHTER_DARK),
           child: DataTable(
             columnSpacing: 45,
             columns: [
-              DataColumn(
-                  label: textWhiteBold(getTranslated(this.context, 'from'))),
-              DataColumn(
-                  label: textWhiteBold(getTranslated(this.context, 'to'))),
-              DataColumn(
-                  label: textWhiteBold(getTranslated(this.context, 'sum'))),
-              DataColumn(
-                  label: textWhiteBold(
-                      getTranslated(this.context, 'workplaceId'))),
+              DataColumn(label: textWhiteBold(getTranslated(this.context, 'from'))),
+              DataColumn(label: textWhiteBold(getTranslated(this.context, 'to'))),
+              DataColumn(label: textWhiteBold(getTranslated(this.context, 'sum'))),
+              DataColumn(label: textWhiteBold(getTranslated(this.context, 'workplaceId'))),
             ],
             rows: [
               for (var workTime in workTimes)
                 DataRow(
                   cells: [
                     DataCell(textWhite(workTime.startTime)),
-                    DataCell(textWhite(
-                        workTime.endTime != null ? workTime.endTime : '-')),
-                    DataCell(textWhite(
-                        workTime.totalTime != null ? workTime.totalTime : '-')),
-                    DataCell(textWhite(workTime.workplaceId != null
-                        ? workTime.workplaceId
-                        : '-')),
+                    DataCell(textWhite(workTime.endTime != null ? workTime.endTime : '-')),
+                    DataCell(textWhite(workTime.totalTime != null ? workTime.totalTime : '-')),
+                    DataCell(textWhite(workTime.workplaceId != null ? workTime.workplaceId : '-')),
                   ],
                 ),
             ],
@@ -390,13 +378,8 @@ class _WorkingTimePageState extends State<WorkingTimePage> {
   }
 
   Future<Null> _refresh() {
-    return _workTimeService
-        .checkIfIsCurrentlyAtWorkAndFindAllByEmployeeIdAndDateOrEndTimeIsNull(
-            _user.employeeId)
-        .then((res) {
-      setState(() {
-        _dto = res;
-      });
+    return _workTimeService.checkIfIsCurrentlyAtWorkAndFindAllByEmployeeIdAndDateOrEndTimeIsNull(_user.employeeId).then((res) {
+      setState(() => _dto = res);
     });
   }
 }

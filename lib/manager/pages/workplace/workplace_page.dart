@@ -4,6 +4,7 @@ import 'dart:convert';
 import 'package:bouncing_widget/bouncing_widget.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_progress_dialog/flutter_progress_dialog.dart';
 import 'package:givejobtimer_mobile/api/shared/service_initializer.dart';
 import 'package:givejobtimer_mobile/api/workplace/dto/create_workplace_dto.dart';
 import 'package:givejobtimer_mobile/api/workplace/dto/workplace_dto.dart';
@@ -17,11 +18,12 @@ import 'package:givejobtimer_mobile/shared/constants.dart';
 import 'package:givejobtimer_mobile/shared/icons.dart';
 import 'package:givejobtimer_mobile/shared/loader_container.dart';
 import 'package:givejobtimer_mobile/shared/model/user.dart';
+import 'package:givejobtimer_mobile/shared/service/dialog_service.dart';
+import 'package:givejobtimer_mobile/shared/service/toastr_service.dart';
+import 'package:givejobtimer_mobile/shared/service/validator_service.dart';
 import 'package:givejobtimer_mobile/shared/texts.dart';
-import 'package:givejobtimer_mobile/shared/toastr.dart';
-import 'package:givejobtimer_mobile/shared/validator.dart';
+import 'package:givejobtimer_mobile/shared/widget/hint.dart';
 import 'package:shimmer/shimmer.dart';
-import 'package:slide_popup_dialog/slide_popup_dialog.dart' as slideDialog;
 
 class WorkplacePage extends StatefulWidget {
   final User _user;
@@ -50,8 +52,7 @@ class _WorkplacePageState extends State<WorkplacePage> {
   @override
   void initState() {
     this._user = widget._user;
-    this._workplaceService =
-        ServiceInitializer.initialize(_user.authHeader, WorkplaceService);
+    this._workplaceService = ServiceInitializer.initialize(context, _user.authHeader, WorkplaceService);
     super.initState();
     _loading = true;
     _workplaceService.findAllByManagerId(_user.managerId).then((res) {
@@ -67,10 +68,7 @@ class _WorkplacePageState extends State<WorkplacePage> {
   @override
   Widget build(BuildContext context) {
     if (_loading) {
-      return loaderContainer(
-          context,
-          appBar(context, _user, getTranslated(context, 'loading')),
-          managerSideBar(context, _user));
+      return loader(appBar(context, _user, getTranslated(context, 'loading')), managerSideBar(context, _user));
     }
     return MaterialApp(
       title: APP_NAME,
@@ -83,29 +81,24 @@ class _WorkplacePageState extends State<WorkplacePage> {
         body: Column(
           children: <Widget>[
             Container(
-              padding:
-                  EdgeInsets.only(top: 20, left: 10, right: 10, bottom: 10),
+              padding: EdgeInsets.only(top: 20, left: 10, right: 10, bottom: 10),
               child: TextFormField(
                 autofocus: false,
                 autocorrect: true,
                 cursorColor: WHITE,
                 style: TextStyle(color: WHITE),
                 decoration: InputDecoration(
-                    enabledBorder: OutlineInputBorder(
-                        borderSide: BorderSide(color: WHITE, width: 2)),
-                    counterStyle: TextStyle(color: WHITE),
-                    border: OutlineInputBorder(),
-                    labelText: getTranslated(context, 'search'),
-                    prefixIcon: iconWhite(Icons.search),
-                    labelStyle: TextStyle(color: WHITE)),
+                  enabledBorder: OutlineInputBorder(borderSide: BorderSide(color: WHITE, width: 2)),
+                  counterStyle: TextStyle(color: WHITE),
+                  border: OutlineInputBorder(),
+                  labelText: getTranslated(context, 'search'),
+                  prefixIcon: iconWhite(Icons.search),
+                  labelStyle: TextStyle(color: WHITE),
+                ),
                 onChanged: (string) {
                   setState(
                     () {
-                      _filteredWorkplaces = _workplaces
-                          .where((w) => ((w.name + w.id)
-                              .toLowerCase()
-                              .contains(string.toLowerCase())))
-                          .toList();
+                      _filteredWorkplaces = _workplaces.where((w) => ((w.name + w.id).toLowerCase().contains(string.toLowerCase()))).toList();
                     },
                   );
                 },
@@ -114,8 +107,7 @@ class _WorkplacePageState extends State<WorkplacePage> {
             ListTileTheme(
               contentPadding: EdgeInsets.only(left: 3),
               child: CheckboxListTile(
-                title:
-                    textWhite(getTranslated(this.context, 'selectUnselectAll')),
+                title: textWhite(getTranslated(this.context, 'selectUnselectAll')),
                 value: _isChecked,
                 activeColor: GREEN,
                 checkColor: WHITE,
@@ -164,8 +156,7 @@ class _WorkplacePageState extends State<WorkplacePage> {
                                 child: ListTileTheme(
                                   contentPadding: EdgeInsets.only(right: 10),
                                   child: CheckboxListTile(
-                                    controlAffinity:
-                                        ListTileControlAffinity.trailing,
+                                    controlAffinity: ListTileControlAffinity.trailing,
                                     secondary: Padding(
                                       padding: EdgeInsets.only(left: 10),
                                       child: Shimmer.fromColors(
@@ -178,29 +169,23 @@ class _WorkplacePageState extends State<WorkplacePage> {
                                             Navigator.push(
                                               this.context,
                                               MaterialPageRoute(
-                                                builder: (context) =>
-                                                    WorkplaceDatesPage(
-                                                        _user, workplace),
+                                                builder: (context) => WorkplaceDatesPage(_user, workplace),
                                               ),
                                             ),
                                           },
                                           child: Image(
-                                            image: AssetImage(
-                                                'images/big-workplace-icon.png'),
+                                            image: AssetImage('images/big-workplace-icon.png'),
                                           ),
                                         ),
                                       ),
                                     ),
                                     title: Row(
                                       children: [
-                                        text18WhiteBold(getTranslated(
-                                                this.context, 'code') +
-                                            ': '),
+                                        text18WhiteBold(getTranslated(this.context, 'code') + ': '),
                                         text18GreenBold(id),
                                         IconButton(
                                           icon: icon30Green(Icons.border_color),
-                                          onPressed: () =>
-                                              _editWorkplace(workplace),
+                                          onPressed: () => _editWorkplace(workplace),
                                         ),
                                       ],
                                     ),
@@ -208,20 +193,12 @@ class _WorkplacePageState extends State<WorkplacePage> {
                                       children: [
                                         Align(
                                           alignment: Alignment.topLeft,
-                                          child: textWhite(name != null
-                                              ? utf8.decode(name.runes.toList())
-                                              : getTranslated(
-                                                  this.context, 'empty')),
+                                          child: textWhite(name != null ? utf8.decode(name.runes.toList()) : getTranslated(this.context, 'empty')),
                                         ),
                                         Align(
                                           alignment: Alignment.topLeft,
                                           child: textWhite(
-                                            getTranslated(this.context,
-                                                    'totalTimeWorked') +
-                                                ': ' +
-                                                (totalTimeWorked != null
-                                                    ? totalTimeWorked
-                                                    : '00:00:00'),
+                                            getTranslated(this.context, 'totalTimeWorked') + ': ' + (totalTimeWorked != null ? totalTimeWorked : '00:00:00'),
                                           ),
                                         )
                                       ],
@@ -233,16 +210,12 @@ class _WorkplacePageState extends State<WorkplacePage> {
                                       setState(() {
                                         _checked[foundIndex] = value;
                                         if (value) {
-                                          _selectedIds
-                                              .add(_workplaces[foundIndex].id);
+                                          _selectedIds.add(_workplaces[foundIndex].id);
                                         } else {
-                                          _selectedIds.remove(
-                                              _workplaces[foundIndex].id);
+                                          _selectedIds.remove(_workplaces[foundIndex].id);
                                         }
-                                        int selectedIdsLength =
-                                            _selectedIds.length;
-                                        if (selectedIdsLength ==
-                                            _workplaces.length) {
+                                        int selectedIdsLength = _selectedIds.length;
+                                        if (selectedIdsLength == _workplaces.length) {
                                           _isChecked = true;
                                         } else if (selectedIdsLength == 0) {
                                           _isChecked = false;
@@ -276,9 +249,7 @@ class _WorkplacePageState extends State<WorkplacePage> {
               heroTag: "deleteBtn",
               tooltip: getTranslated(context, 'deleteSelectedWorkplaces'),
               backgroundColor: Colors.red,
-              onPressed: () => _isDeleteButtonTapped
-                  ? null
-                  : _handleDeleteByIdIn(_selectedIds),
+              onPressed: () => _isDeleteButtonTapped ? null : _handleDeleteByIdIn(_selectedIds),
               child: Icon(Icons.delete),
             ),
           ],
@@ -303,10 +274,7 @@ class _WorkplacePageState extends State<WorkplacePage> {
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: <Widget>[
-                  Padding(
-                      padding: EdgeInsets.only(top: 50),
-                      child: text20GreenBold(
-                          getTranslated(context, 'addWorkplace'))),
+                  Padding(padding: EdgeInsets.only(top: 50), child: text20GreenBold(getTranslated(context, 'addWorkplace'))),
                   SizedBox(height: 20),
                   Padding(
                     padding: EdgeInsets.only(left: 25, right: 25),
@@ -320,9 +288,7 @@ class _WorkplacePageState extends State<WorkplacePage> {
                       textAlignVertical: TextAlignVertical.center,
                       style: TextStyle(color: WHITE),
                       decoration: InputDecoration(
-                        hintText:
-                            getTranslated(this.context, 'textSomeWorkplace') +
-                                ' ...',
+                        hintText: getTranslated(this.context, 'textSomeWorkplace') + ' ...',
                         hintStyle: TextStyle(color: MORE_BRIGHTER_DARK),
                         counterStyle: TextStyle(color: WHITE),
                         focusedBorder: OutlineInputBorder(
@@ -341,8 +307,7 @@ class _WorkplacePageState extends State<WorkplacePage> {
                         elevation: 0,
                         height: 50,
                         minWidth: 40,
-                        shape: new RoundedRectangleBorder(
-                            borderRadius: new BorderRadius.circular(30.0)),
+                        shape: new RoundedRectangleBorder(borderRadius: new BorderRadius.circular(30.0)),
                         child: Row(
                           mainAxisAlignment: MainAxisAlignment.center,
                           children: <Widget>[iconWhite(Icons.close)],
@@ -354,16 +319,13 @@ class _WorkplacePageState extends State<WorkplacePage> {
                       MaterialButton(
                         elevation: 0,
                         height: 50,
-                        shape: new RoundedRectangleBorder(
-                            borderRadius: new BorderRadius.circular(30.0)),
+                        shape: new RoundedRectangleBorder(borderRadius: new BorderRadius.circular(30.0)),
                         child: Row(
                           mainAxisAlignment: MainAxisAlignment.center,
                           children: <Widget>[iconWhite(Icons.check)],
                         ),
                         color: GREEN,
-                        onPressed: () => _isAddButtonTapped
-                            ? null
-                            : _handleAddWorkplace(_workplaceController.text),
+                        onPressed: () => _isAddButtonTapped ? null : _handleAddWorkplace(_workplaceController.text),
                       ),
                     ],
                   ),
@@ -378,28 +340,35 @@ class _WorkplacePageState extends State<WorkplacePage> {
 
   _handleAddWorkplace(String workplace) {
     setState(() => _isAddButtonTapped = true);
-    String invalidMessage =
-        ValidatorService.validateWorkplace(workplace, context);
+    String invalidMessage = ValidatorService.validateWorkplace(workplace, context);
     if (invalidMessage != null) {
       setState(() => _isAddButtonTapped = false);
       ToastService.showErrorToast(invalidMessage);
       return;
     }
-    CreateWorkplaceDto dto = new CreateWorkplaceDto(
-        managerId: int.parse(_user.managerId), name: workplace);
+    CreateWorkplaceDto dto = new CreateWorkplaceDto(managerId: int.parse(_user.managerId), name: workplace);
+    showProgressDialog(context: context, loadingText: getTranslated(context, 'loading'));
     _workplaceService.create(dto).then((res) {
-      Navigator.pop(context);
-      _refresh();
-      _showSuccessDialog(res);
+      Future.delayed(Duration(microseconds: 1), () => dismissProgressDialog()).whenComplete(() {
+        Navigator.pop(context);
+        _refresh();
+        _showSuccessDialog(res);
+      });
     }).catchError((onError) {
-      setState(() => _isAddButtonTapped = false);
-      ToastService.showErrorToast(getTranslated(context, 'smthWentWrong'));
+      Future.delayed(Duration(microseconds: 1), () => dismissProgressDialog()).whenComplete(() {
+        DialogService.showCustomDialog(
+          context: context,
+          titleWidget: textRed(getTranslated(context, 'error')),
+          content: getTranslated(context, 'smthWentWrong'),
+        );
+        setState(() => _isAddButtonTapped = false);
+      });
     });
   }
 
   _handleDeleteByIdIn(LinkedHashSet<String> ids) {
     if (ids.isEmpty) {
-      _showHint();
+      showHint(context, getTranslated(context, 'needToSelectWorkplaces') + ' ', getTranslated(context, 'whichYouWantToRemove'));
       return;
     }
     showDialog(
@@ -408,36 +377,37 @@ class _WorkplacePageState extends State<WorkplacePage> {
         return AlertDialog(
           backgroundColor: DARK,
           title: textWhite(getTranslated(this.context, 'confirmation')),
-          content: textWhite(getTranslated(
-              this.context, 'areYouSureYouWantToDeleteSelectedWorkplaces')),
+          content: textWhite(getTranslated(this.context, 'areYouSureYouWantToDeleteSelectedWorkplaces')),
           actions: <Widget>[
             FlatButton(
               child: textWhite(getTranslated(this.context, 'yesDeleteThem')),
-              onPressed: () => {
-                _workplaceService
-                    .deleteByIdIn(ids.toList())
-                    .then((res) => {
-                          Navigator.of(context).pushAndRemoveUntil(
-                            MaterialPageRoute(
-                                builder: (BuildContext context) =>
-                                    WorkplacePage(_user)),
-                            ModalRoute.withName('/'),
-                          ),
-                          ToastService.showSuccessToast(getTranslated(
-                              this.context, 'selectedWorkplacesRemoved')),
-                        })
-                    .catchError((onError) {
-                  String errorMsg = onError.toString();
-                  if (errorMsg.substring(0, 17) == "EMPLOYEES_IN_WORK") {
+              onPressed: () {
+                showProgressDialog(context: context, loadingText: getTranslated(context, 'loading'));
+                _workplaceService.deleteByIdIn(ids.toList()).then((res) {
+                  Future.delayed(Duration(microseconds: 1), () => dismissProgressDialog()).whenComplete(() {
+                    Navigator.of(context).pushAndRemoveUntil(
+                      MaterialPageRoute(builder: (BuildContext context) => WorkplacePage(_user)),
+                      ModalRoute.withName('/'),
+                    );
+                    ToastService.showSuccessToast(getTranslated(this.context, 'selectedWorkplacesRemoved'));
+                  });
+                }).catchError((onError) {
+                  Future.delayed(Duration(microseconds: 1), () => dismissProgressDialog()).whenComplete(() {
+                    String errorMsg = onError.toString();
+                    if (errorMsg.substring(0, 17) == "EMPLOYEES_IN_WORK") {
+                      setState(() => _isDeleteButtonTapped = false);
+                      Navigator.pop(this.context);
+                      _showErrorDialog(errorMsg.substring(19));
+                      return;
+                    }
+                    DialogService.showCustomDialog(
+                      context: context,
+                      titleWidget: textRed(getTranslated(context, 'error')),
+                      content: getTranslated(context, 'smthWentWrong'),
+                    );
                     setState(() => _isDeleteButtonTapped = false);
-                    Navigator.pop(this.context);
-                    _showErrorDialog(errorMsg.substring(19));
-                    return;
-                  }
-                  setState(() => _isDeleteButtonTapped = false);
-                  ToastService.showErrorToast(
-                      getTranslated(this.context, 'smthWentWrong'));
-                }),
+                  });
+                });
               },
             ),
             FlatButton(
@@ -464,8 +434,7 @@ class _WorkplacePageState extends State<WorkplacePage> {
                 Column(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    textCenter20White(getTranslated(this.context,
-                        'cannotDeleteWorkplaceWhenSomeoneWorkingThere')),
+                    textCenter20White(getTranslated(this.context, 'cannotDeleteWorkplaceWhenSomeoneWorkingThere')),
                     textCenter20GreenBold(workplaceIds),
                   ],
                 ),
@@ -477,8 +446,7 @@ class _WorkplacePageState extends State<WorkplacePage> {
               elevation: 0,
               height: 50,
               minWidth: double.maxFinite,
-              shape: new RoundedRectangleBorder(
-                  borderRadius: new BorderRadius.circular(30.0)),
+              shape: new RoundedRectangleBorder(borderRadius: new BorderRadius.circular(30.0)),
               color: GREEN,
               child: text20WhiteBold(getTranslated(context, 'close')),
               onPressed: () => Navigator.of(context).pop(),
@@ -506,10 +474,7 @@ class _WorkplacePageState extends State<WorkplacePage> {
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: <Widget>[
-                  Padding(
-                      padding: EdgeInsets.only(top: 50),
-                      child: text20GreenBold(
-                          getTranslated(context, 'editWorkplace'))),
+                  Padding(padding: EdgeInsets.only(top: 50), child: text20GreenBold(getTranslated(context, 'editWorkplace'))),
                   SizedBox(height: 20),
                   Padding(
                     padding: EdgeInsets.only(left: 25, right: 25),
@@ -523,8 +488,7 @@ class _WorkplacePageState extends State<WorkplacePage> {
                       textAlignVertical: TextAlignVertical.center,
                       style: TextStyle(color: WHITE),
                       decoration: InputDecoration(
-                        hintText: getTranslated(context, 'textSomeWorkplace') +
-                            ' ...',
+                        hintText: getTranslated(context, 'textSomeWorkplace') + ' ...',
                         hintStyle: TextStyle(color: MORE_BRIGHTER_DARK),
                         counterStyle: TextStyle(color: WHITE),
                         focusedBorder: OutlineInputBorder(
@@ -543,8 +507,7 @@ class _WorkplacePageState extends State<WorkplacePage> {
                         elevation: 0,
                         height: 50,
                         minWidth: 40,
-                        shape: new RoundedRectangleBorder(
-                            borderRadius: new BorderRadius.circular(30.0)),
+                        shape: new RoundedRectangleBorder(borderRadius: new BorderRadius.circular(30.0)),
                         child: Row(
                           mainAxisAlignment: MainAxisAlignment.center,
                           children: <Widget>[iconWhite(Icons.close)],
@@ -556,8 +519,7 @@ class _WorkplacePageState extends State<WorkplacePage> {
                       MaterialButton(
                         elevation: 0,
                         height: 50,
-                        shape: new RoundedRectangleBorder(
-                            borderRadius: new BorderRadius.circular(30.0)),
+                        shape: new RoundedRectangleBorder(borderRadius: new BorderRadius.circular(30.0)),
                         child: Row(
                           mainAxisAlignment: MainAxisAlignment.center,
                           children: <Widget>[iconWhite(Icons.check)],
@@ -565,24 +527,26 @@ class _WorkplacePageState extends State<WorkplacePage> {
                         color: GREEN,
                         onPressed: () {
                           String name = _workplaceController.text;
-                          String invalidMessage =
-                              ValidatorService.validateWorkplace(name, context);
+                          String invalidMessage = ValidatorService.validateWorkplace(name, context);
                           if (invalidMessage != null) {
                             ToastService.showErrorToast(invalidMessage);
                             return;
                           }
-                          _workplaceService
-                              .update(workplace.id, {'name': name}).then((res) {
-                            Navigator.pop(context);
-                            _refresh();
-                            ToastService.showSuccessToast(getTranslated(
-                                    context, 'successfullyUpdatedWorkplace') +
-                                ' (' +
-                                workplace.id +
-                                ')');
+                          showProgressDialog(context: context, loadingText: getTranslated(context, 'loading'));
+                          _workplaceService.update(workplace.id, {'name': name}).then((res) {
+                            Future.delayed(Duration(microseconds: 1), () => dismissProgressDialog()).whenComplete(() {
+                              Navigator.pop(context);
+                              _refresh();
+                              ToastService.showSuccessToast(getTranslated(context, 'successfullyUpdatedWorkplace') + ' (' + workplace.id + ')');
+                            });
                           }).catchError((onError) {
-                            ToastService.showErrorToast(
-                                getTranslated(context, 'smthWentWrong'));
+                            Future.delayed(Duration(microseconds: 1), () => dismissProgressDialog()).whenComplete(() {
+                              DialogService.showCustomDialog(
+                                context: context,
+                                titleWidget: textRed(getTranslated(context, 'error')),
+                                content: getTranslated(context, 'smthWentWrong'),
+                              );
+                            });
                           });
                         },
                       ),
@@ -607,11 +571,9 @@ class _WorkplacePageState extends State<WorkplacePage> {
           content: SingleChildScrollView(
             child: ListBody(
               children: <Widget>[
-                textWhite(getTranslated(
-                    this.context, 'successfullyAddedNewWorkplace')),
+                textWhite(getTranslated(this.context, 'successfullyAddedNewWorkplace')),
                 SizedBox(height: 10),
-                text20GreenBold(
-                    getTranslated(this.context, 'code') + ': $workplaceCode'),
+                text20GreenBold(getTranslated(this.context, 'code') + ': $workplaceCode'),
               ],
             ),
           ),
@@ -626,51 +588,18 @@ class _WorkplacePageState extends State<WorkplacePage> {
     );
   }
 
-  void _uncheckAll() {
-    _selectedIds.clear();
-    _isChecked = false;
-    List<bool> l = new List();
-    _checked.forEach((b) => l.add(false));
-    _checked = l;
-  }
-
   Widget _handleNoWorkplaces() {
     return Column(
       children: <Widget>[
         Padding(
           padding: EdgeInsets.only(top: 20),
-          child: Align(
-              alignment: Alignment.center,
-              child:
-                  text20GreenBold(getTranslated(this.context, 'noWorkplaces'))),
+          child: Align(alignment: Alignment.center, child: text20GreenBold(getTranslated(this.context, 'noWorkplaces'))),
         ),
         Padding(
           padding: EdgeInsets.only(right: 30, left: 30, top: 10),
-          child: Align(
-              alignment: Alignment.center,
-              child: textCenter19White(
-                  getTranslated(this.context, 'noWorkplacesHint'))),
+          child: Align(alignment: Alignment.center, child: textCenter19White(getTranslated(this.context, 'noWorkplacesHint'))),
         ),
       ],
-    );
-  }
-
-  void _showHint() {
-    slideDialog.showSlideDialog(
-      context: context,
-      backgroundColor: DARK,
-      child: Padding(
-        padding: EdgeInsets.all(10),
-        child: Column(
-          children: <Widget>[
-            text20GreenBold(getTranslated(context, 'hint')),
-            SizedBox(height: 10),
-            textCenter20White(
-                getTranslated(context, 'needToSelectWorkplaces') + ' '),
-            textCenter20White(getTranslated(context, 'whichYouWantToRemove')),
-          ],
-        ),
-      ),
     );
   }
 

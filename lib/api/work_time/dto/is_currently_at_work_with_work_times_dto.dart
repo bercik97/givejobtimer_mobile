@@ -12,13 +12,11 @@ class IsCurrentlyAtWorkWithWorkTimesDto {
     @required this.workTimes,
   });
 
-  factory IsCurrentlyAtWorkWithWorkTimesDto.fromJson(
-      Map<String, dynamic> json) {
+  factory IsCurrentlyAtWorkWithWorkTimesDto.fromJson(Map<String, dynamic> json) {
     return IsCurrentlyAtWorkWithWorkTimesDto(
       currentlyAtWork: json['currentlyAtWork'] as bool,
       notFinishedWorkTimeId: json['notFinishedWorkTimeId'] as int,
-      workTimes:
-          json['workTimes'].map((data) => WorkTimeDto.fromJson(data)).toList(),
+      workTimes: json['workTimes'].map((data) => WorkTimeDto.fromJson(data)).toList(),
     );
   }
 }

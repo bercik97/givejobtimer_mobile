@@ -1,22 +1,21 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_progress_dialog/flutter_progress_dialog.dart';
 import 'package:givejobtimer_mobile/employee/shared/employee_side_bar.dart';
 import 'package:givejobtimer_mobile/internationalization/localization/localization_constants.dart';
 import 'package:givejobtimer_mobile/internationalization/model/language.dart';
-import 'package:givejobtimer_mobile/internationalization/util/language_util.dart';
+import 'package:givejobtimer_mobile/shared/util/language_util.dart';
 import 'package:givejobtimer_mobile/manager/shared/manager_side_bar.dart';
 import 'package:givejobtimer_mobile/shared/app_bar.dart';
 import 'package:givejobtimer_mobile/shared/colors.dart';
 import 'package:givejobtimer_mobile/shared/constants.dart';
 import 'package:givejobtimer_mobile/shared/model/user.dart';
+import 'package:givejobtimer_mobile/shared/pdf_viewer_from_asset.dart';
 import 'package:givejobtimer_mobile/shared/texts.dart';
-import 'package:givejobtimer_mobile/shared/url_util.dart';
-import 'package:givejobtimer_mobile/widget/circular_progress_indicator.dart';
-import 'package:progress_dialog/progress_dialog.dart';
+import 'package:givejobtimer_mobile/shared/util/url_util.dart';
 
 import '../main.dart';
 import 'bug_report_dialog.dart';
-import 'documents_page.dart';
 
 class SettingsPage extends StatefulWidget {
   final User _user;
@@ -42,8 +41,7 @@ class _SettingsPageState extends State<SettingsPage> {
     List<DropdownMenuItem<Language>> items = List();
     for (Language language in languages) {
       items.add(
-        DropdownMenuItem(
-            value: language, child: Text(language.name + ' ' + language.flag)),
+        DropdownMenuItem(value: language, child: Text(language.name + ' ' + language.flag)),
       );
     }
     return items;
@@ -51,19 +49,11 @@ class _SettingsPageState extends State<SettingsPage> {
 
   @override
   Widget build(BuildContext context) {
-    final ProgressDialog progressDialog = new ProgressDialog(context);
-    progressDialog.style(
-      message: '  ' + getTranslated(context, 'changingLanguage') + ' ...',
-      messageTextStyle: TextStyle(color: DARK),
-      progressWidget: circularProgressIndicator(),
-    );
-
     void _changeLanguage(Language language, BuildContext context) async {
-      progressDialog.show();
+      showProgressDialog(context: context, loadingText: getTranslated(context, 'loading'));
       Locale _temp = await setLocale(language.languageCode);
-      MyApp.setLocale(context, _temp);
-      Future.delayed(Duration(seconds: 1)).then((value) {
-        progressDialog.hide();
+      Future.delayed(Duration(microseconds: 1), () => dismissProgressDialog()).whenComplete(() {
+        MyApp.setLocale(context, _temp);
       });
     }
 
@@ -73,11 +63,8 @@ class _SettingsPageState extends State<SettingsPage> {
       debugShowCheckedModeBanner: false,
       home: Scaffold(
         backgroundColor: DARK,
-        appBar:
-            appBar(context, widget._user, getTranslated(context, 'settings')),
-        drawer: widget._user.role == ROLE_EMPLOYEE
-            ? employeeSideBar(context, widget._user)
-            : managerSideBar(context, widget._user),
+        appBar: appBar(context, widget._user, getTranslated(context, 'settings')),
+        drawer: widget._user.role == ROLE_EMPLOYEE ? employeeSideBar(context, widget._user) : managerSideBar(context, widget._user),
         body: ListView(
           children: <Widget>[
             Container(
@@ -85,8 +72,7 @@ class _SettingsPageState extends State<SettingsPage> {
               child: Theme(
                 data: Theme.of(context).copyWith(canvasColor: DARK),
                 child: Container(
-                  decoration:
-                      BoxDecoration(border: Border.all(color: BRIGHTER_DARK)),
+                  decoration: BoxDecoration(border: Border.all(color: BRIGHTER_DARK)),
                   padding: EdgeInsets.only(left: 10),
                   alignment: Alignment.centerLeft,
                   height: 30,
@@ -104,44 +90,44 @@ class _SettingsPageState extends State<SettingsPage> {
             Container(
                 margin: EdgeInsets.only(left: 15, top: 10),
                 child: InkWell(
-                    onTap: () => {
-                          Navigator.of(context).push(
-                            CupertinoPageRoute<Null>(
-                              builder: (BuildContext context) {
-                                return DocumentsPage(widget._user);
-                              },
-                            ),
+                    onTap: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute<dynamic>(
+                          builder: (_) => PDFViewerFromAsset(
+                            title: getTranslated(context, 'regulations'),
+                            pdfAssetPath: 'docs/regulations.pdf',
                           ),
-                        },
-                    child: _subtitleInkWellContainer(
-                        getTranslated(context, 'termsOfUseLowerCase')))),
+                        ),
+                      );
+                    },
+                    child: _subtitleInkWellContainer(getTranslated(context, 'regulations')))),
             Container(
                 margin: EdgeInsets.only(left: 15, top: 10),
                 child: InkWell(
-                    onTap: () => bugReportDialog(context),
-                    child: _subtitleInkWellContainer(
-                        getTranslated(context, 'bugReport')))),
-            Container(
-                margin: EdgeInsets.only(left: 25),
-                alignment: Alignment.centerLeft,
-                height: 30,
-                child:
-                    text13White(getTranslated(context, 'version') + ': 1.0.3')),
+                    onTap: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute<dynamic>(
+                          builder: (_) => PDFViewerFromAsset(
+                            title: getTranslated(context, 'privacyPolicy'),
+                            pdfAssetPath: 'docs/privacy_policy.pdf',
+                          ),
+                        ),
+                      );
+                    },
+                    child: _subtitleInkWellContainer(getTranslated(context, 'privacyPolicy')))),
+            Container(margin: EdgeInsets.only(left: 15, top: 10), child: InkWell(onTap: () => bugReportDialog(context), child: _subtitleInkWellContainer(getTranslated(context, 'bugReport')))),
+            Container(margin: EdgeInsets.only(left: 25), alignment: Alignment.centerLeft, height: 30, child: text13White(getTranslated(context, 'version') + ': 1.0.3')),
             _titleContainer(getTranslated(context, 'graphics')),
-            _socialMediaInkWell('https://plumko.business.site/ ', 'Plumko',
-                'images/plumko-logo.png'),
+            _socialMediaInkWell('https://plumko.business.site/ ', 'Plumko', 'images/plumko-logo.png'),
             _titleContainer(getTranslated(context, 'followUs')),
             SizedBox(height: 5.0),
-            _socialMediaInkWell(
-                'https://www.givejob.pl', 'GiveJob', 'images/logo.png'),
-            _socialMediaInkWell('https://www.medica.givejob.pl',
-                'GiveJob Medica', 'images/givejob-medica-logo.png'),
-            _socialMediaInkWell('https://www.facebook.com/givejobb', 'Facebook',
-                'images/facebook-logo.png'),
-            _socialMediaInkWell('https://www.instagram.com/give_job',
-                'Instagram', 'images/instagram-logo.png'),
-            _socialMediaInkWell('https://www.linkedin.com/company/give-job',
-                'Linkedin', 'images/linkedin-logo.png'),
+            _socialMediaInkWell('https://www.givejob.pl', 'GiveJob', 'images/logo.png'),
+            _socialMediaInkWell('https://www.medica.givejob.pl', 'GiveJob Medica', 'images/givejob-medica-logo.png'),
+            _socialMediaInkWell('https://www.facebook.com/givejobb', 'Facebook', 'images/facebook-logo.png'),
+            _socialMediaInkWell('https://www.instagram.com/give_job', 'Instagram', 'images/instagram-logo.png'),
+            _socialMediaInkWell('https://www.linkedin.com/company/give-job', 'Linkedin', 'images/linkedin-logo.png'),
           ],
         ),
       ),
@@ -174,13 +160,11 @@ class _SettingsPageState extends State<SettingsPage> {
       child: Column(
         children: <Widget>[
           ListTile(
-            title:
-                Align(child: text16White(text), alignment: Alignment(-1.05, 0)),
+            title: Align(child: text16White(text), alignment: Alignment(-1.05, 0)),
             leading: Padding(
               padding: EdgeInsets.all(5.0),
               child: Container(
-                child:
-                    Image(image: AssetImage(imagePath), fit: BoxFit.fitWidth),
+                child: Image(image: AssetImage(imagePath), fit: BoxFit.fitWidth),
               ),
             ),
           ),

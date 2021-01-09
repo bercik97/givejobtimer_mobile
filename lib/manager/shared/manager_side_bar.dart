@@ -6,8 +6,8 @@ import 'package:givejobtimer_mobile/settings/settings_page.dart';
 import 'package:givejobtimer_mobile/shared/colors.dart';
 import 'package:givejobtimer_mobile/shared/constants.dart';
 import 'package:givejobtimer_mobile/shared/icons.dart';
-import 'package:givejobtimer_mobile/shared/logout.dart';
 import 'package:givejobtimer_mobile/shared/model/user.dart';
+import 'package:givejobtimer_mobile/shared/service/logout_service.dart';
 import 'package:givejobtimer_mobile/shared/texts.dart';
 import 'package:open_appstore/open_appstore.dart';
 
@@ -22,25 +22,22 @@ Drawer managerSideBar(BuildContext context, User user) {
             width: double.infinity,
             padding: EdgeInsets.all(20),
             decoration: BoxDecoration(
-                gradient: LinearGradient(
-                    begin: Alignment.topCenter,
-                    end: Alignment.bottomCenter,
-                    colors: [WHITE, GREEN])),
+              gradient: LinearGradient(
+                begin: Alignment.topCenter,
+                end: Alignment.bottomCenter,
+                colors: [WHITE, GREEN],
+              ),
+            ),
             child: Center(
               child: Column(
                 children: <Widget>[
                   Container(
                     width: 100,
                     height: 100,
-                    margin: EdgeInsets.only(
-                      top: 30,
-                      bottom: 10,
-                    ),
+                    margin: EdgeInsets.only(top: 30, bottom: 10),
                     decoration: BoxDecoration(
                       shape: BoxShape.circle,
-                      image: DecorationImage(
-                          image: AssetImage('images/logo.png'),
-                          fit: BoxFit.fill),
+                      image: DecorationImage(image: AssetImage('images/logo.png'), fit: BoxFit.fill),
                     ),
                   ),
                   text25Dark(APP_NAME),
@@ -65,8 +62,7 @@ Drawer managerSideBar(BuildContext context, User user) {
           ListTile(
             leading: iconWhite(Icons.star),
             title: text18White(getTranslated(context, 'rate')),
-            onTap: () => OpenAppstore.launch(
-                androidAppId: ANDROID_APP_ID, iOSAppId: IOS_APP_ID),
+            onTap: () => OpenAppstore.launch(androidAppId: ANDROID_APP_ID, iOSAppId: IOS_APP_ID),
           ),
           ListTile(
             leading: iconWhite(Icons.settings),

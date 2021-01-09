@@ -3,9 +3,7 @@ import 'package:givejobtimer_mobile/internationalization/localization/localizati
 
 class ValidatorService {
   static String validateLoginCode(String loginCode, BuildContext context) {
-    return loginCode.isEmpty
-        ? getTranslated(context, 'loginCodeIsRequired')
-        : null;
+    return loginCode.isEmpty ? getTranslated(context, 'loginCodeIsRequired') : null;
   }
 
   static String validateWorkplace(String workplace, BuildContext context) {

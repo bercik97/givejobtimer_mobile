@@ -1,10 +1,10 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:givejobtimer_mobile/api/employee/dto/employee_dto.dart';
 import 'package:givejobtimer_mobile/api/shared/service_initializer.dart';
+import 'package:givejobtimer_mobile/api/work_time/dto/work_time_dates_dto.dart';
 import 'package:givejobtimer_mobile/api/work_time/service/work_time_service.dart';
 import 'package:givejobtimer_mobile/internationalization/localization/localization_constants.dart';
-import 'package:givejobtimer_mobile/api/work_time/dto/work_time_dates_dto.dart';
-import 'package:givejobtimer_mobile/api/employee/dto/employee_dto.dart';
 import 'package:givejobtimer_mobile/manager/shared/manager_side_bar.dart';
 import 'package:givejobtimer_mobile/manager/shared/navigate_button.dart';
 import 'package:givejobtimer_mobile/shared/app_bar.dart';
@@ -41,13 +41,10 @@ class _EmployeeDatesPageState extends State<EmployeeDatesPage> {
   void initState() {
     this._user = widget._user;
     this._employee = widget._employee;
-    this._workTimeService =
-        ServiceInitializer.initialize(_user.authHeader, WorkTimeService);
+    this._workTimeService = ServiceInitializer.initialize(context, _user.authHeader, WorkTimeService);
     super.initState();
     _loading = true;
-    _workTimeService
-        .findAllDatesWithTotalTimeByEmployeeId(_employee.employeeId)
-        .then((res) {
+    _workTimeService.findAllDatesWithTotalTimeByEmployeeId(_employee.employeeId).then((res) {
       setState(() {
         _employeeDates = res;
         _filteredEmployeeDates = _employeeDates;
@@ -59,10 +56,7 @@ class _EmployeeDatesPageState extends State<EmployeeDatesPage> {
   @override
   Widget build(BuildContext context) {
     if (_loading) {
-      return loaderContainer(
-          context,
-          appBar(context, _user, getTranslated(context, 'loading')),
-          managerSideBar(context, _user));
+      return loader(appBar(context, _user, getTranslated(context, 'loading')), managerSideBar(context, _user));
     }
     return MaterialApp(
       title: APP_NAME,
@@ -70,35 +64,29 @@ class _EmployeeDatesPageState extends State<EmployeeDatesPage> {
       debugShowCheckedModeBanner: false,
       home: Scaffold(
         backgroundColor: DARK,
-        appBar:
-            appBar(context, _user, _employee.name + ' ' + _employee.surname),
+        appBar: appBar(context, _user, _employee.name + ' ' + _employee.surname),
         drawer: managerSideBar(context, _user),
         body: Column(
           children: <Widget>[
             Container(
-              padding:
-                  EdgeInsets.only(top: 20, left: 10, right: 10, bottom: 10),
+              padding: EdgeInsets.only(top: 20, left: 10, right: 10, bottom: 10),
               child: TextFormField(
                 autofocus: false,
                 autocorrect: true,
                 cursorColor: WHITE,
                 style: TextStyle(color: WHITE),
                 decoration: InputDecoration(
-                    enabledBorder: OutlineInputBorder(
-                        borderSide: BorderSide(color: WHITE, width: 2)),
-                    counterStyle: TextStyle(color: WHITE),
-                    border: OutlineInputBorder(),
-                    labelText: getTranslated(context, 'search'),
-                    prefixIcon: iconWhite(Icons.search),
-                    labelStyle: TextStyle(color: WHITE)),
+                  enabledBorder: OutlineInputBorder(borderSide: BorderSide(color: WHITE, width: 2)),
+                  counterStyle: TextStyle(color: WHITE),
+                  border: OutlineInputBorder(),
+                  labelText: getTranslated(context, 'search'),
+                  prefixIcon: iconWhite(Icons.search),
+                  labelStyle: TextStyle(color: WHITE),
+                ),
                 onChanged: (string) {
                   setState(
                     () {
-                      _filteredEmployeeDates = _employeeDates
-                          .where((e) => ((e.year + ' ' + e.totalDateTime)
-                              .toLowerCase()
-                              .contains(string.toLowerCase())))
-                          .toList();
+                      _filteredEmployeeDates = _employeeDates.where((e) => ((e.year + ' ' + e.totalDateTime).toLowerCase().contains(string.toLowerCase()))).toList();
                     },
                   );
                 },
@@ -113,8 +101,7 @@ class _EmployeeDatesPageState extends State<EmployeeDatesPage> {
                       child: ListView.builder(
                         itemCount: _filteredEmployeeDates.length,
                         itemBuilder: (BuildContext context, int index) {
-                          WorkTimeDatesDto employeeDates =
-                              _filteredEmployeeDates[index];
+                          WorkTimeDatesDto employeeDates = _filteredEmployeeDates[index];
                           return Card(
                             color: DARK,
                             child: Column(
@@ -128,26 +115,14 @@ class _EmployeeDatesPageState extends State<EmployeeDatesPage> {
                                     child: Column(
                                       children: <Widget>[
                                         ListTile(
-                                          title: text20WhiteBold(
-                                              employeeDates.year +
-                                                  ' ' +
-                                                  getTranslated(this.context,
-                                                      employeeDates.month)),
+                                          title: text20WhiteBold(employeeDates.year + ' ' + getTranslated(this.context, employeeDates.month)),
                                           subtitle: Column(
                                             children: <Widget>[
                                               Align(
                                                   child: Row(
                                                     children: <Widget>[
-                                                      textWhite(getTranslated(
-                                                              this.context,
-                                                              'totalTimeWorked') +
-                                                          ': '),
-                                                      textGreenBold(employeeDates
-                                                                  .totalDateTime !=
-                                                              null
-                                                          ? employeeDates
-                                                              .totalDateTime
-                                                          : '00:00:00'),
+                                                      textWhite(getTranslated(this.context, 'totalTimeWorked') + ': '),
+                                                      textGreenBold(employeeDates.totalDateTime != null ? employeeDates.totalDateTime : '00:00:00'),
                                                     ],
                                                   ),
                                                   alignment: Alignment.topLeft),
@@ -156,15 +131,8 @@ class _EmployeeDatesPageState extends State<EmployeeDatesPage> {
                                           onTap: () => {
                                             Navigator.of(this.context).push(
                                               CupertinoPageRoute<Null>(
-                                                builder:
-                                                    (BuildContext context) {
-                                                  return EmployeeWorkTimePage(
-                                                      _user,
-                                                      _employee.employeeId,
-                                                      _employee.name +
-                                                          ' ' +
-                                                          _employee.surname,
-                                                      employeeDates);
+                                                builder: (BuildContext context) {
+                                                  return EmployeeWorkTimePage(_user, _employee.employeeId, _employee.name + ' ' + _employee.surname, employeeDates);
                                                 },
                                               ),
                                             ),
@@ -204,8 +172,7 @@ class _EmployeeDatesPageState extends State<EmployeeDatesPage> {
           padding: EdgeInsets.only(top: 10),
           child: Align(
             alignment: Alignment.center,
-            child: textCenter19White(
-                getTranslated(context, 'noDaysWorkedOfCurrentEmployee')),
+            child: textCenter19White(getTranslated(context, 'noDaysWorkedOfCurrentEmployee')),
           ),
         ),
       ],
@@ -213,9 +180,7 @@ class _EmployeeDatesPageState extends State<EmployeeDatesPage> {
   }
 
   Future<Null> _refresh() {
-    return _workTimeService
-        .findAllDatesWithTotalTimeByEmployeeId(_employee.employeeId)
-        .then((res) {
+    return _workTimeService.findAllDatesWithTotalTimeByEmployeeId(_employee.employeeId).then((res) {
       setState(() {
         _employeeDates = res;
         _filteredEmployeeDates = _employeeDates;

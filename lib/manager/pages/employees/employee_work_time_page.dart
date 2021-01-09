@@ -1,20 +1,22 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_progress_dialog/flutter_progress_dialog.dart';
 import 'package:givejobtimer_mobile/api/shared/service_initializer.dart';
+import 'package:givejobtimer_mobile/api/work_time/dto/work_time_dates_dto.dart';
 import 'package:givejobtimer_mobile/api/work_time/dto/work_time_employee_date_dto.dart';
 import 'package:givejobtimer_mobile/api/work_time/service/work_time_service.dart';
 import 'package:givejobtimer_mobile/employee/shared/employee_side_bar.dart';
 import 'package:givejobtimer_mobile/internationalization/localization/localization_constants.dart';
-import 'package:givejobtimer_mobile/api/work_time/dto/work_time_dates_dto.dart';
 import 'package:givejobtimer_mobile/manager/shared/manager_side_bar.dart';
 import 'package:givejobtimer_mobile/shared/app_bar.dart';
 import 'package:givejobtimer_mobile/shared/colors.dart';
 import 'package:givejobtimer_mobile/shared/constants.dart';
 import 'package:givejobtimer_mobile/shared/model/user.dart';
+import 'package:givejobtimer_mobile/shared/service/dialog_service.dart';
+import 'package:givejobtimer_mobile/shared/service/toastr_service.dart';
 import 'package:givejobtimer_mobile/shared/texts.dart';
-import 'package:givejobtimer_mobile/shared/toastr.dart';
-import 'package:givejobtimer_mobile/widget/circular_progress_indicator.dart';
-import 'package:slide_popup_dialog/slide_popup_dialog.dart' as slideDialog;
+import 'package:givejobtimer_mobile/shared/widget/circular_progress_indicator.dart';
+import 'package:givejobtimer_mobile/shared/widget/hint.dart';
 
 class EmployeeWorkTimePage extends StatefulWidget {
   final User _user;
@@ -22,8 +24,7 @@ class EmployeeWorkTimePage extends StatefulWidget {
   final String _employeeInfo;
   final WorkTimeDatesDto _dto;
 
-  EmployeeWorkTimePage(
-      this._user, this._employeeId, this._employeeInfo, this._dto);
+  EmployeeWorkTimePage(this._user, this._employeeId, this._employeeInfo, this._dto);
 
   @override
   _EmployeeWorkTimePageState createState() => _EmployeeWorkTimePageState();
@@ -47,8 +48,7 @@ class _EmployeeWorkTimePageState extends State<EmployeeWorkTimePage> {
     this._employeeId = widget._employeeId;
     this._employeeInfo = widget._employeeInfo;
     this._employeeDates = widget._dto;
-    this._workTimeService =
-        ServiceInitializer.initialize(_user.authHeader, WorkTimeService);
+    this._workTimeService = ServiceInitializer.initialize(context, _user.authHeader, WorkTimeService);
     _date = _employeeDates.year + ' ' + _employeeDates.month;
     if (_workTimes.isEmpty) {
       return MaterialApp(
@@ -61,12 +61,9 @@ class _EmployeeWorkTimePageState extends State<EmployeeWorkTimePage> {
           drawer: managerSideBar(this.context, _user),
           body: SingleChildScrollView(
             child: FutureBuilder(
-              future: _workTimeService.findAllByEmployeeIdAndDateIn(
-                  _employeeId, _date),
-              builder: (BuildContext context,
-                  AsyncSnapshot<List<WorkTimeDateEmployeeDto>> snapshot) {
-                if (snapshot.connectionState == ConnectionState.waiting ||
-                    snapshot.data == null) {
+              future: _workTimeService.findAllByEmployeeIdAndDateIn(_employeeId, _date),
+              builder: (BuildContext context, AsyncSnapshot<List<WorkTimeDateEmployeeDto>> snapshot) {
+                if (snapshot.connectionState == ConnectionState.waiting || snapshot.data == null) {
                   return Padding(
                     padding: EdgeInsets.only(top: 50),
                     child: Center(child: circularProgressIndicator()),
@@ -80,18 +77,12 @@ class _EmployeeWorkTimePageState extends State<EmployeeWorkTimePage> {
                         child: Column(
                           children: [
                             ListTile(
-                              title: text20White(
-                                  getTranslated(this.context, 'date')),
-                              subtitle: text20GreenBold(_employeeDates.year +
-                                  ' ' +
-                                  getTranslated(
-                                      this.context, _employeeDates.month)),
+                              title: text20White(getTranslated(this.context, 'date')),
+                              subtitle: text20GreenBold(_employeeDates.year + ' ' + getTranslated(this.context, _employeeDates.month)),
                             ),
                             ListTile(
-                              title: text20White(getTranslated(
-                                  this.context, 'totalTimeWorked')),
-                              subtitle:
-                                  text20GreenBold(_employeeDates.totalDateTime),
+                              title: text20White(getTranslated(this.context, 'totalTimeWorked')),
+                              subtitle: text20GreenBold(_employeeDates.totalDateTime),
                             ),
                           ],
                         ),
@@ -101,26 +92,15 @@ class _EmployeeWorkTimePageState extends State<EmployeeWorkTimePage> {
                         child: SingleChildScrollView(
                           scrollDirection: Axis.horizontal,
                           child: Theme(
-                            data: Theme.of(this.context)
-                                .copyWith(dividerColor: MORE_BRIGHTER_DARK),
+                            data: Theme.of(this.context).copyWith(dividerColor: MORE_BRIGHTER_DARK),
                             child: DataTable(
                               columnSpacing: 45,
                               columns: [
-                                DataColumn(
-                                    label: textWhiteBold(
-                                        getTranslated(this.context, 'date'))),
-                                DataColumn(
-                                    label: textWhiteBold(
-                                        getTranslated(this.context, 'from'))),
-                                DataColumn(
-                                    label: textWhiteBold(
-                                        getTranslated(this.context, 'to'))),
-                                DataColumn(
-                                    label: textWhiteBold(
-                                        getTranslated(this.context, 'sum'))),
-                                DataColumn(
-                                    label: textWhiteBold(getTranslated(
-                                        this.context, 'workplaceId'))),
+                                DataColumn(label: textWhiteBold(getTranslated(this.context, 'date'))),
+                                DataColumn(label: textWhiteBold(getTranslated(this.context, 'from'))),
+                                DataColumn(label: textWhiteBold(getTranslated(this.context, 'to'))),
+                                DataColumn(label: textWhiteBold(getTranslated(this.context, 'sum'))),
+                                DataColumn(label: textWhiteBold(getTranslated(this.context, 'workplaceId'))),
                               ],
                               rows: [
                                 for (var workTime in _workTimes)
@@ -132,18 +112,9 @@ class _EmployeeWorkTimePageState extends State<EmployeeWorkTimePage> {
                                     cells: [
                                       DataCell(textWhite(workTime.date)),
                                       DataCell(textWhite(workTime.startTime)),
-                                      DataCell(textWhite(
-                                          workTime.endTime != null
-                                              ? workTime.endTime
-                                              : '-')),
-                                      DataCell(textWhite(
-                                          workTime.totalTime != null
-                                              ? workTime.totalTime
-                                              : '-')),
-                                      DataCell(textWhite(
-                                          workTime.workplaceId != null
-                                              ? workTime.workplaceId
-                                              : '-')),
+                                      DataCell(textWhite(workTime.endTime != null ? workTime.endTime : '-')),
+                                      DataCell(textWhite(workTime.totalTime != null ? workTime.totalTime : '-')),
+                                      DataCell(textWhite(workTime.workplaceId != null ? workTime.workplaceId : '-')),
                                     ],
                                   ),
                               ],
@@ -184,13 +155,10 @@ class _EmployeeWorkTimePageState extends State<EmployeeWorkTimePage> {
                   children: [
                     ListTile(
                       title: text20White(getTranslated(this.context, 'date')),
-                      subtitle: text20GreenBold(_employeeDates.year +
-                          ' ' +
-                          getTranslated(this.context, _employeeDates.month)),
+                      subtitle: text20GreenBold(_employeeDates.year + ' ' + getTranslated(this.context, _employeeDates.month)),
                     ),
                     ListTile(
-                      title: text20White(
-                          getTranslated(this.context, 'totalTimeWorked')),
+                      title: text20White(getTranslated(this.context, 'totalTimeWorked')),
                       subtitle: text20GreenBold(_employeeDates.totalDateTime),
                     ),
                   ],
@@ -201,26 +169,15 @@ class _EmployeeWorkTimePageState extends State<EmployeeWorkTimePage> {
                 child: SingleChildScrollView(
                   scrollDirection: Axis.horizontal,
                   child: Theme(
-                    data: Theme.of(this.context)
-                        .copyWith(dividerColor: MORE_BRIGHTER_DARK),
+                    data: Theme.of(this.context).copyWith(dividerColor: MORE_BRIGHTER_DARK),
                     child: DataTable(
                       columnSpacing: 45,
                       columns: [
-                        DataColumn(
-                            label: textWhiteBold(
-                                getTranslated(this.context, 'date'))),
-                        DataColumn(
-                            label: textWhiteBold(
-                                getTranslated(this.context, 'from'))),
-                        DataColumn(
-                            label: textWhiteBold(
-                                getTranslated(this.context, 'to'))),
-                        DataColumn(
-                            label: textWhiteBold(
-                                getTranslated(this.context, 'sum'))),
-                        DataColumn(
-                            label: textWhiteBold(
-                                getTranslated(this.context, 'workplaceId'))),
+                        DataColumn(label: textWhiteBold(getTranslated(this.context, 'date'))),
+                        DataColumn(label: textWhiteBold(getTranslated(this.context, 'from'))),
+                        DataColumn(label: textWhiteBold(getTranslated(this.context, 'to'))),
+                        DataColumn(label: textWhiteBold(getTranslated(this.context, 'sum'))),
+                        DataColumn(label: textWhiteBold(getTranslated(this.context, 'workplaceId'))),
                       ],
                       rows: [
                         for (var workTime in _workTimes)
@@ -232,15 +189,9 @@ class _EmployeeWorkTimePageState extends State<EmployeeWorkTimePage> {
                             cells: [
                               DataCell(textWhite(workTime.date)),
                               DataCell(textWhite(workTime.startTime)),
-                              DataCell(textWhite(workTime.endTime != null
-                                  ? workTime.endTime
-                                  : '-')),
-                              DataCell(textWhite(workTime.totalTime != null
-                                  ? workTime.totalTime
-                                  : '-')),
-                              DataCell(textWhite(workTime.workplaceId != null
-                                  ? workTime.workplaceId
-                                  : '-')),
+                              DataCell(textWhite(workTime.endTime != null ? workTime.endTime : '-')),
+                              DataCell(textWhite(workTime.totalTime != null ? workTime.totalTime : '-')),
+                              DataCell(textWhite(workTime.workplaceId != null ? workTime.workplaceId : '-')),
                             ],
                           ),
                       ],
@@ -271,7 +222,7 @@ class _EmployeeWorkTimePageState extends State<EmployeeWorkTimePage> {
 
   _deleteByIdIn(Set<int> ids) {
     if (ids.isEmpty) {
-      _showHint();
+      showHint(context, getTranslated(context, 'needToSelectWorkTimes') + ' ', getTranslated(context, 'whichYouWantToRemove'));
       return;
     }
     showDialog(
@@ -280,58 +231,38 @@ class _EmployeeWorkTimePageState extends State<EmployeeWorkTimePage> {
         return AlertDialog(
           backgroundColor: DARK,
           title: textWhite(getTranslated(this.context, 'confirmation')),
-          content: textWhite(getTranslated(
-              this.context, 'areYouSureYouWantToDeleteSelectedWorkTimes')),
+          content: textWhite(getTranslated(this.context, 'areYouSureYouWantToDeleteSelectedWorkTimes')),
           actions: <Widget>[
             FlatButton(
               child: textWhite(getTranslated(this.context, 'yesDeleteThem')),
-              onPressed: () => {
-                _workTimeService
-                    .deleteByIdIn(ids.toList())
-                    .then((res) => {
-                          Navigator.pop(this.context),
-                          _refresh(),
-                          ToastService.showSuccessToast(getTranslated(
-                              this.context, 'selectedWorkTimesRemoved')),
-                        })
-                    .catchError((onError) {
-                  ToastService.showErrorToast(
-                      getTranslated(this.context, 'smthWentWrong'));
-                }),
+              onPressed: () {
+                showProgressDialog(context: context, loadingText: getTranslated(context, 'loading'));
+                _workTimeService.deleteByIdIn(ids.toList()).then((res) {
+                  Future.delayed(Duration(microseconds: 1), () => dismissProgressDialog()).whenComplete(() {
+                    Navigator.pop(this.context);
+                    _refresh();
+                    ToastService.showSuccessToast(getTranslated(this.context, 'selectedWorkTimesRemoved'));
+                  });
+                }).catchError((onError) {
+                  Future.delayed(Duration(microseconds: 1), () => dismissProgressDialog()).whenComplete(() {
+                    DialogService.showCustomDialog(
+                      context: context,
+                      titleWidget: textRed(getTranslated(context, 'error')),
+                      content: getTranslated(context, 'smthWentWrong'),
+                    );
+                  });
+                });
               },
             ),
-            FlatButton(
-                child: textWhite(getTranslated(this.context, 'no')),
-                onPressed: () => Navigator.of(this.context).pop()),
+            FlatButton(child: textWhite(getTranslated(this.context, 'no')), onPressed: () => Navigator.of(this.context).pop()),
           ],
         );
       },
     );
   }
 
-  void _showHint() {
-    slideDialog.showSlideDialog(
-      context: context,
-      backgroundColor: DARK,
-      child: Padding(
-        padding: EdgeInsets.all(10),
-        child: Column(
-          children: <Widget>[
-            text20GreenBold(getTranslated(context, 'hint')),
-            SizedBox(height: 10),
-            textCenter20White(
-                getTranslated(context, 'needToSelectWorkTimes') + ' '),
-            textCenter20White(getTranslated(context, 'whichYouWantToRemove')),
-          ],
-        ),
-      ),
-    );
-  }
-
   Future<Null> _refresh() {
-    return _workTimeService
-        .findAllByEmployeeIdAndDateIn(_employeeId, _date)
-        .then((res) {
+    return _workTimeService.findAllByEmployeeIdAndDateIn(_employeeId, _date).then((res) {
       setState(() {
         _workTimes = res;
       });

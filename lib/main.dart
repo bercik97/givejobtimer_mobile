@@ -6,14 +6,17 @@ import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:givejobtimer_mobile/shared/colors.dart';
 import 'package:givejobtimer_mobile/shared/constants.dart';
 import 'package:givejobtimer_mobile/shared/model/user.dart';
+import 'package:givejobtimer_mobile/shared/own_upgrader_messages.dart';
 import 'package:givejobtimer_mobile/unauthenticated/get_started_page.dart';
 import 'package:givejobtimer_mobile/unauthenticated/login_page.dart';
+import 'package:splashscreen/splashscreen.dart';
+import 'package:upgrader/upgrader.dart';
 
 import 'employee/employee_page.dart';
 import 'internationalization/localization/demo_localization.dart';
 import 'internationalization/localization/localization_constants.dart';
 import 'manager/manager_page.dart';
-import 'own_http_overrides.dart';
+import 'shared/own_http_overrides.dart';
 
 final storage = new FlutterSecureStorage();
 
@@ -89,10 +92,10 @@ class _MyAppState extends State<MyApp> {
   @override
   Widget build(BuildContext context) {
     if (_locale == null) {
-      return Container(
-        child: Center(child: CircularProgressIndicator()),
-      );
+      return Container(child: Center(child: CircularProgressIndicator()));
     } else {
+      final appcastURL = 'https://givejob.pl/mobile-app/appcast_timer.xml';
+      final cfg = AppcastConfiguration(url: appcastURL, supportedOS: ['android']);
       return MaterialApp(
         title: APP_NAME,
         theme: ThemeData(primarySwatch: MaterialColor(0xFFB5D76D, GREEN_RGBO)),
@@ -114,35 +117,55 @@ class _MyAppState extends State<MyApp> {
         ],
         localeResolutionCallback: (deviceLocale, supportedLocales) {
           for (var locale in supportedLocales) {
-            if (locale.languageCode == deviceLocale.languageCode &&
-                locale.countryCode == deviceLocale.countryCode) {
+            if (locale.languageCode == deviceLocale.languageCode && locale.countryCode == deviceLocale.countryCode) {
               return deviceLocale;
             }
           }
           return supportedLocales.first;
         },
         debugShowCheckedModeBanner: false,
-        home: FutureBuilder(
-          future: authOrEmpty,
-          builder: (context, snapshot) {
-            Map<String, String> data = snapshot.data;
-            if (data == null) {
-              return GetStartedPage();
-            }
-            String getStartedClick = data['getStartedClick'];
-            if (getStartedClick == null) {
-              return GetStartedPage();
-            }
-            User user = new User().create(data);
-            String role = user.role;
-            if (role == ROLE_EMPLOYEE) {
-              return EmployeePage(user);
-            } else if (role == ROLE_MANAGER) {
-              return ManagerPage(user);
-            } else {
-              return LoginPage();
-            }
-          },
+        home: SplashScreen(
+          seconds: 3,
+          image: new Image.asset('images/logo.png'),
+          backgroundColor: DARK,
+          photoSize: 50,
+          loaderColor: GREEN,
+          navigateAfterSeconds: FutureBuilder(
+            future: authOrEmpty,
+            builder: (context, snapshot) {
+              Map<String, String> data = snapshot.data;
+              if (data == null) {
+                return GetStartedPage();
+              }
+              StatefulWidget pageToReturn;
+              String getStartedClick = data['getStartedClick'];
+              if (getStartedClick == null) {
+                pageToReturn = GetStartedPage();
+              }
+              User user = new User().create(data);
+              String role = user.role;
+              if (role == ROLE_EMPLOYEE) {
+                pageToReturn = EmployeePage(user);
+              } else if (role == ROLE_MANAGER) {
+                pageToReturn = ManagerPage(user);
+              } else {
+                pageToReturn = LoginPage();
+              }
+              return UpgradeAlert(
+                appcastConfig: cfg,
+                debugLogging: true,
+                showLater: false,
+                messages: OwnUpgraderMessages(
+                  getTranslated(context, 'updateTitle'),
+                  getTranslated(context, 'newVersionOfApp'),
+                  getTranslated(context, 'prompt'),
+                  getTranslated(context, 'ignore'),
+                  getTranslated(context, 'updateNow'),
+                ),
+                child: pageToReturn,
+              );
+            },
+          ),
         ),
       );
     }

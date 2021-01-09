@@ -3,7 +3,6 @@ import 'dart:convert';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:givejobtimer_mobile/internationalization/localization/localization_constants.dart';
-import 'package:givejobtimer_mobile/internationalization/util/language_util.dart';
 import 'package:givejobtimer_mobile/manager/pages/employees/employees_page.dart';
 import 'package:givejobtimer_mobile/manager/pages/workplace/workplace_page.dart';
 import 'package:givejobtimer_mobile/manager/shared/manager_side_bar.dart';
@@ -11,10 +10,11 @@ import 'package:givejobtimer_mobile/shared/app_bar.dart';
 import 'package:givejobtimer_mobile/shared/colors.dart';
 import 'package:givejobtimer_mobile/shared/constants.dart';
 import 'package:givejobtimer_mobile/shared/icons.dart';
-import 'package:givejobtimer_mobile/shared/logout.dart';
 import 'package:givejobtimer_mobile/shared/model/user.dart';
 import 'package:givejobtimer_mobile/shared/page/edit_user.dart';
+import 'package:givejobtimer_mobile/shared/service/logout_service.dart';
 import 'package:givejobtimer_mobile/shared/texts.dart';
+import 'package:givejobtimer_mobile/shared/util/language_util.dart';
 
 class ManagerPage extends StatefulWidget {
   final User _user;
@@ -53,19 +53,16 @@ class _ManagerPageState extends State<ManagerPage> {
                         height: 120,
                         decoration: BoxDecoration(
                           shape: BoxShape.circle,
-                          image: DecorationImage(
-                              image: AssetImage('images/big-manager-icon.png')),
+                          image: DecorationImage(image: AssetImage('images/big-manager-icon.png')),
                         ),
                       ),
                       Ink(
-                        decoration: ShapeDecoration(
-                            color: GREEN, shape: CircleBorder()),
+                        decoration: ShapeDecoration(color: GREEN, shape: CircleBorder()),
                         child: IconButton(
                           icon: iconDark(Icons.border_color),
                           onPressed: () => Navigator.push(
                             context,
-                            MaterialPageRoute(
-                                builder: (context) => EditUserPage(_user)),
+                            MaterialPageRoute(builder: (context) => EditUserPage(_user)),
                           ),
                         ),
                       ),
@@ -73,19 +70,11 @@ class _ManagerPageState extends State<ManagerPage> {
                   ),
                   Column(
                     children: <Widget>[
-                      text25WhiteBold(utf8.decode(_employeeInfo != null
-                          ? _employeeInfo.runes.toList()
-                          : '-')),
+                      text25WhiteBold(utf8.decode(_employeeInfo != null ? _employeeInfo.runes.toList() : '-')),
                       SizedBox(height: 2.5),
-                      text20White(LanguageUtil.convertShortNameToFullName(
-                              this.context, _user.nationality) +
-                          ' ' +
-                          LanguageUtil.findFlagByNationality(
-                              _user.nationality)),
+                      text20White(LanguageUtil.convertShortNameToFullName(this.context, _user.nationality) + ' ' + LanguageUtil.findFlagByNationality(_user.nationality)),
                       SizedBox(height: 2.5),
-                      text18White(getTranslated(context, 'manager') +
-                          ' #' +
-                          _user.id.toString()),
+                      text18White(getTranslated(context, 'manager') + ' #' + _user.id.toString()),
                     ],
                   ),
                   SingleChildScrollView(
@@ -109,10 +98,7 @@ class _ManagerPageState extends State<ManagerPage> {
                                         ),
                                       );
                                     },
-                                    child: _buildScrollableContainer(
-                                        'images/big-employees-icon.png',
-                                        'employees',
-                                        'seeYourEmployees'),
+                                    child: _buildScrollableContainer('images/big-employees-icon.png', 'employees', 'seeYourEmployees'),
                                   ),
                                 ),
                               ),
@@ -130,10 +116,7 @@ class _ManagerPageState extends State<ManagerPage> {
                                         ),
                                       ),
                                     },
-                                    child: _buildScrollableContainer(
-                                        'images/big-workplace-icon.png',
-                                        'workplaces',
-                                        'manageWorkplaces'),
+                                    child: _buildScrollableContainer('images/big-workplace-icon.png', 'workplaces', 'manageWorkplaces'),
                                   ),
                                 ),
                               ),
@@ -153,8 +136,7 @@ class _ManagerPageState extends State<ManagerPage> {
     );
   }
 
-  Widget _buildScrollableContainer(
-      String imagePath, String title, String subtitle) {
+  Widget _buildScrollableContainer(String imagePath, String title, String subtitle) {
     return Container(
       height: 160,
       child: SingleChildScrollView(
@@ -163,10 +145,8 @@ class _ManagerPageState extends State<ManagerPage> {
           children: <Widget>[
             Image(height: 100, image: AssetImage(imagePath)),
             text18WhiteBold(getTranslated(context, title)),
-            Padding(
-                padding: EdgeInsets.only(left: 10, right: 10),
-                child: textCenter13White(getTranslated(context, subtitle))),
-            SizedBox(height: 10)
+            Padding(padding: EdgeInsets.only(left: 10, right: 10), child: textCenter13White(getTranslated(context, subtitle))),
+            SizedBox(height: 10),
           ],
         ),
       ),

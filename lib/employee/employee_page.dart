@@ -5,16 +5,16 @@ import 'package:flutter/material.dart';
 import 'package:givejobtimer_mobile/employee/shared/employee_side_bar.dart';
 import 'package:givejobtimer_mobile/employee/working_time/working_time_page.dart';
 import 'package:givejobtimer_mobile/internationalization/localization/localization_constants.dart';
-import 'package:givejobtimer_mobile/internationalization/util/language_util.dart';
 import 'package:givejobtimer_mobile/shared/app_bar.dart';
 import 'package:givejobtimer_mobile/shared/colors.dart';
 import 'package:givejobtimer_mobile/shared/constants.dart';
 import 'package:givejobtimer_mobile/shared/icons.dart';
-import 'package:givejobtimer_mobile/shared/logout.dart';
 import 'package:givejobtimer_mobile/shared/model/user.dart';
 import 'package:givejobtimer_mobile/shared/page/edit_user.dart';
+import 'package:givejobtimer_mobile/shared/service/logout_service.dart';
 import 'package:givejobtimer_mobile/shared/texts.dart';
-import 'package:givejobtimer_mobile/widget/contact_section.dart';
+import 'package:givejobtimer_mobile/shared/util/language_util.dart';
+import 'package:givejobtimer_mobile/shared/widget/contact_section.dart';
 
 class EmployeePage extends StatefulWidget {
   final User _user;
@@ -53,20 +53,16 @@ class _EmployeePageState extends State<EmployeePage> {
                         height: 120,
                         decoration: BoxDecoration(
                           shape: BoxShape.circle,
-                          image: DecorationImage(
-                              image:
-                                  AssetImage('images/big-employee-icon.png')),
+                          image: DecorationImage(image: AssetImage('images/big-employee-icon.png')),
                         ),
                       ),
                       Ink(
-                        decoration: ShapeDecoration(
-                            color: GREEN, shape: CircleBorder()),
+                        decoration: ShapeDecoration(color: GREEN, shape: CircleBorder()),
                         child: IconButton(
                           icon: iconDark(Icons.border_color),
                           onPressed: () => Navigator.push(
                             context,
-                            MaterialPageRoute(
-                                builder: (context) => EditUserPage(_user)),
+                            MaterialPageRoute(builder: (context) => EditUserPage(_user)),
                           ),
                         ),
                       ),
@@ -74,19 +70,11 @@ class _EmployeePageState extends State<EmployeePage> {
                   ),
                   Column(
                     children: <Widget>[
-                      text25WhiteBold(utf8.decode(_employeeInfo != null
-                          ? _employeeInfo.runes.toList()
-                          : '-')),
+                      text25WhiteBold(utf8.decode(_employeeInfo != null ? _employeeInfo.runes.toList() : '-')),
                       SizedBox(height: 2.5),
-                      text20White(LanguageUtil.convertShortNameToFullName(
-                              this.context, _user.nationality) +
-                          ' ' +
-                          LanguageUtil.findFlagByNationality(
-                              _user.nationality)),
+                      text20White(LanguageUtil.convertShortNameToFullName(this.context, _user.nationality) + ' ' + LanguageUtil.findFlagByNationality(_user.nationality)),
                       SizedBox(height: 2.5),
-                      text18White(getTranslated(context, 'employee') +
-                          ' #' +
-                          _user.id.toString()),
+                      text18White(getTranslated(context, 'employee') + ' #' + _user.id.toString()),
                     ],
                   ),
                   SingleChildScrollView(
@@ -110,10 +98,7 @@ class _EmployeePageState extends State<EmployeePage> {
                                         ),
                                       );
                                     },
-                                    child: _buildScrollableContainer(
-                                        'images/big-employee-work-icon.png',
-                                        'workingTime',
-                                        'startFinishWork'),
+                                    child: _buildScrollableContainer('images/big-employee-work-icon.png', 'workingTime', 'startFinishWork'),
                                   ),
                                 ),
                               ),
@@ -122,17 +107,8 @@ class _EmployeePageState extends State<EmployeePage> {
                                 child: Material(
                                   color: BRIGHTER_DARK,
                                   child: InkWell(
-                                    onTap: () => {
-                                      showContactDialog(
-                                          context,
-                                          _user.managerPhone,
-                                          _user.managerViber,
-                                          _user.managerWhatsApp),
-                                    },
-                                    child: _buildScrollableContainer(
-                                        'images/big-contact-with-manager-icon.png',
-                                        'contact',
-                                        'contactWithYourManager'),
+                                    onTap: () => showContactDialog(context, _user.managerPhone, _user.managerViber, _user.managerWhatsApp),
+                                    child: _buildScrollableContainer('images/big-contact-with-manager-icon.png', 'contact', 'contactWithYourManager'),
                                   ),
                                 ),
                               ),
@@ -152,8 +128,7 @@ class _EmployeePageState extends State<EmployeePage> {
     );
   }
 
-  Widget _buildScrollableContainer(
-      String imagePath, String title, String subtitle) {
+  Widget _buildScrollableContainer(String imagePath, String title, String subtitle) {
     return Container(
       height: 160,
       child: SingleChildScrollView(
@@ -162,10 +137,8 @@ class _EmployeePageState extends State<EmployeePage> {
           children: <Widget>[
             Image(height: 100, image: AssetImage(imagePath)),
             text18WhiteBold(getTranslated(context, title)),
-            Padding(
-                padding: EdgeInsets.only(left: 10, right: 10),
-                child: textCenter13White(getTranslated(context, subtitle))),
-            SizedBox(height: 10)
+            Padding(padding: EdgeInsets.only(left: 10, right: 10), child: textCenter13White(getTranslated(context, subtitle))),
+            SizedBox(height: 10),
           ],
         ),
       ),

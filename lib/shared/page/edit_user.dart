@@ -2,15 +2,17 @@ import 'package:dropdown_formfield/dropdown_formfield.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_progress_dialog/flutter_progress_dialog.dart';
 import 'package:form_field_validator/form_field_validator.dart';
 import 'package:givejobtimer_mobile/api/shared/service_initializer.dart';
 import 'package:givejobtimer_mobile/api/user/service/user_service.dart';
 import 'package:givejobtimer_mobile/employee/shared/employee_side_bar.dart';
 import 'package:givejobtimer_mobile/internationalization/localization/localization_constants.dart';
-import 'package:givejobtimer_mobile/internationalization/util/language_util.dart';
 import 'package:givejobtimer_mobile/manager/shared/manager_side_bar.dart';
 import 'package:givejobtimer_mobile/shared/model/user.dart';
-import 'package:givejobtimer_mobile/shared/toastr.dart';
+import 'package:givejobtimer_mobile/shared/service/dialog_service.dart';
+import 'package:givejobtimer_mobile/shared/service/toastr_service.dart';
+import 'package:givejobtimer_mobile/shared/util/language_util.dart';
 
 import '../app_bar.dart';
 import '../colors.dart';
@@ -47,8 +49,7 @@ class _EditUserPageState extends State<EditUserPage> {
     super.initState();
     this._user = widget._user;
     this._fieldsValues = new Map();
-    this._userService =
-        ServiceInitializer.initialize(_user.authHeader, UserService);
+    this._userService = ServiceInitializer.initialize(context, _user.authHeader, UserService);
     this._nameController.text = _user.name;
     this._surnameController.text = _user.surname;
     this._phoneController.text = _user.phone;
@@ -66,9 +67,7 @@ class _EditUserPageState extends State<EditUserPage> {
       home: Scaffold(
         backgroundColor: DARK,
         appBar: appBar(context, _user, getTranslated(context, 'edit')),
-        drawer: _user.role == ROLE_MANAGER
-            ? managerSideBar(context, _user)
-            : employeeSideBar(context, _user),
+        drawer: _user.role == ROLE_MANAGER ? managerSideBar(context, _user) : employeeSideBar(context, _user),
         body: Padding(
           padding: EdgeInsets.fromLTRB(25, 0, 25, 25),
           child: Center(
@@ -78,8 +77,7 @@ class _EditUserPageState extends State<EditUserPage> {
               child: Column(
                 children: [
                   SizedBox(height: 10),
-                  textCenter28GreenBold(
-                      getTranslated(context, 'informationAboutYou')),
+                  textCenter28GreenBold(getTranslated(context, 'informationAboutYou')),
                   Divider(color: WHITE),
                   SizedBox(height: 10),
                   Expanded(
@@ -146,8 +144,7 @@ class _EditUserPageState extends State<EditUserPage> {
     );
   }
 
-  Widget _buildRequiredTextField(TextEditingController controller,
-      int maxLength, String labelText, String errorText, IconData icon) {
+  Widget _buildRequiredTextField(TextEditingController controller, int maxLength, String labelText, String errorText, IconData icon) {
     return Column(
       children: <Widget>[
         TextFormField(
@@ -156,14 +153,7 @@ class _EditUserPageState extends State<EditUserPage> {
           cursorColor: WHITE,
           maxLength: maxLength,
           style: TextStyle(color: WHITE),
-          decoration: InputDecoration(
-              enabledBorder: OutlineInputBorder(
-                  borderSide: BorderSide(color: WHITE, width: 2)),
-              counterStyle: TextStyle(color: WHITE),
-              border: OutlineInputBorder(),
-              labelText: labelText,
-              prefixIcon: iconWhite(icon),
-              labelStyle: TextStyle(color: WHITE)),
+          decoration: InputDecoration(enabledBorder: OutlineInputBorder(borderSide: BorderSide(color: WHITE, width: 2)), counterStyle: TextStyle(color: WHITE), border: OutlineInputBorder(), labelText: labelText, prefixIcon: iconWhite(icon), labelStyle: TextStyle(color: WHITE)),
           validator: RequiredValidator(errorText: errorText),
         ),
         SizedBox(height: 10),
@@ -171,8 +161,7 @@ class _EditUserPageState extends State<EditUserPage> {
     );
   }
 
-  Widget _buildContactNumField(
-      TextEditingController controller, String labelText, IconData icon) {
+  Widget _buildContactNumField(TextEditingController controller, String labelText, IconData icon) {
     String validate(String value) {
       String phone = _phoneController.text;
       String viber = _viberController.text;
@@ -192,17 +181,8 @@ class _EditUserPageState extends State<EditUserPage> {
           controller: controller,
           style: TextStyle(color: WHITE),
           keyboardType: TextInputType.number,
-          inputFormatters: <TextInputFormatter>[
-            WhitelistingTextInputFormatter.digitsOnly
-          ],
-          decoration: InputDecoration(
-              enabledBorder: OutlineInputBorder(
-                  borderSide: BorderSide(color: WHITE, width: 2)),
-              counterStyle: TextStyle(color: WHITE),
-              border: OutlineInputBorder(),
-              labelText: labelText,
-              prefixIcon: iconWhite(icon),
-              labelStyle: TextStyle(color: WHITE)),
+          inputFormatters: <TextInputFormatter>[WhitelistingTextInputFormatter.digitsOnly],
+          decoration: InputDecoration(enabledBorder: OutlineInputBorder(borderSide: BorderSide(color: WHITE, width: 2)), counterStyle: TextStyle(color: WHITE), border: OutlineInputBorder(), labelText: labelText, prefixIcon: iconWhite(icon), labelStyle: TextStyle(color: WHITE)),
           validator: (value) => validate(value),
         ),
         SizedBox(height: 10),
@@ -232,36 +212,12 @@ class _EditUserPageState extends State<EditUserPage> {
                 });
               },
               dataSource: [
-                {
-                  'display':
-                      'Беларус ' + LanguageUtil.findFlagByNationality('BE'),
-                  'value': 'BE'
-                },
-                {
-                  'display':
-                      'English ' + LanguageUtil.findFlagByNationality('EN'),
-                  'value': 'EN'
-                },
-                {
-                  'display':
-                      'ქართული ' + LanguageUtil.findFlagByNationality('GE'),
-                  'value': 'GE'
-                },
-                {
-                  'display':
-                      'Polska ' + LanguageUtil.findFlagByNationality('PL'),
-                  'value': 'PL'
-                },
-                {
-                  'display':
-                      'русский ' + LanguageUtil.findFlagByNationality('RU'),
-                  'value': 'RU'
-                },
-                {
-                  'display':
-                      'Українська ' + LanguageUtil.findFlagByNationality('UK'),
-                  'value': 'UK'
-                },
+                {'display': 'Беларус ' + LanguageUtil.findFlagByNationality('BE'), 'value': 'BE'},
+                {'display': 'English ' + LanguageUtil.findFlagByNationality('EN'), 'value': 'EN'},
+                {'display': 'ქართული ' + LanguageUtil.findFlagByNationality('GE'), 'value': 'GE'},
+                {'display': 'Polska ' + LanguageUtil.findFlagByNationality('PL'), 'value': 'PL'},
+                {'display': 'русский ' + LanguageUtil.findFlagByNationality('RU'), 'value': 'RU'},
+                {'display': 'Українська ' + LanguageUtil.findFlagByNationality('UK'), 'value': 'UK'},
               ],
               textField: 'display',
               valueField: 'value',
@@ -282,43 +238,46 @@ class _EditUserPageState extends State<EditUserPage> {
           elevation: 0,
           minWidth: double.maxFinite,
           height: 50,
-          shape: new RoundedRectangleBorder(
-              borderRadius: new BorderRadius.circular(30.0)),
-          onPressed: () => {
-            if (!_isValid())
-              {
-                _errorDialog(getTranslated(context, 'correctInvalidFields')),
-              }
-            else
-              {
-                _fieldsValues = {
-                  "name": _nameController.text,
-                  "surname": _surnameController.text,
-                  "nationality": _nationality,
-                  "phone": _phoneController.text,
-                  "viber": _viberController.text,
-                  "whatsApp": _whatsAppController.text,
-                },
-                _userService.update(
-                  _user.id,
-                  {
-                    "name": _nameController.text,
-                    "surname": _surnameController.text,
-                    "nationality": _nationality,
-                    "phone": _phoneController.text,
-                    "viber": _viberController.text,
-                    "whatsApp": _whatsAppController.text,
-                  },
-                ).then((res) {
+          shape: new RoundedRectangleBorder(borderRadius: new BorderRadius.circular(30.0)),
+          onPressed: () {
+            if (!_isValid()) {
+              DialogService.showCustomDialog(
+                context: context,
+                titleWidget: textRed(getTranslated(context, 'error')),
+                content: getTranslated(context, 'correctInvalidFields'),
+              );
+            } else {
+              _fieldsValues = {
+                "name": _nameController.text,
+                "surname": _surnameController.text,
+                "nationality": _nationality,
+                "phone": _phoneController.text,
+                "viber": _viberController.text,
+                "whatsApp": _whatsAppController.text,
+              };
+              showProgressDialog(context: context, loadingText: getTranslated(context, 'loading'));
+              _userService.update(_user.id, {
+                "name": _nameController.text,
+                "surname": _surnameController.text,
+                "nationality": _nationality,
+                "phone": _phoneController.text,
+                "viber": _viberController.text,
+                "whatsApp": _whatsAppController.text,
+              }).then((res) {
+                Future.delayed(Duration(microseconds: 1), () => dismissProgressDialog()).whenComplete(() {
                   _user.update(_fieldsValues);
-                  ToastService.showSuccessToast(getTranslated(
-                      context, 'successfullyUpdatedInformationAboutYou'));
-                }).catchError((onError) {
-                  _errorDialog(
-                    getTranslated(context, 'smthWentWrong'),
+                  ToastService.showSuccessToast(getTranslated(context, 'successfullyUpdatedInformationAboutYou'));
+                });
+              }).catchError((onError) {
+                Future.delayed(Duration(microseconds: 1), () => dismissProgressDialog()).whenComplete(() {
+                  DialogService.showCustomDialog(
+                    context: context,
+                    titleWidget: textRed(getTranslated(context, 'error')),
+                    content: getTranslated(context, 'smthWentWrong'),
                   );
-                }),
-              }
+                });
+              });
+            }
           },
           color: GREEN,
           child: text20White(getTranslated(context, 'update')),
@@ -330,31 +289,5 @@ class _EditUserPageState extends State<EditUserPage> {
 
   bool _isValid() {
     return formKey.currentState.validate();
-  }
-
-  _errorDialog(String content) {
-    return showDialog(
-      barrierDismissible: false,
-      context: context,
-      builder: (BuildContext context) {
-        return AlertDialog(
-          backgroundColor: DARK,
-          title: textGreen(getTranslated(context, 'error')),
-          content: SingleChildScrollView(
-            child: ListBody(
-              children: <Widget>[
-                textWhite(content),
-              ],
-            ),
-          ),
-          actions: <Widget>[
-            FlatButton(
-              child: textWhite(getTranslated(context, 'close')),
-              onPressed: () => Navigator.of(context).pop(),
-            ),
-          ],
-        );
-      },
-    );
   }
 }
