@@ -94,7 +94,7 @@ class _EmployeeWorkTimePageState extends State<EmployeeWorkTimePage> {
                           child: Theme(
                             data: Theme.of(this.context).copyWith(dividerColor: MORE_BRIGHTER_DARK),
                             child: DataTable(
-                              columnSpacing: 45,
+                              columnSpacing: 10,
                               columns: [
                                 DataColumn(label: textWhiteBold(getTranslated(this.context, 'date'))),
                                 DataColumn(label: textWhiteBold(getTranslated(this.context, 'from'))),
@@ -171,7 +171,7 @@ class _EmployeeWorkTimePageState extends State<EmployeeWorkTimePage> {
                   child: Theme(
                     data: Theme.of(this.context).copyWith(dividerColor: MORE_BRIGHTER_DARK),
                     child: DataTable(
-                      columnSpacing: 45,
+                      columnSpacing: 10,
                       columns: [
                         DataColumn(label: textWhiteBold(getTranslated(this.context, 'date'))),
                         DataColumn(label: textWhiteBold(getTranslated(this.context, 'from'))),

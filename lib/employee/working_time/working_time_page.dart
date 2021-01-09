@@ -353,7 +353,7 @@ class _WorkingTimePageState extends State<WorkingTimePage> {
         child: Theme(
           data: Theme.of(this.context).copyWith(dividerColor: MORE_BRIGHTER_DARK),
           child: DataTable(
-            columnSpacing: 45,
+            columnSpacing: 10,
             columns: [
               DataColumn(label: textWhiteBold(getTranslated(this.context, 'from'))),
               DataColumn(label: textWhiteBold(getTranslated(this.context, 'to'))),
