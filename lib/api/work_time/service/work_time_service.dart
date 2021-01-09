@@ -30,8 +30,8 @@ class WorkTimeService {
     }
   }
 
-  Future<List<WorkTimeEmployeeDto>> findAllDatesWithTotalTimeByWorkplaceId(String workplaceId) async {
-    String url = _url + '?workplace_id=$workplaceId';
+  Future<List<WorkTimeEmployeeDto>> findAllDatesWithTotalTimeByWorkplaceIdAndYearMonthIn(String workplaceId, String date) async {
+    String url = _url + '?workplace_id=$workplaceId&date=$date';
     Response res = await get(url, headers: _header);
     if (res.statusCode == 200) {
       return (json.decode(res.body) as List).map((data) => WorkTimeEmployeeDto.fromJson(data)).toList();

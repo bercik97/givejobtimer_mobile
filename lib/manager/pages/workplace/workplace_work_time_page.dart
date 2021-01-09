@@ -72,7 +72,7 @@ class _WorkplaceWorkTimePageState extends State<WorkplaceWorkTimePage> {
             ),
             SingleChildScrollView(
               child: FutureBuilder(
-                future: _workTimeService.findAllDatesWithTotalTimeByWorkplaceId(_workplaceDto.id),
+                future: _workTimeService.findAllDatesWithTotalTimeByWorkplaceIdAndYearMonthIn(_workplaceDto.id, _workplace.year + '-' + _workplace.month),
                 builder: (BuildContext context, AsyncSnapshot<List<WorkTimeEmployeeDto>> snapshot) {
                   if (snapshot.connectionState == ConnectionState.waiting || snapshot.data == null) {
                     return Padding(
@@ -88,8 +88,9 @@ class _WorkplaceWorkTimePageState extends State<WorkplaceWorkTimePage> {
                         child: Theme(
                           data: Theme.of(this.context).copyWith(dividerColor: MORE_BRIGHTER_DARK),
                           child: DataTable(
-                            columnSpacing: 45,
+                            columnSpacing: 10,
                             columns: [
+                              DataColumn(label: textWhiteBold(getTranslated(this.context, 'date'))),
                               DataColumn(label: textWhiteBold(getTranslated(this.context, 'from'))),
                               DataColumn(label: textWhiteBold(getTranslated(this.context, 'to'))),
                               DataColumn(label: textWhiteBold(getTranslated(this.context, 'sum'))),
@@ -99,6 +100,7 @@ class _WorkplaceWorkTimePageState extends State<WorkplaceWorkTimePage> {
                               for (var workTime in _workTimes)
                                 DataRow(
                                   cells: [
+                                    DataCell(textWhite(workTime.date)),
                                     DataCell(textWhite(workTime.startTime)),
                                     DataCell(textWhite(workTime.endTime != null ? workTime.endTime : '-')),
                                     DataCell(textWhite(workTime.totalTime != null ? workTime.totalTime : '-')),
