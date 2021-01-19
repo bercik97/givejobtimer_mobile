@@ -187,5 +187,8 @@
   "someOfSelectedEmployeesAreInWork": "Niektórzy z zaznaczonych pracowników są obecnie w pracy.",
   "someOfSelectedEmployeesAreNotInWork": "Niektórzy z zaznaczonych pracowników nie są obecnie w pracy.",
   "ifYouWantToStartWorkPleaseFirstStopTheirWork": "Jeśli chcesz zacząc naliczać czas, proszę odznacz błędnie wybranych pracowników lub skończ ich bieżącą pracę",
-  "ifYouWantToStopWorkPleaseFirstStartTheirWork": "Jeśli chcesz skończyć naliczać czas, proszę odznacz błędnie wybranych pracowników lub rozpocznij ich pracę"
+  "ifYouWantToStopWorkPleaseFirstStartTheirWork": "Jeśli chcesz skończyć naliczać czas, proszę odznacz błędnie wybranych pracowników lub rozpocznij ich pracę",
+  "chooseWorkplaceWhereSelectedEmployeesWillStartWork": "Wybierz miejsce pracy w którym wybrani pracownicy rozpoczną pracę",
+  "goToWorkplacesSectionAndAddSomeWorkplaces": "Przejdź do sekcji miejsca pracy aby dodać miejsca pracy",
+  "workHasBeenStartedSuccessfullyForSelectedEmployees": "Praca została zaczęta dla wybranych pracowników"
 }

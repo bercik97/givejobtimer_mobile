@@ -30,6 +30,20 @@ class WorkTimeService {
     }
   }
 
+  Future<dynamic> createForEmployees(List<String> employeeIds, String workplaceId) async {
+    Response res = await post(
+      '$_url/employees/$employeeIds?workplace_id=$workplaceId',
+      headers: _headers,
+    );
+    if (res.statusCode == 200) {
+      return res;
+    } else if (res.statusCode == 401) {
+      return Logout.handle401WithLogout(_context);
+    } else {
+      return Future.error(res.body);
+    }
+  }
+
   Future<List<WorkTimeEmployeeDto>> findAllDatesWithTotalTimeByWorkplaceIdAndYearMonthIn(String workplaceId, String date) async {
     String url = _url + '?workplace_id=$workplaceId&date=$date';
     Response res = await get(url, headers: _header);

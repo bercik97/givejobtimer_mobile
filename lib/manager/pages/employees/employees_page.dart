@@ -3,9 +3,13 @@ import 'dart:convert';
 
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_progress_dialog/flutter_progress_dialog.dart';
 import 'package:givejobtimer_mobile/api/employee/dto/employee_dto.dart';
 import 'package:givejobtimer_mobile/api/employee/service/employee_service.dart';
 import 'package:givejobtimer_mobile/api/shared/service_initializer.dart';
+import 'package:givejobtimer_mobile/api/work_time/service/work_time_service.dart';
+import 'package:givejobtimer_mobile/api/workplace/dto/workplace_dto.dart';
+import 'package:givejobtimer_mobile/api/workplace/service/workplace_service.dart';
 import 'package:givejobtimer_mobile/internationalization/localization/localization_constants.dart';
 import 'package:givejobtimer_mobile/manager/pages/employees/employee_dates_page.dart';
 import 'package:givejobtimer_mobile/manager/shared/manager_side_bar.dart';
@@ -15,6 +19,8 @@ import 'package:givejobtimer_mobile/shared/constants.dart';
 import 'package:givejobtimer_mobile/shared/icons.dart';
 import 'package:givejobtimer_mobile/shared/loader_container.dart';
 import 'package:givejobtimer_mobile/shared/model/user.dart';
+import 'package:givejobtimer_mobile/shared/service/dialog_service.dart';
+import 'package:givejobtimer_mobile/shared/service/toastr_service.dart';
 import 'package:givejobtimer_mobile/shared/texts.dart';
 import 'package:givejobtimer_mobile/shared/util/icons_legend_util.dart';
 import 'package:givejobtimer_mobile/shared/util/language_util.dart';
@@ -32,11 +38,20 @@ class EmployeesPage extends StatefulWidget {
 
 class _EmployeesPageState extends State<EmployeesPage> {
   EmployeeService _employeeService;
+  WorkplaceService _workplaceService;
+  WorkTimeService _workTimeService;
 
   User _user;
 
   List<EmployeeDto> _employees = new List();
   List<EmployeeDto> _filteredEmployees = new List();
+
+  List<WorkplaceDto> _workplaces = new List();
+  List<int> _workplacesRadioValues = new List();
+  int _chosenIndex = -1;
+  bool _isChoseWorkplaceBtnDisabled = true;
+  bool _isChoseWorkplaceButtonTapped = false;
+
   bool _loading = false;
 
   bool _isChecked = false;
@@ -48,6 +63,8 @@ class _EmployeesPageState extends State<EmployeesPage> {
   void initState() {
     this._user = widget._user;
     this._employeeService = ServiceInitializer.initialize(context, _user.authHeader, EmployeeService);
+    this._workplaceService = ServiceInitializer.initialize(context, _user.authHeader, WorkplaceService);
+    this._workTimeService = ServiceInitializer.initialize(context, _user.authHeader, WorkTimeService);
     super.initState();
     _loading = true;
     _employeeService.findAllByManagerId(_user.managerId).then((res) {
@@ -55,7 +72,13 @@ class _EmployeesPageState extends State<EmployeesPage> {
         _employees = res;
         _employees.forEach((e) => _checked.add(false));
         _filteredEmployees = _employees;
-        _loading = false;
+        _workplaceService.findAllByManagerId(_user.managerId).then((res) {
+          setState(() {
+            _workplaces = res;
+            _workplaces.forEach((element) => _workplacesRadioValues.add(-1));
+            _loading = false;
+          });
+        });
       });
     });
   }
@@ -262,6 +285,11 @@ class _EmployeesPageState extends State<EmployeesPage> {
                       showHint(context, getTranslated(context, 'someOfSelectedEmployeesAreInWork') + ' ', getTranslated(context, 'ifYouWantToStartWorkPleaseFirstStopTheirWork'));
                       return;
                     }
+                    if (_workplaces.isEmpty) {
+                      showHint(context, getTranslated(context, 'noWorkplaces') + ' ', getTranslated(context, 'goToWorkplacesSectionAndAddSomeWorkplaces'));
+                      return;
+                    }
+                    _startSelectedEmployeesWork();
                   },
                 ),
               ),
@@ -316,6 +344,133 @@ class _EmployeesPageState extends State<EmployeesPage> {
       }
     }
     return false;
+  }
+
+  void _startSelectedEmployeesWork() {
+    showGeneralDialog(
+      context: context,
+      barrierColor: DARK.withOpacity(0.95),
+      barrierDismissible: false,
+      transitionDuration: Duration(milliseconds: 400),
+      pageBuilder: (_, __, ___) {
+        return SizedBox.expand(
+          child: StatefulBuilder(builder: (context, setState) {
+            return Scaffold(
+              backgroundColor: Colors.black12,
+              body: Center(
+                child: Padding(
+                  padding: EdgeInsets.only(left: 10, right: 10),
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: <Widget>[
+                      Padding(
+                        padding: EdgeInsets.only(top: 50),
+                        child: Column(
+                          children: [
+                            textCenter20GreenBold(getTranslated(this.context, 'chooseWorkplaceWhereSelectedEmployeesWillStartWork')),
+                          ],
+                        ),
+                      ),
+                      SizedBox(height: 7.5),
+                      Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          for (int i = 0; i < _workplaces.length; i++)
+                            _buildRadioBtn(
+                              color: GREEN,
+                              title: utf8.decode(_workplaces[i].name.runes.toList()),
+                              value: 0,
+                              groupValue: _workplacesRadioValues[i],
+                              onChanged: (newValue) => setState(
+                                () {
+                                  if (_chosenIndex != -1) {
+                                    _workplacesRadioValues[_chosenIndex] = -1;
+                                  }
+                                  _workplacesRadioValues[i] = newValue;
+                                  _chosenIndex = i;
+                                  _isChoseWorkplaceBtnDisabled = false;
+                                },
+                              ),
+                            ),
+                        ],
+                      ),
+                      SizedBox(height: 20),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: <Widget>[
+                          MaterialButton(
+                            elevation: 0,
+                            height: 50,
+                            minWidth: 40,
+                            shape: new RoundedRectangleBorder(borderRadius: new BorderRadius.circular(30.0)),
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: <Widget>[iconWhite(Icons.close)],
+                            ),
+                            color: Colors.red,
+                            onPressed: () {
+                              if (_chosenIndex != -1) {
+                                _workplacesRadioValues[_chosenIndex] = -1;
+                              }
+                              _chosenIndex = -1;
+                              _isChoseWorkplaceBtnDisabled = true;
+                              Navigator.pop(context);
+                            },
+                          ),
+                          SizedBox(width: 25),
+                          MaterialButton(
+                            elevation: 0,
+                            height: 50,
+                            shape: new RoundedRectangleBorder(borderRadius: new BorderRadius.circular(30.0)),
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: <Widget>[iconWhite(Icons.check)],
+                            ),
+                            color: !_isChoseWorkplaceBtnDisabled ? GREEN : Colors.grey,
+                            onPressed: () => _isChoseWorkplaceBtnDisabled || _isChoseWorkplaceButtonTapped ? null : _handleChoseWorkplaceBtn(),
+                          ),
+                        ],
+                      ),
+                    ],
+                  ),
+                ),
+              ),
+            );
+          }),
+        );
+      },
+    );
+  }
+
+  void _handleChoseWorkplaceBtn() {
+    showProgressDialog(context: context, loadingText: getTranslated(context, 'loading'));
+    _workTimeService.createForEmployees(_selectedIds.map((el) => el.toString()).toList(), _workplaces[_chosenIndex].id).then((value) {
+      Future.delayed(Duration(microseconds: 1), () => dismissProgressDialog()).whenComplete(() {
+        _refresh();
+        Navigator.pop(context);
+        ToastService.showSuccessToast(getTranslated(context, 'workHasBeenStartedSuccessfullyForSelectedEmployees'));
+        setState(() => _isChoseWorkplaceButtonTapped = false);
+      });
+    }).catchError((onError) {
+      Future.delayed(Duration(microseconds: 1), () => dismissProgressDialog()).whenComplete(() {
+        DialogService.showCustomDialog(
+          context: context,
+          titleWidget: textRed(getTranslated(context, 'error')),
+          content: getTranslated(context, 'smthWentWrong'),
+        );
+        setState(() => _isChoseWorkplaceButtonTapped = false);
+      });
+    });
+  }
+
+  Widget _buildRadioBtn({Color color, String title, int value, int groupValue, Function onChanged}) {
+    return RadioListTile(
+      activeColor: color,
+      value: value,
+      groupValue: groupValue,
+      onChanged: onChanged,
+      title: textWhite(title),
+    );
   }
 
   Widget _handleWorkStatus(MainAxisAlignment alignment, String workStatus, String workplace, String workplaceCode) {
@@ -394,7 +549,13 @@ class _EmployeesPageState extends State<EmployeesPage> {
       setState(() {
         _employees = res;
         _filteredEmployees = _employees;
-        _loading = false;
+        _workplaceService.findAllByManagerId(_user.managerId).then((res) {
+          setState(() {
+            _workplaces = res;
+            _workplaces.forEach((element) => _workplacesRadioValues.add(-1));
+            _loading = false;
+          });
+        });
       });
     });
   }
