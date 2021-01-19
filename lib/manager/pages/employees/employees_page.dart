@@ -149,7 +149,7 @@ class _EmployeesPageState extends State<EmployeesPage> {
                               children: <Widget>[
                                 Ink(
                                   width: MediaQuery.of(context).size.width * 0.15,
-                                  height: 107,
+                                  height: 123,
                                   color: BRIGHTER_DARK,
                                   child: ListTileTheme(
                                     contentPadding: EdgeInsets.only(right: 10),
@@ -198,6 +198,12 @@ class _EmployeesPageState extends State<EmployeesPage> {
                                           crossAxisAlignment: CrossAxisAlignment.start,
                                           children: [
                                             text20WhiteBold(utf8.decode(info.runes.toList()) + ' ' + LanguageUtil.findFlagByNationality(nationality)),
+                                            Row(
+                                              children: <Widget>[
+                                                textWhite(getTranslated(this.context, 'loginCode') + ': '),
+                                                textGreenBold(employee.loginCode),
+                                              ],
+                                            ),
                                             Row(
                                               children: <Widget>[
                                                 textWhite(getTranslated(this.context, 'timeWorkedToday') + ': '),
