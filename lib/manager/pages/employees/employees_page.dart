@@ -182,7 +182,7 @@ class _EmployeesPageState extends State<EmployeesPage> {
                               children: <Widget>[
                                 Ink(
                                   width: MediaQuery.of(context).size.width * 0.15,
-                                  height: 123,
+                                  height: 129,
                                   color: BRIGHTER_DARK,
                                   child: ListTileTheme(
                                     contentPadding: EdgeInsets.only(right: 10),
@@ -330,8 +330,7 @@ class _EmployeesPageState extends State<EmployeesPage> {
           context,
           getTranslated(context, 'iconsLegend'),
           [
-            IconsLegendUtil.buildImageRow('images/big-employee-icon.png', getTranslated(context, 'employeeProfile')),
-            IconsLegendUtil.buildImageRow('images/hours-icon.png', getTranslated(context, 'settingHours')),
+            IconsLegendUtil.buildImageRow('images/hours-icon.png', getTranslated(context, 'manualSettingOfWorkingTimes')),
             IconsLegendUtil.buildImageRow('images/play-icon.png', getTranslated(context, 'startingWork')),
             IconsLegendUtil.buildImageRow('images/stop-icon.png', getTranslated(context, 'stoppingWork')),
           ],
