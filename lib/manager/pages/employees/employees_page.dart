@@ -1,3 +1,4 @@
+import 'dart:collection';
 import 'dart:convert';
 
 import 'package:bouncing_widget/bouncing_widget.dart';
@@ -18,7 +19,9 @@ import 'package:givejobtimer_mobile/shared/icons.dart';
 import 'package:givejobtimer_mobile/shared/loader_container.dart';
 import 'package:givejobtimer_mobile/shared/model/user.dart';
 import 'package:givejobtimer_mobile/shared/texts.dart';
+import 'package:givejobtimer_mobile/shared/util/icons_legend_util.dart';
 import 'package:givejobtimer_mobile/shared/util/language_util.dart';
+import 'package:givejobtimer_mobile/shared/widget/icons_legend_dialog.dart';
 import 'package:shimmer/shimmer.dart';
 
 class EmployeesPage extends StatefulWidget {
@@ -39,6 +42,10 @@ class _EmployeesPageState extends State<EmployeesPage> {
   List<EmployeeDto> _filteredEmployees = new List();
   bool _loading = false;
 
+  bool _isChecked = false;
+  List<bool> _checked = new List();
+  LinkedHashSet<int> _selectedIds = new LinkedHashSet();
+
   @override
   void initState() {
     this._user = widget._user;
@@ -48,6 +55,7 @@ class _EmployeesPageState extends State<EmployeesPage> {
     _employeeService.findAllByManagerId(_user.managerId).then((res) {
       setState(() {
         _employees = res;
+        _employees.forEach((e) => _checked.add(false));
         _filteredEmployees = _employees;
         _loading = false;
       });
@@ -91,6 +99,28 @@ class _EmployeesPageState extends State<EmployeesPage> {
                     },
                   );
                 },
+              ),
+            ),
+            ListTileTheme(
+              contentPadding: EdgeInsets.only(left: 3),
+              child: CheckboxListTile(
+                title: textWhite(getTranslated(this.context, 'selectUnselectAll')),
+                value: _isChecked,
+                activeColor: GREEN,
+                checkColor: WHITE,
+                onChanged: (bool value) {
+                  setState(() {
+                    _isChecked = value;
+                    List<bool> l = new List();
+                    _checked.forEach((b) => l.add(value));
+                    _checked = l;
+                    if (value) {
+                      _selectedIds.addAll(_filteredEmployees.map((e) => e.employeeId));
+                    } else
+                      _selectedIds.clear();
+                  });
+                },
+                controlAffinity: ListTileControlAffinity.leading,
               ),
             ),
             _employees.isNotEmpty
@@ -181,8 +211,48 @@ class _EmployeesPageState extends State<EmployeesPage> {
                 : _handleEmptyData()
           ],
         ),
-        floatingActionButtonLocation: FloatingActionButtonLocation.endFloat,
-        floatingActionButton: navigateButton(context, _user),
+        bottomNavigationBar: Container(
+          height: 40,
+          child: Row(
+            children: <Widget>[
+              SizedBox(width: 1),
+              Expanded(
+                child: MaterialButton(
+                  color: GREEN,
+                  child: Image(image: AssetImage('images/dark-hours-icon.png')),
+                  onPressed: () {},
+                ),
+              ),
+              SizedBox(width: 5),
+              Expanded(
+                child: MaterialButton(
+                  color: GREEN,
+                  child: Image(image: AssetImage('images/dark-play-icon.png')),
+                  onPressed: () {},
+                ),
+              ),
+              SizedBox(width: 5),
+              Expanded(
+                child: MaterialButton(
+                  color: GREEN,
+                  child: Image(image: AssetImage('images/dark-stop-icon.png')),
+                  onPressed: () {},
+                ),
+              ),
+              SizedBox(width: 1),
+            ],
+          ),
+        ),
+        floatingActionButton: iconsLegendDialog(
+          context,
+          getTranslated(context, 'iconsLegend'),
+          [
+            IconsLegendUtil.buildImageRow('images/big-employee-icon.png', getTranslated(context, 'employeeProfile')),
+            IconsLegendUtil.buildImageRow('images/hours-icon.png', getTranslated(context, 'settingHours')),
+            IconsLegendUtil.buildImageRow('images/play-icon.png', getTranslated(context, 'startingWork')),
+            IconsLegendUtil.buildImageRow('images/stop-icon.png', getTranslated(context, 'stoppingWork')),
+          ],
+        ),
       ),
     );
   }

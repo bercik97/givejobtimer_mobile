@@ -176,5 +176,10 @@
   "updateNow": "ZAKTUALIZUJ",
   "tokenIsRequired": "Token jest wymagany",
   "regulationsLowerCase": "regulamin",
-  "privacyPolicyLowerCase": "politykę prywatności"
+  "privacyPolicyLowerCase": "politykę prywatności",
+  "iconsLegend": "Legenda ikon",
+  "employeeProfile": "Profil pracownika",
+  "settingHours": "Ustawianie godzin",
+  "startingWork": "Startowanie pracy",
+  "stoppingWork": "Stopowanie pracy"
 }

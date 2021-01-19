@@ -171,5 +171,10 @@
   "accept": "Я прымаю",
   "tokenIsRequired": "Неабходны токен",
   "regulationsLowerCase": "правілы",
-  "privacyPolicyLowerCase": "Палітыка прыватнасці"
+  "privacyPolicyLowerCase": "Палітыка прыватнасці",
+  "iconsLegend": "Icons legend",
+  "employeeProfile": "Employee profile",
+  "settingHours": "Setting hours",
+  "startingWork": "Starting work",
+  "stoppingWork": "Stopping work"
 }

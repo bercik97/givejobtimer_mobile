@@ -178,5 +178,10 @@
   "updateNow": "UPDATE NOW",
   "tokenIsRequired": "Token is required",
   "regulationsLowerCase": "regulations",
-  "privacyPolicyLowerCase": "privacy policy"
+  "privacyPolicyLowerCase": "privacy policy",
+  "iconsLegend": "Icons legend",
+  "employeeProfile": "Employee profile",
+  "settingHours": "Setting hours",
+  "startingWork": "Starting work",
+  "stoppingWork": "Stopping work"
 }

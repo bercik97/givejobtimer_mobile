@@ -176,5 +176,10 @@
   "updateNow": "განაახლეთ ახლა",
   "tokenIsRequired": "ნიშანი არის საჭირო",
   "regulationsLowerCase": "რეგულაციები",
-  "privacyPolicyLowerCase": "კონფიდენციალურობის პოლიტიკა"
+  "privacyPolicyLowerCase": "კონფიდენციალურობის პოლიტიკა",
+  "iconsLegend": "Icons legend",
+  "employeeProfile": "Employee profile",
+  "settingHours": "Setting hours",
+  "startingWork": "Starting work",
+  "stoppingWork": "Stopping work"
 }

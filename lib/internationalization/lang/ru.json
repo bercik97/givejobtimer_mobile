@@ -176,5 +176,10 @@
   "updateNow": "ОБНОВИТЬ СЕЙЧАС",
   "tokenIsRequired": "Требуется токен",
   "regulationsLowerCase": "нормативные документы",
-  "privacyPolicyLowerCase": "политика конфиденциальности"
+  "privacyPolicyLowerCase": "политика конфиденциальности",
+  "iconsLegend": "Icons legend",
+  "employeeProfile": "Employee profile",
+  "settingHours": "Setting hours",
+  "startingWork": "Starting work",
+  "stoppingWork": "Stopping work"
 }
