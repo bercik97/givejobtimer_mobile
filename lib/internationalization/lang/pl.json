@@ -192,5 +192,21 @@
   "goToWorkplacesSectionAndAddSomeWorkplaces": "Przejdź do sekcji miejsca pracy aby dodać miejsca pracy",
   "workHasBeenStartedSuccessfullyForSelectedEmployees": "Praca została zaczęta dla wybranych pracowników",
   "pauseWorkForSelectedEmployeesConfirmation": "Czy na pewno chcesz zakończyć pracę wybranych pracowników?",
-  "workHasBeenStoppedSuccessfullyForSelectedEmployees": "Praca została zastopowana dla wybranych pracowników"
+  "workHasBeenStoppedSuccessfullyForSelectedEmployees": "Praca została zastopowana dla wybranych pracowników",
+  "workTimeUpperCase": "CZAS PRACY",
+  "setWorkTimeForSelectedEmployees": "Ustaw czas pracy dla wybranych pracowników",
+  "givenValueIsNotANumber": "Podana wartość nie jest liczbą",
+  "hoursCannotBeLowerThan0": "Godziny nie mogą być mniejsze niż 0",
+  "hoursCannotBeHigherThan24": "Godziny nie mogą być większe niż 24",
+  "minutesCannotBeLowerThan0": "Minuty nie mogą być mniejsze niż 0",
+  "minutesCannotBeHigherThan59": "Minuty nie mogą być większe niż 59",
+  "hours": "Godziny",
+  "minutes": "Minuty",
+  "startWorkTimeFrom": "START PRACY (OD)",
+  "finishWorkTimeTo": "ZAKOŃCZENIE PRACY (DO)",
+  "chooseWorkplaceWhereEmployeesWorked": "Wybierz miejsce pracy gdzie pracownicy pracowali",
+  "timeOfStartCannotStartLaterThanFinish": "Czas zaczęcia pracy nie może zaczynać się później niż czas zaczęcia pracy",
+  "workingTimeHasBeenSuccessfullySetForSelectedDaysAndEmployees": "Czas pracy został pomyślnie ustawiony dla wybranych dni oraz pracowników",
+  "workTimeFromAndToEmpty": "Proszę podać czas pracy",
+  "ifYouWantToFillTimeManuallyPleaseFirstStopTheirWork": "Jeśli chcesz wpisać czas pracy ręcznie, musisz najpierw zastopować bieżącą pracę wybranych pracowników"
 }

@@ -1,6 +1,8 @@
 import 'dart:collection';
 import 'dart:convert';
 
+import 'package:date_range_picker/date_range_picker.dart' as DateRagePicker;
+import 'package:date_util/date_util.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_progress_dialog/flutter_progress_dialog.dart';
@@ -21,11 +23,14 @@ import 'package:givejobtimer_mobile/shared/loader_container.dart';
 import 'package:givejobtimer_mobile/shared/model/user.dart';
 import 'package:givejobtimer_mobile/shared/service/dialog_service.dart';
 import 'package:givejobtimer_mobile/shared/service/toastr_service.dart';
+import 'package:givejobtimer_mobile/shared/service/validator_service.dart';
 import 'package:givejobtimer_mobile/shared/texts.dart';
 import 'package:givejobtimer_mobile/shared/util/icons_legend_util.dart';
 import 'package:givejobtimer_mobile/shared/util/language_util.dart';
 import 'package:givejobtimer_mobile/shared/widget/hint.dart';
 import 'package:givejobtimer_mobile/shared/widget/icons_legend_dialog.dart';
+import 'package:intl/intl.dart';
+import 'package:number_inc_dec/number_inc_dec.dart';
 
 class EmployeesPage extends StatefulWidget {
   final User _user;
@@ -37,6 +42,11 @@ class EmployeesPage extends StatefulWidget {
 }
 
 class _EmployeesPageState extends State<EmployeesPage> {
+  final TextEditingController _fromHoursController = new TextEditingController();
+  final TextEditingController _fromMinutesController = new TextEditingController();
+  final TextEditingController _toHoursController = new TextEditingController();
+  final TextEditingController _toMinutesController = new TextEditingController();
+
   EmployeeService _employeeService;
   WorkplaceService _workplaceService;
   WorkTimeService _workTimeService;
@@ -50,7 +60,6 @@ class _EmployeesPageState extends State<EmployeesPage> {
   List<int> _workplacesRadioValues = new List();
   int _chosenIndex = -1;
   bool _isChoseWorkplaceBtnDisabled = true;
-  bool _isChoseWorkplaceButtonTapped = false;
   bool _isPauseButtonTapped = false;
 
   bool _loading = false;
@@ -190,7 +199,7 @@ class _EmployeesPageState extends State<EmployeesPage> {
                                             _selectedEmployees.add(_employees[foundIndex]);
                                           } else {
                                             _selectedIds.remove(_employees[foundIndex].employeeId);
-                                            _selectedEmployees.remove(_employees[foundIndex]);
+                                            _selectedEmployees.removeWhere((e) => e.employeeId == _employees[foundIndex].employeeId);
                                           }
                                           int selectedIdsLength = _selectedIds.length;
                                           if (selectedIdsLength == _employees.length) {
@@ -266,9 +275,10 @@ class _EmployeesPageState extends State<EmployeesPage> {
                       return;
                     }
                     if (_areSelectedEmployeesInWork()) {
-                      showHint(context, getTranslated(context, 'someOfSelectedEmployeesAreInWork') + ' ', getTranslated(context, 'ifYouWantToStartWorkPleaseFirstStopTheirWork'));
+                      showHint(context, getTranslated(context, 'someOfSelectedEmployeesAreInWork') + ' ', getTranslated(context, 'ifYouWantToFillTimeManuallyPleaseFirstStopTheirWork'));
                       return;
                     }
+                    _showUpdateHoursDialog(_selectedIds);
                   },
                 ),
               ),
@@ -290,7 +300,7 @@ class _EmployeesPageState extends State<EmployeesPage> {
                       showHint(context, getTranslated(context, 'noWorkplaces') + ' ', getTranslated(context, 'goToWorkplacesSectionAndAddSomeWorkplaces'));
                       return;
                     }
-                    _startSelectedEmployeesWork();
+                    _showChooseWorkplaceDialog(getTranslated(this.context, 'chooseWorkplaceWhereSelectedEmployeesWillStartWork'), () => _handleCreateWorkTimeForEmployees());
                   },
                 ),
               ),
@@ -341,14 +351,244 @@ class _EmployeesPageState extends State<EmployeesPage> {
 
   bool _areSelectedEmployeesNotInWork() {
     for (var employee in _selectedEmployees) {
-      if (employee.workStatus != 'In progress') {
+      if (employee.workStatus != 'In progress' || employee.workStatus == 'Done') {
         return true;
       }
     }
     return false;
   }
 
-  void _startSelectedEmployeesWork() {
+  void _showUpdateHoursDialog(LinkedHashSet<int> selectedIds) async {
+    DateTime now = new DateTime.now();
+    int year = now.year;
+    int month = now.month;
+    int days = DateUtil().daysInMonth(month, year);
+    final List<DateTime> picked = await DateRagePicker.showDatePicker(
+      context: context,
+      initialFirstDate: new DateTime(year, month, 1),
+      initialLastDate: new DateTime(year, month, days),
+      firstDate: new DateTime(year, month, 1),
+      lastDate: new DateTime(year, month, days),
+    );
+    if (picked != null && picked.length == 1) {
+      picked.add(picked[0]);
+    }
+    if (picked != null && picked.length == 2) {
+      String dateFrom = DateFormat('yyyy-MM-dd').format(picked[0]);
+      String dateTo = DateFormat('yyyy-MM-dd').format(picked[1]);
+      showGeneralDialog(
+        context: context,
+        barrierColor: DARK.withOpacity(0.95),
+        barrierDismissible: false,
+        barrierLabel: 'workTime',
+        transitionDuration: Duration(milliseconds: 400),
+        pageBuilder: (_, __, ___) {
+          return SizedBox.expand(
+            child: Scaffold(
+              backgroundColor: Colors.black12,
+              body: Center(
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: <Widget>[
+                    Padding(padding: EdgeInsets.only(top: 50), child: text20GreenBold(getTranslated(context, 'workTimeUpperCase'))),
+                    SizedBox(height: 2.5),
+                    textGreen(getTranslated(context, 'setWorkTimeForSelectedEmployees')),
+                    SizedBox(height: 2.5),
+                    textGreenBold('[' + dateFrom + ' - ' + dateTo + ']'),
+                    SizedBox(height: 20),
+                    text20WhiteBold(getTranslated(context, 'startWorkTimeFrom')),
+                    Row(
+                      children: [
+                        Expanded(
+                          flex: 2,
+                          child: Padding(
+                            padding: const EdgeInsets.all(16.0),
+                            child: Column(
+                              children: [
+                                textWhite(getTranslated(context, 'hours')),
+                                SizedBox(height: 2.5),
+                                NumberInputWithIncrementDecrement(
+                                  controller: _fromHoursController,
+                                  min: 0,
+                                  max: 24,
+                                  onIncrement: (value) {
+                                    if (value > 24) {
+                                      setState(() => value = 24);
+                                    }
+                                  },
+                                  onSubmitted: (value) {
+                                    if (value >= 24) {
+                                      setState(() => _fromHoursController.text = 24.toString());
+                                    }
+                                  },
+                                  style: TextStyle(color: GREEN),
+                                  widgetContainerDecoration: BoxDecoration(border: Border.all(color: BRIGHTER_DARK)),
+                                ),
+                              ],
+                            ),
+                          ),
+                        ),
+                        Expanded(
+                          flex: 2,
+                          child: Padding(
+                            padding: const EdgeInsets.all(16.0),
+                            child: Column(
+                              children: [
+                                textWhite(getTranslated(context, 'minutes')),
+                                SizedBox(height: 2.5),
+                                NumberInputWithIncrementDecrement(
+                                  controller: _fromMinutesController,
+                                  min: 0,
+                                  max: 59,
+                                  onIncrement: (value) {
+                                    if (value > 59) {
+                                      setState(() => value = 59);
+                                    }
+                                  },
+                                  onSubmitted: (value) {
+                                    if (value >= 59) {
+                                      setState(() => _fromMinutesController.text = 59.toString());
+                                    }
+                                  },
+                                  style: TextStyle(color: GREEN),
+                                  widgetContainerDecoration: BoxDecoration(border: Border.all(color: BRIGHTER_DARK)),
+                                ),
+                              ],
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
+                    SizedBox(height: 20),
+                    text20WhiteBold(getTranslated(context, 'finishWorkTimeTo')),
+                    Row(
+                      children: [
+                        Expanded(
+                          flex: 2,
+                          child: Padding(
+                            padding: const EdgeInsets.all(16.0),
+                            child: Column(
+                              children: [
+                                textWhite(getTranslated(context, 'hours')),
+                                SizedBox(height: 2.5),
+                                NumberInputWithIncrementDecrement(
+                                  controller: _toHoursController,
+                                  min: 0,
+                                  max: 24,
+                                  onIncrement: (value) {
+                                    if (value > 24) {
+                                      setState(() => value = 24);
+                                    }
+                                  },
+                                  onSubmitted: (value) {
+                                    if (value >= 24) {
+                                      setState(() => _toHoursController.text = 24.toString());
+                                    }
+                                  },
+                                  style: TextStyle(color: GREEN),
+                                  widgetContainerDecoration: BoxDecoration(border: Border.all(color: BRIGHTER_DARK)),
+                                ),
+                              ],
+                            ),
+                          ),
+                        ),
+                        Expanded(
+                          flex: 2,
+                          child: Padding(
+                            padding: const EdgeInsets.all(16.0),
+                            child: Column(
+                              children: [
+                                textWhite(getTranslated(context, 'minutes')),
+                                SizedBox(height: 2.5),
+                                NumberInputWithIncrementDecrement(
+                                  controller: _toMinutesController,
+                                  min: 0,
+                                  max: 59,
+                                  onIncrement: (value) {
+                                    if (value > 59) {
+                                      setState(() => value = 59);
+                                    }
+                                  },
+                                  onSubmitted: (value) {
+                                    if (value >= 59) {
+                                      setState(() => _toMinutesController.text = 59.toString());
+                                    }
+                                  },
+                                  style: TextStyle(color: GREEN),
+                                  widgetContainerDecoration: BoxDecoration(border: Border.all(color: BRIGHTER_DARK)),
+                                ),
+                              ],
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
+                    SizedBox(height: 20),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: <Widget>[
+                        MaterialButton(
+                          elevation: 0,
+                          height: 50,
+                          minWidth: 40,
+                          shape: new RoundedRectangleBorder(borderRadius: new BorderRadius.circular(30.0)),
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: <Widget>[iconWhite(Icons.close)],
+                          ),
+                          color: Colors.red,
+                          onPressed: () => Navigator.pop(context),
+                        ),
+                        SizedBox(width: 25),
+                        MaterialButton(
+                          elevation: 0,
+                          height: 50,
+                          shape: new RoundedRectangleBorder(borderRadius: new BorderRadius.circular(30.0)),
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: <Widget>[iconWhite(Icons.check)],
+                          ),
+                          color: GREEN,
+                          onPressed: () {
+                            int fromHours;
+                            int fromMinutes;
+                            int toHours;
+                            int toMinutes;
+                            try {
+                              fromHours = int.parse(_fromHoursController.text);
+                              fromMinutes = int.parse(_fromMinutesController.text);
+                              toHours = int.parse(_toHoursController.text);
+                              toMinutes = int.parse(_toMinutesController.text);
+                            } catch (FormatException) {
+                              ToastService.showErrorToast(getTranslated(context, 'givenValueIsNotANumber'));
+                              return;
+                            }
+                            String validationMsg = ValidatorService.validateSettingManuallyWorkTimes(fromHours, fromMinutes, toHours, toMinutes, context);
+                            if (validationMsg != null) {
+                              ToastService.showErrorToast(validationMsg);
+                              return;
+                            }
+                            String startTime = fromHours.toString() + ':' + fromMinutes.toString() + ':' + '00';
+                            String endTime = toHours.toString() + ':' + toMinutes.toString() + ':' + '00';
+                            _showChooseWorkplaceDialog(
+                              getTranslated(this.context, 'chooseWorkplaceWhereEmployeesWorked'),
+                              () => _handleSaveWorkTimesManually(year, month, dateFrom, dateTo, startTime, endTime),
+                            );
+                          },
+                        ),
+                      ],
+                    ),
+                  ],
+                ),
+              ),
+            ),
+          );
+        },
+      );
+    }
+  }
+
+  void _showChooseWorkplaceDialog(String title, Function() fun) {
     showGeneralDialog(
       context: context,
       barrierColor: DARK.withOpacity(0.95),
@@ -369,7 +609,7 @@ class _EmployeesPageState extends State<EmployeesPage> {
                         padding: EdgeInsets.only(top: 50),
                         child: Column(
                           children: [
-                            textCenter20GreenBold(getTranslated(this.context, 'chooseWorkplaceWhereSelectedEmployeesWillStartWork')),
+                            textCenter20GreenBold(title),
                           ],
                         ),
                       ),
@@ -429,7 +669,12 @@ class _EmployeesPageState extends State<EmployeesPage> {
                               children: <Widget>[iconWhite(Icons.check)],
                             ),
                             color: !_isChoseWorkplaceBtnDisabled ? GREEN : Colors.grey,
-                            onPressed: () => _isChoseWorkplaceBtnDisabled || _isChoseWorkplaceButtonTapped ? null : _handleChoseWorkplaceBtn(),
+                            onPressed: () {
+                              if (_isChoseWorkplaceBtnDisabled) {
+                                return;
+                              }
+                              fun();
+                            },
                           ),
                         ],
                       ),
@@ -444,15 +689,26 @@ class _EmployeesPageState extends State<EmployeesPage> {
     );
   }
 
-  void _handleChoseWorkplaceBtn() {
+  void _handleSaveWorkTimesManually(int year, int month, String dateFrom, String dateTo, String startTime, String endTime) {
     showProgressDialog(context: context, loadingText: getTranslated(context, 'loading'));
-    _workTimeService.createForEmployees(_selectedIds.map((el) => el.toString()).toList(), _workplaces[_chosenIndex].id).then((value) {
+    _workTimeService
+        .saveManuallyForEmployees(
+      _selectedIds.map((el) => el.toString()).toList(),
+      _workplaces[_chosenIndex].id,
+      year,
+      month,
+      dateFrom,
+      dateTo,
+      startTime,
+      endTime,
+    )
+        .then((value) {
       Future.delayed(Duration(microseconds: 1), () => dismissProgressDialog()).whenComplete(() {
         _uncheckAll();
         _refresh();
         Navigator.pop(context);
-        ToastService.showSuccessToast(getTranslated(context, 'workHasBeenStartedSuccessfullyForSelectedEmployees'));
-        setState(() => _isChoseWorkplaceButtonTapped = false);
+        Navigator.pop(context);
+        ToastService.showSuccessToast(getTranslated(context, 'workingTimeHasBeenSuccessfullySetForSelectedDaysAndEmployees'));
       });
     }).catchError((onError) {
       Future.delayed(Duration(microseconds: 1), () => dismissProgressDialog()).whenComplete(() {
@@ -461,7 +717,26 @@ class _EmployeesPageState extends State<EmployeesPage> {
           titleWidget: textRed(getTranslated(context, 'error')),
           content: getTranslated(context, 'smthWentWrong'),
         );
-        setState(() => _isChoseWorkplaceButtonTapped = false);
+      });
+    });
+  }
+
+  void _handleCreateWorkTimeForEmployees() {
+    showProgressDialog(context: context, loadingText: getTranslated(context, 'loading'));
+    _workTimeService.createForEmployees(_selectedIds.map((el) => el.toString()).toList(), _workplaces[_chosenIndex].id).then((value) {
+      Future.delayed(Duration(microseconds: 1), () => dismissProgressDialog()).whenComplete(() {
+        _uncheckAll();
+        _refresh();
+        Navigator.pop(context);
+        ToastService.showSuccessToast(getTranslated(context, 'workHasBeenStartedSuccessfullyForSelectedEmployees'));
+      });
+    }).catchError((onError) {
+      Future.delayed(Duration(microseconds: 1), () => dismissProgressDialog()).whenComplete(() {
+        DialogService.showCustomDialog(
+          context: context,
+          titleWidget: textRed(getTranslated(context, 'error')),
+          content: getTranslated(context, 'smthWentWrong'),
+        );
       });
     });
   }

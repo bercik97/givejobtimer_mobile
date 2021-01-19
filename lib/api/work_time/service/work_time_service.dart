@@ -44,6 +44,21 @@ class WorkTimeService {
     }
   }
 
+  Future<dynamic> saveManuallyForEmployees(List<String> employeeIds, String workplaceId, int year, int month, String dateFrom, String dateTo, String startTime, String endTime) async {
+    Response res = await post(
+      '$_url/save-manually/employees/$employeeIds',
+      body: jsonEncode({'workplaceId': workplaceId, 'year': year, 'month': month, 'dateFrom': dateFrom, 'dateTo': dateTo, 'startTime': startTime, 'endTime': endTime}),
+      headers: _headers,
+    );
+    if (res.statusCode == 200) {
+      return res;
+    } else if (res.statusCode == 401) {
+      return Logout.handle401WithLogout(_context);
+    } else {
+      return Future.error(res.body);
+    }
+  }
+
   Future<List<WorkTimeEmployeeDto>> findAllDatesWithTotalTimeByWorkplaceIdAndYearMonthIn(String workplaceId, String date) async {
     String url = _url + '?workplace_id=$workplaceId&date=$date';
     Response res = await get(url, headers: _header);

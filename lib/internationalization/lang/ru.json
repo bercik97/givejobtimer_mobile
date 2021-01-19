@@ -192,5 +192,21 @@
   "goToWorkplacesSectionAndAddSomeWorkplaces": "Go to workplaces section and add some workplaces",
   "workHasBeenStartedSuccessfullyForSelectedEmployees": "Work has been started successfully for selected employees",
   "pauseWorkForSelectedEmployeesConfirmation": "Are you sure you want to stop work for selected employees?",
-  "workHasBeenStoppedSuccessfullyForSelectedEmployees": "Work has been successfully stopped for selected employees"
+  "workHasBeenStoppedSuccessfullyForSelectedEmployees": "Work has been successfully stopped for selected employees",
+  "workTimeUpperCase": "WORK TIME",
+  "setWorkTimeForSelectedEmployees": "Set work time for selected employees",
+  "givenValueIsNotANumber": "Given value is not a number",
+  "hoursCannotBeLowerThan0": "Hours cannot be lower than 0",
+  "hoursCannotBeHigherThan24": "Hours cannot be higher than 24",
+  "minutesCannotBeLowerThan0": "Minutes cannot be lower than 0",
+  "minutesCannotBeHigherThan59": "Minutes cannot be higher than 59",
+  "hours": "Hours",
+  "minutes": "Minutes",
+  "startWorkTimeFrom": "START WORK TIME (FROM)",
+  "finishWorkTimeTo": "FINISH WORK TIME (TO)",
+  "chooseWorkplaceWhereEmployeesWorked": "Choose workplace where employees worked",
+  "timeOfStartCannotStartLaterThanFinish": "Time of starting work cannot start later than time of finishing work",
+  "workingTimeHasBeenSuccessfullySetForSelectedDaysAndEmployees": "Working time has been successfully set for selected days and employees",
+  "workTimeFromAndToEmpty": "Please provide work time",
+  "ifYouWantToFillTimeManuallyPleaseFirstStopTheirWork": "If you want to fill time manually, please first stop their work"
 }
