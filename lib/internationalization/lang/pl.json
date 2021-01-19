@@ -190,5 +190,7 @@
   "ifYouWantToStopWorkPleaseFirstStartTheirWork": "Jeśli chcesz skończyć naliczać czas, proszę odznacz błędnie wybranych pracowników lub rozpocznij ich pracę",
   "chooseWorkplaceWhereSelectedEmployeesWillStartWork": "Wybierz miejsce pracy w którym wybrani pracownicy rozpoczną pracę",
   "goToWorkplacesSectionAndAddSomeWorkplaces": "Przejdź do sekcji miejsca pracy aby dodać miejsca pracy",
-  "workHasBeenStartedSuccessfullyForSelectedEmployees": "Praca została zaczęta dla wybranych pracowników"
+  "workHasBeenStartedSuccessfullyForSelectedEmployees": "Praca została zaczęta dla wybranych pracowników",
+  "pauseWorkForSelectedEmployeesConfirmation": "Czy na pewno chcesz zakończyć pracę wybranych pracowników?",
+  "workHasBeenStoppedSuccessfullyForSelectedEmployees": "Praca została zastopowana dla wybranych pracowników"
 }

@@ -192,5 +192,7 @@
   "ifYouWantToStopWorkPleaseFirstStartTheirWork": "If you want to stop work, please uncheck wrong employees or start their work first",
   "chooseWorkplaceWhereSelectedEmployeesWillStartWork": "Choose workplace where selected employees will start to work",
   "goToWorkplacesSectionAndAddSomeWorkplaces": "Go to workplaces section and add some workplaces",
-  "workHasBeenStartedSuccessfullyForSelectedEmployees": "Work has been started successfully for selected employees"
+  "workHasBeenStartedSuccessfullyForSelectedEmployees": "Work has been started successfully for selected employees",
+  "pauseWorkForSelectedEmployeesConfirmation": "Are you sure you want to stop work for selected employees?",
+  "workHasBeenStoppedSuccessfullyForSelectedEmployees": "Work has been successfully stopped for selected employees"
 }

@@ -51,6 +51,7 @@ class _EmployeesPageState extends State<EmployeesPage> {
   int _chosenIndex = -1;
   bool _isChoseWorkplaceBtnDisabled = true;
   bool _isChoseWorkplaceButtonTapped = false;
+  bool _isPauseButtonTapped = false;
 
   bool _loading = false;
 
@@ -307,6 +308,7 @@ class _EmployeesPageState extends State<EmployeesPage> {
                       showHint(context, getTranslated(context, 'someOfSelectedEmployeesAreNotInWork') + ' ', getTranslated(context, 'ifYouWantToStopWorkPleaseFirstStartTheirWork'));
                       return;
                     }
+                    _showPauseWorkDialog();
                   },
                 ),
               ),
@@ -459,6 +461,57 @@ class _EmployeesPageState extends State<EmployeesPage> {
           content: getTranslated(context, 'smthWentWrong'),
         );
         setState(() => _isChoseWorkplaceButtonTapped = false);
+      });
+    });
+  }
+
+  _showPauseWorkDialog() {
+    return showDialog(
+      barrierDismissible: false,
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          backgroundColor: DARK,
+          title: textGreen(getTranslated(context, 'confirmation')),
+          content: SingleChildScrollView(
+            child: ListBody(
+              children: <Widget>[textCenter20Green(getTranslated(context, 'pauseWorkForSelectedEmployeesConfirmation'))],
+            ),
+          ),
+          actions: <Widget>[
+            Row(
+              children: [
+                FlatButton(
+                  child: textWhite(getTranslated(context, 'workIsDone')),
+                  onPressed: () => _isPauseButtonTapped ? null : _pauseSelectedEmployeesWork(),
+                ),
+                FlatButton(child: textWhite(getTranslated(context, 'no')), onPressed: () => Navigator.of(context).pop()),
+              ],
+            ),
+          ],
+        );
+      },
+    );
+  }
+
+  _pauseSelectedEmployeesWork() {
+    setState(() => _isPauseButtonTapped = true);
+    showProgressDialog(context: context, loadingText: getTranslated(context, 'loading'));
+    _workTimeService.finishForEmployees(_selectedIds.map((el) => el.toString()).toList()).then((res) {
+      Future.delayed(Duration(microseconds: 1), () => dismissProgressDialog()).whenComplete(() {
+        _refresh();
+        Navigator.pop(context);
+        ToastService.showSuccessToast(getTranslated(context, 'workHasBeenStoppedSuccessfullyForSelectedEmployees'));
+        setState(() => _isPauseButtonTapped = false);
+      });
+    }).catchError((onError) {
+      Future.delayed(Duration(microseconds: 1), () => dismissProgressDialog()).whenComplete(() {
+        DialogService.showCustomDialog(
+          context: context,
+          titleWidget: textRed(getTranslated(context, 'error')),
+          content: getTranslated(context, 'smthWentWrong'),
+        );
+        setState(() => _isPauseButtonTapped = false);
       });
     });
   }

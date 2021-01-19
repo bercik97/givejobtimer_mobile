@@ -105,6 +105,18 @@ class WorkTimeService {
     }
   }
 
+  Future<dynamic> finishForEmployees(List<String> employeeIds) async {
+    String url = _url + '/finish/employees/$employeeIds';
+    Response res = await put(url, headers: _headers);
+    if (res.statusCode == 200) {
+      return res;
+    } else if (res.statusCode == 401) {
+      return Logout.handle401WithLogout(_context);
+    } else {
+      return Future.error(res.body);
+    }
+  }
+
   Future<dynamic> deleteByIdIn(List<int> ids) async {
     Response res = await delete(_url + '/$ids', headers: _headers);
     if (res.statusCode == 200) {
