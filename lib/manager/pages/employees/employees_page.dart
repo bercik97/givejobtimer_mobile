@@ -448,6 +448,7 @@ class _EmployeesPageState extends State<EmployeesPage> {
     showProgressDialog(context: context, loadingText: getTranslated(context, 'loading'));
     _workTimeService.createForEmployees(_selectedIds.map((el) => el.toString()).toList(), _workplaces[_chosenIndex].id).then((value) {
       Future.delayed(Duration(microseconds: 1), () => dismissProgressDialog()).whenComplete(() {
+        _uncheckAll();
         _refresh();
         Navigator.pop(context);
         ToastService.showSuccessToast(getTranslated(context, 'workHasBeenStartedSuccessfullyForSelectedEmployees'));
@@ -499,6 +500,7 @@ class _EmployeesPageState extends State<EmployeesPage> {
     showProgressDialog(context: context, loadingText: getTranslated(context, 'loading'));
     _workTimeService.finishForEmployees(_selectedIds.map((el) => el.toString()).toList()).then((res) {
       Future.delayed(Duration(microseconds: 1), () => dismissProgressDialog()).whenComplete(() {
+        _uncheckAll();
         _refresh();
         Navigator.pop(context);
         ToastService.showSuccessToast(getTranslated(context, 'workHasBeenStoppedSuccessfullyForSelectedEmployees'));
@@ -611,5 +613,14 @@ class _EmployeesPageState extends State<EmployeesPage> {
         });
       });
     });
+  }
+
+  void _uncheckAll() {
+    _selectedIds.clear();
+    _selectedEmployees.clear();
+    _isChecked = false;
+    List<bool> l = new List();
+    _checked.forEach((b) => l.add(false));
+    _checked = l;
   }
 }
