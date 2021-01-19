@@ -1,7 +1,6 @@
 import 'dart:collection';
 import 'dart:convert';
 
-import 'package:bouncing_widget/bouncing_widget.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:givejobtimer_mobile/api/employee/dto/employee_dto.dart';
@@ -9,9 +8,7 @@ import 'package:givejobtimer_mobile/api/employee/service/employee_service.dart';
 import 'package:givejobtimer_mobile/api/shared/service_initializer.dart';
 import 'package:givejobtimer_mobile/internationalization/localization/localization_constants.dart';
 import 'package:givejobtimer_mobile/manager/pages/employees/employee_dates_page.dart';
-import 'package:givejobtimer_mobile/manager/shared/manager_employee_profile_page.dart';
 import 'package:givejobtimer_mobile/manager/shared/manager_side_bar.dart';
-import 'package:givejobtimer_mobile/manager/shared/navigate_button.dart';
 import 'package:givejobtimer_mobile/shared/app_bar.dart';
 import 'package:givejobtimer_mobile/shared/colors.dart';
 import 'package:givejobtimer_mobile/shared/constants.dart';
@@ -22,7 +19,6 @@ import 'package:givejobtimer_mobile/shared/texts.dart';
 import 'package:givejobtimer_mobile/shared/util/icons_legend_util.dart';
 import 'package:givejobtimer_mobile/shared/util/language_util.dart';
 import 'package:givejobtimer_mobile/shared/widget/icons_legend_dialog.dart';
-import 'package:shimmer/shimmer.dart';
 
 class EmployeesPage extends StatefulWidget {
   final User _user;
@@ -135,69 +131,77 @@ class _EmployeesPageState extends State<EmployeesPage> {
                           EmployeeDto employee = _filteredEmployees[index];
                           String info = employee.name + ' ' + employee.surname;
                           String nationality = employee.nationality;
+                          int foundIndex = 0;
+                          for (int i = 0; i < _employees.length; i++) {
+                            if (_employees[i].employeeId == employee.employeeId) {
+                              foundIndex = i;
+                            }
+                          }
                           return Card(
                             color: DARK,
-                            child: Column(
+                            child: Row(
                               mainAxisAlignment: MainAxisAlignment.start,
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: <Widget>[
-                                Card(
+                                Ink(
+                                  width: MediaQuery.of(context).size.width * 0.15,
+                                  height: 107,
                                   color: BRIGHTER_DARK,
+                                  child: ListTileTheme(
+                                    contentPadding: EdgeInsets.only(right: 10),
+                                    child: CheckboxListTile(
+                                      controlAffinity: ListTileControlAffinity.leading,
+                                      activeColor: GREEN,
+                                      checkColor: WHITE,
+                                      value: _checked[foundIndex],
+                                      onChanged: (bool value) {
+                                        setState(() {
+                                          _checked[foundIndex] = value;
+                                          if (value) {
+                                            _selectedIds.add(_employees[foundIndex].employeeId);
+                                          } else {
+                                            _selectedIds.remove(_employees[foundIndex].employeeId);
+                                          }
+                                          int selectedIdsLength = _selectedIds.length;
+                                          if (selectedIdsLength == _employees.length) {
+                                            _isChecked = true;
+                                          } else if (selectedIdsLength == 0) {
+                                            _isChecked = false;
+                                          }
+                                        });
+                                      },
+                                    ),
+                                  ),
+                                ),
+                                SizedBox(width: 15),
+                                Expanded(
                                   child: InkWell(
-                                    child: Column(
-                                      children: <Widget>[
-                                        ListTile(
-                                          leading: Tab(
-                                            icon: Container(
-                                              child: Shimmer.fromColors(
-                                                baseColor: GREEN,
-                                                highlightColor: WHITE,
-                                                child: BouncingWidget(
-                                                  duration: Duration(milliseconds: 100),
-                                                  scaleFactor: 2,
-                                                  onPressed: () => {
-                                                    Navigator.push(
-                                                      this.context,
-                                                      MaterialPageRoute(
-                                                        builder: (context) => ManagerEmployeeProfilePage(
-                                                          _user,
-                                                          employee,
-                                                          _handleWorkStatus(MainAxisAlignment.center, employee.workStatus, employee.workplace, employee.workplaceCode),
-                                                        ),
-                                                      ),
-                                                    ),
-                                                  },
-                                                  child: Image(
-                                                    image: AssetImage('images/big-employee-icon.png'),
-                                                  ),
-                                                ),
-                                              ),
-                                            ),
-                                          ),
-                                          title: text20WhiteBold(utf8.decode(info.runes.toList()) + ' ' + LanguageUtil.findFlagByNationality(nationality)),
-                                          subtitle: Column(
-                                            children: <Widget>[
-                                              Align(
-                                                  child: Row(
-                                                    children: <Widget>[
-                                                      textWhite(getTranslated(this.context, 'timeWorkedToday') + ': '),
-                                                      textGreenBold(employee.timeWorkedToday != null ? employee.timeWorkedToday : getTranslated(this.context, 'empty')),
-                                                    ],
-                                                  ),
-                                                  alignment: Alignment.topLeft),
-                                              _handleWorkStatus(MainAxisAlignment.start, employee.workStatus, employee.workplace, employee.workplaceCode),
-                                            ],
-                                          ),
-                                          onTap: () => {
-                                            Navigator.push(
-                                              this.context,
-                                              MaterialPageRoute(
-                                                builder: (context) => EmployeeDatesPage(_user, employee),
-                                              ),
-                                            ),
-                                          },
+                                    onTap: () => {
+                                      Navigator.push(
+                                        this.context,
+                                        MaterialPageRoute(
+                                          builder: (context) => EmployeeDatesPage(_user, employee),
                                         ),
-                                      ],
+                                      ),
+                                    },
+                                    child: Ink(
+                                      color: BRIGHTER_DARK,
+                                      child: Padding(
+                                        padding: const EdgeInsets.all(6),
+                                        child: Column(
+                                          crossAxisAlignment: CrossAxisAlignment.start,
+                                          children: [
+                                            text20WhiteBold(utf8.decode(info.runes.toList()) + ' ' + LanguageUtil.findFlagByNationality(nationality)),
+                                            Row(
+                                              children: <Widget>[
+                                                textWhite(getTranslated(this.context, 'timeWorkedToday') + ': '),
+                                                textGreenBold(employee.timeWorkedToday != null ? employee.timeWorkedToday : getTranslated(this.context, 'empty')),
+                                              ],
+                                            ),
+                                            _handleWorkStatus(MainAxisAlignment.start, employee.workStatus, employee.workplace, employee.workplaceCode)
+                                          ],
+                                        ),
+                                      ),
                                     ),
                                   ),
                                 ),
