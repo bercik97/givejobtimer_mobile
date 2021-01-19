@@ -18,6 +18,7 @@ import 'package:givejobtimer_mobile/shared/model/user.dart';
 import 'package:givejobtimer_mobile/shared/texts.dart';
 import 'package:givejobtimer_mobile/shared/util/icons_legend_util.dart';
 import 'package:givejobtimer_mobile/shared/util/language_util.dart';
+import 'package:givejobtimer_mobile/shared/widget/hint.dart';
 import 'package:givejobtimer_mobile/shared/widget/icons_legend_dialog.dart';
 
 class EmployeesPage extends StatefulWidget {
@@ -41,6 +42,7 @@ class _EmployeesPageState extends State<EmployeesPage> {
   bool _isChecked = false;
   List<bool> _checked = new List();
   LinkedHashSet<int> _selectedIds = new LinkedHashSet();
+  LinkedHashSet<EmployeeDto> _selectedEmployees = new LinkedHashSet();
 
   @override
   void initState() {
@@ -112,8 +114,10 @@ class _EmployeesPageState extends State<EmployeesPage> {
                     _checked = l;
                     if (value) {
                       _selectedIds.addAll(_filteredEmployees.map((e) => e.employeeId));
+                      _selectedEmployees.addAll(_filteredEmployees);
                     } else
                       _selectedIds.clear();
+                    _selectedEmployees.clear();
                   });
                 },
                 controlAffinity: ListTileControlAffinity.leading,
@@ -159,8 +163,10 @@ class _EmployeesPageState extends State<EmployeesPage> {
                                           _checked[foundIndex] = value;
                                           if (value) {
                                             _selectedIds.add(_employees[foundIndex].employeeId);
+                                            _selectedEmployees.add(_employees[foundIndex]);
                                           } else {
                                             _selectedIds.remove(_employees[foundIndex].employeeId);
+                                            _selectedEmployees.remove(_employees[foundIndex]);
                                           }
                                           int selectedIdsLength = _selectedIds.length;
                                           if (selectedIdsLength == _employees.length) {
@@ -224,7 +230,16 @@ class _EmployeesPageState extends State<EmployeesPage> {
                 child: MaterialButton(
                   color: GREEN,
                   child: Image(image: AssetImage('images/dark-hours-icon.png')),
-                  onPressed: () {},
+                  onPressed: () {
+                    if (_selectedIds.isEmpty) {
+                      showHint(context, getTranslated(context, 'needToSelectRecords') + ' ', getTranslated(context, 'whichYouWantToUpdate'));
+                      return;
+                    }
+                    if (_areSelectedEmployeesInWork()) {
+                      showHint(context, getTranslated(context, 'someOfSelectedEmployeesAreInWork') + ' ', getTranslated(context, 'ifYouWantToStartWorkPleaseFirstStopTheirWork'));
+                      return;
+                    }
+                  },
                 ),
               ),
               SizedBox(width: 5),
@@ -232,7 +247,16 @@ class _EmployeesPageState extends State<EmployeesPage> {
                 child: MaterialButton(
                   color: GREEN,
                   child: Image(image: AssetImage('images/dark-play-icon.png')),
-                  onPressed: () {},
+                  onPressed: () {
+                    if (_selectedIds.isEmpty) {
+                      showHint(context, getTranslated(context, 'needToSelectRecords') + ' ', getTranslated(context, 'whichYouWantToUpdate'));
+                      return;
+                    }
+                    if (_areSelectedEmployeesInWork()) {
+                      showHint(context, getTranslated(context, 'someOfSelectedEmployeesAreInWork') + ' ', getTranslated(context, 'ifYouWantToStartWorkPleaseFirstStopTheirWork'));
+                      return;
+                    }
+                  },
                 ),
               ),
               SizedBox(width: 5),
@@ -240,7 +264,16 @@ class _EmployeesPageState extends State<EmployeesPage> {
                 child: MaterialButton(
                   color: GREEN,
                   child: Image(image: AssetImage('images/dark-stop-icon.png')),
-                  onPressed: () {},
+                  onPressed: () {
+                    if (_selectedIds.isEmpty) {
+                      showHint(context, getTranslated(context, 'needToSelectRecords') + ' ', getTranslated(context, 'whichYouWantToUpdate'));
+                      return;
+                    }
+                    if (_areSelectedEmployeesNotInWork()) {
+                      showHint(context, getTranslated(context, 'someOfSelectedEmployeesAreNotInWork') + ' ', getTranslated(context, 'ifYouWantToStopWorkPleaseFirstStartTheirWork'));
+                      return;
+                    }
+                  },
                 ),
               ),
               SizedBox(width: 1),
@@ -259,6 +292,24 @@ class _EmployeesPageState extends State<EmployeesPage> {
         ),
       ),
     );
+  }
+
+  bool _areSelectedEmployeesInWork() {
+    for (var employee in _selectedEmployees) {
+      if (employee.workStatus == 'In progress') {
+        return true;
+      }
+    }
+    return false;
+  }
+
+  bool _areSelectedEmployeesNotInWork() {
+    for (var employee in _selectedEmployees) {
+      if (employee.workStatus != 'In progress') {
+        return true;
+      }
+    }
+    return false;
   }
 
   Widget _handleWorkStatus(MainAxisAlignment alignment, String workStatus, String workplace, String workplaceCode) {

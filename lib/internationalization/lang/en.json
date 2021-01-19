@@ -183,5 +183,11 @@
   "employeeProfile": "Employee profile",
   "settingHours": "Setting hours",
   "startingWork": "Starting work",
-  "stoppingWork": "Stopping work"
+  "stoppingWork": "Stopping work",
+  "needToSelectRecords": "Need to select records",
+  "whichYouWantToUpdate": "which you want to update",
+  "someOfSelectedEmployeesAreInWork": "Some of selected employees are in work.",
+  "someOfSelectedEmployeesAreNotInWork": "Some of selected employees are not in work.",
+  "ifYouWantToStartWorkPleaseFirstStopTheirWork": "If you want to start work, please uncheck wrong employees or stop their work first",
+  "ifYouWantToStopWorkPleaseFirstStartTheirWork": "If you want to stop work, please uncheck wrong employees or start their work first"
 }

@@ -181,5 +181,11 @@
   "employeeProfile": "Profil pracownika",
   "settingHours": "Ustawianie godzin",
   "startingWork": "Startowanie pracy",
-  "stoppingWork": "Stopowanie pracy"
+  "stoppingWork": "Stopowanie pracy",
+  "needToSelectRecords": "Musisz zaznaczyć rekordy",
+  "whichYouWantToUpdate": "które chcesz zaaktualizować.",
+  "someOfSelectedEmployeesAreInWork": "Niektórzy z zaznaczonych pracowników są obecnie w pracy.",
+  "someOfSelectedEmployeesAreNotInWork": "Niektórzy z zaznaczonych pracowników nie są obecnie w pracy.",
+  "ifYouWantToStartWorkPleaseFirstStopTheirWork": "Jeśli chcesz zacząc naliczać czas, proszę odznacz błędnie wybranych pracowników lub skończ ich bieżącą pracę",
+  "ifYouWantToStopWorkPleaseFirstStartTheirWork": "Jeśli chcesz skończyć naliczać czas, proszę odznacz błędnie wybranych pracowników lub rozpocznij ich pracę"
 }
