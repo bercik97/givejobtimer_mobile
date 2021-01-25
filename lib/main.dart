@@ -8,6 +8,7 @@ import 'package:givejobtimer_mobile/shared/colors.dart';
 import 'package:givejobtimer_mobile/shared/constants.dart';
 import 'package:givejobtimer_mobile/shared/model/user.dart';
 import 'package:givejobtimer_mobile/shared/own_upgrader_messages.dart';
+import 'package:givejobtimer_mobile/shared/texts.dart';
 import 'package:givejobtimer_mobile/unauthenticated/get_started_page.dart';
 import 'package:givejobtimer_mobile/unauthenticated/login_page.dart';
 import 'package:splashscreen/splashscreen.dart';
@@ -117,11 +118,11 @@ class _MyAppState extends State<MyApp> {
         },
         debugShowCheckedModeBanner: false,
         home: SplashScreen(
-          seconds: 3,
-          image: new Image.asset('images/logo.png'),
+          seconds: 2,
+          image: new Image.asset('images/animated-logo.gif'),
           backgroundColor: DARK,
-          photoSize: 50,
-          loaderColor: GREEN,
+          photoSize: 80,
+          useLoader: false,
           navigateAfterSeconds: FutureBuilder(
             future: authOrEmpty,
             builder: (context, snapshot) {
