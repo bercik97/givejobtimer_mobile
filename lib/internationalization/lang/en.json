@@ -258,5 +258,8 @@
   "backToGroups": "Back to groups",
   "seeYourAllGroups": "See your all groups",
   "numberOfEmployees": "Number of employees",
-  "groups": "Groups"
+  "groups": "Groups",
+  "account": "ACCOUNT",
+  "aboutMe": "About me",
+  "other": "OTHER"
 }

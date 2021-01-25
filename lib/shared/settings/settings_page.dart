@@ -4,14 +4,16 @@ import 'package:flutter_progress_dialog/flutter_progress_dialog.dart';
 import 'package:givejobtimer_mobile/employee/shared/employee_side_bar.dart';
 import 'package:givejobtimer_mobile/internationalization/localization/localization_constants.dart';
 import 'package:givejobtimer_mobile/internationalization/model/language.dart';
-import 'package:givejobtimer_mobile/shared/util/language_util.dart';
 import 'package:givejobtimer_mobile/manager/shared/manager_side_bar.dart';
 import 'package:givejobtimer_mobile/shared/app_bar.dart';
 import 'package:givejobtimer_mobile/shared/colors.dart';
 import 'package:givejobtimer_mobile/shared/constants.dart';
 import 'package:givejobtimer_mobile/shared/model/user.dart';
+import 'package:givejobtimer_mobile/shared/page/edit_user_page.dart';
 import 'package:givejobtimer_mobile/shared/pdf_viewer_from_asset.dart';
 import 'package:givejobtimer_mobile/shared/texts.dart';
+import 'package:givejobtimer_mobile/shared/util/language_util.dart';
+import 'package:givejobtimer_mobile/shared/util/navigator_util.dart';
 import 'package:givejobtimer_mobile/shared/util/url_util.dart';
 
 import '../../main.dart';
@@ -67,6 +69,15 @@ class _SettingsPageState extends State<SettingsPage> {
         drawer: widget._user.role == ROLE_EMPLOYEE ? employeeSideBar(context, widget._user) : managerSideBar(context, widget._user),
         body: ListView(
           children: <Widget>[
+            _titleContainer(getTranslated(context, 'account')),
+            Container(
+              margin: EdgeInsets.only(left: 15, top: 10),
+              child: InkWell(
+                child: _subtitleInkWellContainer(getTranslated(context, 'aboutMe')),
+                onTap: () => NavigatorUtil.navigate(context, EditUserPage(widget._user)),
+              ),
+            ),
+            _titleContainer(getTranslated(context, 'other')),
             Container(
               margin: EdgeInsets.only(top: 20, left: 15),
               child: Theme(

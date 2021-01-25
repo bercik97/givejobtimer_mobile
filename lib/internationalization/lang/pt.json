@@ -258,5 +258,8 @@
   "backToGroups": "ჯგუფებში დაბრუნება",
   "seeYourAllGroups": "იხილეთ თქვენი ყველა ჯგუფი",
   "numberOfEmployees": "Number of employees",
-  "groups": "Groups"
+  "groups": "Groups",
+  "account": "ACCOUNT",
+  "aboutMe": "About me",
+  "other": "OTHER"
 }

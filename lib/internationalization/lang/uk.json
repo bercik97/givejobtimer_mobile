@@ -258,5 +258,8 @@
   "backToGroups": "Назад до груп",
   "seeYourAllGroups": "Переглянути всі ваші групи",
   "numberOfEmployees": "Number of employees",
-  "groups": "Groups"
+  "groups": "Groups",
+  "account": "ACCOUNT",
+  "aboutMe": "About me",
+  "other": "OTHER"
 }
