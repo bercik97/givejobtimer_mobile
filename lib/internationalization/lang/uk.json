@@ -209,5 +209,6 @@
   "workTimeFromAndToEmpty": "Please provide work time",
   "ifYouWantToFillTimeManuallyPleaseFirstStopTheirWork": "If you want to fill time manually, please first stop their work",
   "companyName": "Company name",
-  "role": "Role"
+  "role": "Role",
+  "editableSection": "Editable section"
 }

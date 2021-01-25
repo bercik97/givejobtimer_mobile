@@ -209,5 +209,6 @@
   "workTimeFromAndToEmpty": "Proszę podać czas pracy",
   "ifYouWantToFillTimeManuallyPleaseFirstStopTheirWork": "Jeśli chcesz wpisać czas pracy ręcznie, musisz najpierw zastopować bieżącą pracę wybranych pracowników",
   "companyName": "Nazwa firmy",
-  "role": "Rola"
+  "role": "Rola",
+  "editableSection": "Edytowalna sekcja"
 }

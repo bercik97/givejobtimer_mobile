@@ -25,6 +25,22 @@ class UserService {
     }
   }
 
+  Future<Map<String, Object>> findUserAndCompanyFieldsValuesById(String id, List<String> fields) async {
+    int userId = int.parse(id);
+    Response res = await get(
+      '$_url?id=$userId&fields=$fields',
+      headers: _headers,
+    );
+    var body = res.body;
+    if (res.statusCode == 200) {
+      return json.decode(body);
+    } else if (res.statusCode == 401) {
+      return Logout.handle401WithLogout(_context);
+    } else {
+      return Future.error(body);
+    }
+  }
+
   Future<dynamic> update(String id, Map<String, Object> fieldsValues) async {
     int userId = int.parse(id);
     Response res = await put('$_url?id=$userId', body: jsonEncode(fieldsValues), headers: _headers);

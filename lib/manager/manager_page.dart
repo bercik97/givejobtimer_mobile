@@ -11,7 +11,7 @@ import 'package:givejobtimer_mobile/shared/colors.dart';
 import 'package:givejobtimer_mobile/shared/constants.dart';
 import 'package:givejobtimer_mobile/shared/icons.dart';
 import 'package:givejobtimer_mobile/shared/model/user.dart';
-import 'package:givejobtimer_mobile/shared/page/edit_user.dart';
+import 'package:givejobtimer_mobile/shared/page/edit_user_page.dart';
 import 'package:givejobtimer_mobile/shared/service/logout_service.dart';
 import 'package:givejobtimer_mobile/shared/texts.dart';
 import 'package:givejobtimer_mobile/shared/util/language_util.dart';

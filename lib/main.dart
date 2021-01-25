@@ -64,6 +64,8 @@ class _MyAppState extends State<MyApp> {
     var managerWhatsApp = await storage.read(key: 'managerWhatsApp');
     var employeeId = await storage.read(key: 'employeeId');
     var role = await storage.read(key: 'role');
+    var companyId = await storage.read(key: 'companyId');
+    var companyName = await storage.read(key: 'companyName');
     var name = await storage.read(key: 'name');
     var surname = await storage.read(key: 'surname');
     var nationality = await storage.read(key: 'nationality');
@@ -80,6 +82,8 @@ class _MyAppState extends State<MyApp> {
     map['managerWhatsApp'] = managerWhatsApp;
     map['employeeId'] = employeeId;
     map['role'] = role;
+    map['companyId'] = companyId;
+    map['companyName'] = companyName;
     map['name'] = name;
     map['surname'] = surname;
     map['nationality'] = nationality;

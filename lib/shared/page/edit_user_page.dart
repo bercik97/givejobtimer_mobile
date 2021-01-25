@@ -9,6 +9,7 @@ import 'package:givejobtimer_mobile/api/user/service/user_service.dart';
 import 'package:givejobtimer_mobile/employee/shared/employee_side_bar.dart';
 import 'package:givejobtimer_mobile/internationalization/localization/localization_constants.dart';
 import 'package:givejobtimer_mobile/manager/shared/manager_side_bar.dart';
+import 'package:givejobtimer_mobile/shared/loader_container.dart';
 import 'package:givejobtimer_mobile/shared/model/user.dart';
 import 'package:givejobtimer_mobile/shared/service/dialog_service.dart';
 import 'package:givejobtimer_mobile/shared/service/toastr_service.dart';
@@ -37,6 +38,7 @@ class _EditUserPageState extends State<EditUserPage> {
 
   GlobalKey<FormState> formKey = GlobalKey<FormState>();
 
+  String _companyName;
   final TextEditingController _nameController = TextEditingController();
   final TextEditingController _surnameController = TextEditingController();
   final TextEditingController _phoneController = TextEditingController();
@@ -44,30 +46,60 @@ class _EditUserPageState extends State<EditUserPage> {
   final TextEditingController _whatsAppController = TextEditingController();
   String _nationality;
 
+  bool _loading;
+
   @override
   void initState() {
+    this._loading = true;
     super.initState();
     this._user = widget._user;
     this._fieldsValues = new Map();
     this._userService = ServiceInitializer.initialize(context, _user.authHeader, UserService);
     this._nameController.text = _user.name;
     this._surnameController.text = _user.surname;
-    this._phoneController.text = _user.phone;
-    this._viberController.text = _user.viber;
-    this._whatsAppController.text = _user.whatsApp;
     this._nationality = _user.nationality;
+    _userService.findUserAndCompanyFieldsValuesById(
+      _user.id,
+      [
+        'name',
+        'surname',
+        'nationality',
+        'phone',
+        'viber',
+        'whatsApp',
+        'companyName',
+      ],
+    ).then(
+      (res) => {
+        setState(() {
+          _loading = false;
+          _fieldsValues = res;
+          _nameController.text = this._fieldsValues['name'];
+          _surnameController.text = this._fieldsValues['surname'];
+          _nationality = this._fieldsValues['nationality'];
+          _phoneController.text = this._fieldsValues['phone'];
+          _viberController.text = this._fieldsValues['viber'];
+          _whatsAppController.text = this._fieldsValues['whatsApp'];
+          _companyName = this._fieldsValues['companyName'];
+        }),
+      },
+    );
   }
 
   @override
   Widget build(BuildContext context) {
+    bool isRoleManager = _user.role == ROLE_MANAGER;
+    if (_loading) {
+      return loader(appBar(context, _user, getTranslated(context, 'loading')), isRoleManager ? managerSideBar(context, _user) : employeeSideBar(context, _user));
+    }
     return MaterialApp(
       title: APP_NAME,
       theme: ThemeData(primarySwatch: MaterialColor(0xffFFFFFF, WHITE_RGBO)),
       debugShowCheckedModeBanner: false,
       home: Scaffold(
         backgroundColor: DARK,
-        appBar: appBar(context, _user, getTranslated(context, 'edit')),
-        drawer: _user.role == ROLE_MANAGER ? managerSideBar(context, _user) : employeeSideBar(context, _user),
+        appBar: appBar(context, _user, getTranslated(context, 'informationAboutYou')),
+        drawer: isRoleManager ? managerSideBar(context, _user) : employeeSideBar(context, _user),
         body: Padding(
           padding: EdgeInsets.fromLTRB(25, 0, 25, 25),
           child: Center(
@@ -76,14 +108,11 @@ class _EditUserPageState extends State<EditUserPage> {
               key: formKey,
               child: Column(
                 children: [
-                  SizedBox(height: 10),
-                  textCenter28GreenBold(getTranslated(context, 'informationAboutYou')),
-                  Divider(color: WHITE),
-                  SizedBox(height: 10),
                   Expanded(
                     child: SingleChildScrollView(
                       child: Column(
                         children: <Widget>[
+                          _buildReadOnlySection(isRoleManager),
                           _buildBasicSection(),
                           _buildContactSection(),
                         ],
@@ -100,9 +129,31 @@ class _EditUserPageState extends State<EditUserPage> {
     );
   }
 
+  Widget _buildReadOnlySection(bool isRoleManager) {
+    return Column(
+      children: [
+        ListTile(
+          dense: true,
+          contentPadding: EdgeInsets.only(left: 0.0, right: 0.0),
+          title: text16GreenBold(getTranslated(context, 'companyName')),
+          subtitle: text16White(_companyName),
+        ),
+        ListTile(
+          dense: true,
+          contentPadding: EdgeInsets.only(left: 0.0, right: 0.0),
+          title: text16GreenBold(getTranslated(context, 'role')),
+          subtitle: text16White(isRoleManager ? getTranslated(context, 'manager') : getTranslated(context, 'employee')),
+        ),
+      ],
+    );
+  }
+
   Widget _buildBasicSection() {
     return Column(
       children: <Widget>[
+        SizedBox(height: 20),
+        Align(alignment: Alignment.topLeft, child: text25GreenUnderline(getTranslated(context, 'editableSection'))),
+        SizedBox(height: 20),
         _buildRequiredTextField(
           _nameController,
           26,
@@ -247,36 +298,35 @@ class _EditUserPageState extends State<EditUserPage> {
                 content: getTranslated(context, 'correctInvalidFields'),
               );
             } else {
-              _fieldsValues = {
-                "name": _nameController.text,
-                "surname": _surnameController.text,
-                "nationality": _nationality,
-                "phone": _phoneController.text,
-                "viber": _viberController.text,
-                "whatsApp": _whatsAppController.text,
-              };
               showProgressDialog(context: context, loadingText: getTranslated(context, 'loading'));
-              _userService.update(_user.id, {
-                "name": _nameController.text,
-                "surname": _surnameController.text,
-                "nationality": _nationality,
-                "phone": _phoneController.text,
-                "viber": _viberController.text,
-                "whatsApp": _whatsAppController.text,
-              }).then((res) {
+              _userService.update(
+                _user.id,
+                {
+                  "name": _nameController.text,
+                  "surname": _surnameController.text,
+                  "nationality": _nationality,
+                  "phone": _phoneController.text,
+                  "viber": _viberController.text,
+                  "whatsApp": _whatsAppController.text,
+                },
+              ).then((res) {
                 Future.delayed(Duration(microseconds: 1), () => dismissProgressDialog()).whenComplete(() {
-                  _user.update(_fieldsValues);
                   ToastService.showSuccessToast(getTranslated(context, 'successfullyUpdatedInformationAboutYou'));
+                  _user.name = _nameController.text;
+                  _user.surname = _surnameController.text;
+                  _user.nationality = _nationality;
                 });
-              }).catchError((onError) {
-                Future.delayed(Duration(microseconds: 1), () => dismissProgressDialog()).whenComplete(() {
-                  DialogService.showCustomDialog(
-                    context: context,
-                    titleWidget: textRed(getTranslated(context, 'error')),
-                    content: getTranslated(context, 'smthWentWrong'),
-                  );
-                });
-              });
+              }).catchError(
+                (onError) {
+                  Future.delayed(Duration(microseconds: 1), () => dismissProgressDialog()).whenComplete(() {
+                    DialogService.showCustomDialog(
+                      context: context,
+                      titleWidget: textRed(getTranslated(context, 'error')),
+                      content: getTranslated(context, 'smthWentWrong'),
+                    );
+                  });
+                },
+              );
             }
           },
           color: GREEN,

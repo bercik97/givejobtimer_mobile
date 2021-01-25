@@ -164,29 +164,21 @@ class _LoginPageState extends State<LoginPage> {
         user.managerId = map['managerId'];
         user.employeeId = map['employeeId'];
         user.role = map['role'];
+        user.companyId = map['companyId'];
+        user.companyName = map['companyName'];
         user.name = map['name'];
         user.surname = map['surname'];
         user.nationality = map['nationality'];
-        user.phone = map['phone'];
-        user.viber = map['viber'];
-        user.whatsApp = map['whatsApp'];
-        user.managerPhone = map['managerPhone'];
-        user.managerViber = map['managerViber'];
-        user.managerWhatsApp = map['managerWhatsApp'];
         user.authHeader = authHeader;
         storage.write(key: 'id', value: user.id.toString());
         storage.write(key: 'managerId', value: user.managerId.toString());
         storage.write(key: 'employeeId', value: user.employeeId.toString());
         storage.write(key: 'role', value: user.role);
+        storage.write(key: 'companyId', value: user.companyId);
+        storage.write(key: 'companyName', value: user.companyName);
         storage.write(key: 'name', value: user.name);
         storage.write(key: 'surname', value: user.surname);
         storage.write(key: 'nationality', value: user.nationality);
-        storage.write(key: 'phone', value: user.phone);
-        storage.write(key: 'viber', value: user.viber);
-        storage.write(key: 'whatsApp', value: user.whatsApp);
-        storage.write(key: 'managerPhone', value: user.managerPhone);
-        storage.write(key: 'managerViber', value: user.managerViber);
-        storage.write(key: 'managerWhatsApp', value: user.managerWhatsApp);
         Future.delayed(Duration(microseconds: 1), () => dismissProgressDialog()).whenComplete(() {
           if (user.role == ROLE_EMPLOYEE) {
             Navigator.push(context, MaterialPageRoute(builder: (context) => EmployeePage(user)));

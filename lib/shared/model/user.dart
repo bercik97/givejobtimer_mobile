@@ -6,12 +6,8 @@ class User {
   String name;
   String surname;
   String nationality;
-  String phone;
-  String viber;
-  String whatsApp;
-  String managerPhone;
-  String managerViber;
-  String managerWhatsApp;
+  String companyId;
+  String companyName;
   String authHeader;
 
   User();
@@ -24,12 +20,8 @@ class User {
     name = data['name'];
     surname = data['surname'];
     nationality = data['nationality'];
-    phone = data['phone'];
-    viber = data['viber'];
-    whatsApp = data['whatsApp'];
-    managerPhone = data['managerPhone'];
-    managerViber = data['managerViber'];
-    managerWhatsApp = data['managerWhatsApp'];
+    companyId = data['companyId'];
+    companyName = data['companyName'];
     authHeader = data['authorization'];
     return this;
   }
@@ -38,8 +30,5 @@ class User {
     name = fieldsValues['name'];
     surname = fieldsValues['surname'];
     nationality = fieldsValues['nationality'];
-    phone = fieldsValues['phone'];
-    viber = fieldsValues['viber'];
-    whatsApp = fieldsValues['whatsApp'];
   }
 }

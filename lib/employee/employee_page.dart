@@ -10,7 +10,7 @@ import 'package:givejobtimer_mobile/shared/colors.dart';
 import 'package:givejobtimer_mobile/shared/constants.dart';
 import 'package:givejobtimer_mobile/shared/icons.dart';
 import 'package:givejobtimer_mobile/shared/model/user.dart';
-import 'package:givejobtimer_mobile/shared/page/edit_user.dart';
+import 'package:givejobtimer_mobile/shared/page/edit_user_page.dart';
 import 'package:givejobtimer_mobile/shared/service/logout_service.dart';
 import 'package:givejobtimer_mobile/shared/texts.dart';
 import 'package:givejobtimer_mobile/shared/util/language_util.dart';
@@ -107,7 +107,7 @@ class _EmployeePageState extends State<EmployeePage> {
                                 child: Material(
                                   color: BRIGHTER_DARK,
                                   child: InkWell(
-                                    onTap: () => showContactDialog(context, _user.managerPhone, _user.managerViber, _user.managerWhatsApp),
+                                    onTap: () => showContactDialog(context, null, null, null),
                                     child: _buildScrollableContainer('images/big-contact-with-manager-icon.png', 'contact', 'contactWithYourManager'),
                                   ),
                                 ),
