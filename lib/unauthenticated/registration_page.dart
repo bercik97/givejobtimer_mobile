@@ -19,9 +19,11 @@ import 'login_page.dart';
 
 class RegisterPage extends StatefulWidget {
   final String _tokenId;
+  final num _companyId;
+  final String _companyName;
   final String _role;
 
-  RegisterPage(this._tokenId, this._role);
+  RegisterPage(this._tokenId, this._companyId, this._companyName, this._role);
 
   @override
   _RegisterPageState createState() => _RegisterPageState();
@@ -34,6 +36,8 @@ class _RegisterPageState extends State<RegisterPage> {
   bool _isRegisterButtonTapped;
 
   String _tokenId;
+  num _companyId;
+  String _companyName;
   String _role;
 
   final TextEditingController _nameController = TextEditingController();
@@ -51,6 +55,8 @@ class _RegisterPageState extends State<RegisterPage> {
     super.initState();
     _userService = ServiceInitializer.initialize(context, null, UserService);
     _tokenId = widget._tokenId;
+    _companyId = widget._companyId;
+    _companyName = widget._companyName;
     _role = widget._role;
     _isRegisterButtonTapped = false;
     _nationality = '';
@@ -84,6 +90,7 @@ class _RegisterPageState extends State<RegisterPage> {
                       child: Column(
                         children: <Widget>[
                           _buildLoginSection(),
+                          _buildReadOnlySection(),
                           _buildBasicSection(),
                           _buildContactSection(),
                           _buildDocumentsSection(),
@@ -103,6 +110,25 @@ class _RegisterPageState extends State<RegisterPage> {
 
   bool _isValid() {
     return formKey.currentState.validate();
+  }
+
+  Widget _buildReadOnlySection() {
+    return Column(
+      children: [
+        ListTile(
+          dense: true,
+          contentPadding: EdgeInsets.only(left: 0.0, right: 0.0),
+          title: text16GreenBold(getTranslated(context, 'companyName')),
+          subtitle: text16White(_companyName),
+        ),
+        ListTile(
+          dense: true,
+          contentPadding: EdgeInsets.only(left: 0.0, right: 0.0),
+          title: text16GreenBold(getTranslated(context, 'role')),
+          subtitle: text16White(_role == 'ROLE_MANAGER' ? getTranslated(context, 'manager') : getTranslated(context, 'employee')),
+        ),
+      ],
+    );
   }
 
   Widget _buildLoginSection() {
@@ -368,6 +394,7 @@ class _RegisterPageState extends State<RegisterPage> {
       viber: _viberController.text,
       whatsApp: _whatsAppController.text,
       tokenId: _tokenId,
+      companyId: _companyId,
       role: _role,
     );
     _userService.create(dto).then((res) {

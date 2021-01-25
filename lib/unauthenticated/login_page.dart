@@ -4,7 +4,6 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_progress_dialog/flutter_progress_dialog.dart';
-import 'package:fluttertoast/fluttertoast.dart';
 import 'package:givejobtimer_mobile/api/shared/service_initializer.dart';
 import 'package:givejobtimer_mobile/api/token/service/token_service.dart';
 import 'package:givejobtimer_mobile/employee/employee_page.dart';
@@ -218,8 +217,6 @@ class _LoginPageState extends State<LoginPage> {
     );
   }
 
-  ////////////////
-
   _showCreateAccountDialog() {
     return showGeneralDialog(
       context: context,
@@ -304,29 +301,29 @@ class _LoginPageState extends State<LoginPage> {
       return;
     }
     showProgressDialog(context: context, loadingText: getTranslated(context, 'loading'));
-    _tokenService.findFieldsValuesById(token, ['role']).then(
+    _tokenService.findFieldsValuesById(token, ['role', 'companyId', 'companyName']).then(
       (res) {
         if (res == null) {
           Future.delayed(Duration(microseconds: 1), () => dismissProgressDialog()).whenComplete(() {
-            _tokenAlertDialog(false, null);
+            _tokenAlertDialog(false, null, null, null);
             setState(() => _isConfirmTokenButtonTapped = false);
           });
           return;
         }
         Future.delayed(Duration(microseconds: 1), () => dismissProgressDialog()).whenComplete(() {
-          _tokenAlertDialog(true, res['role']);
+          _tokenAlertDialog(true, res['role'], res['companyId'], res['companyName']);
           setState(() => _isConfirmTokenButtonTapped = false);
         });
       },
     ).catchError((onError) {
       Future.delayed(Duration(microseconds: 1), () => dismissProgressDialog()).whenComplete(() {
-        _tokenAlertDialog(false, null);
+        _tokenAlertDialog(false, null, null, null);
         setState(() => _isConfirmTokenButtonTapped = false);
       });
     });
   }
 
-  _tokenAlertDialog(bool isCorrect, String role) {
+  _tokenAlertDialog(bool isCorrect, String role, num companyId, String companyName) {
     return showDialog(
       barrierDismissible: false,
       context: context,
@@ -363,7 +360,7 @@ class _LoginPageState extends State<LoginPage> {
                   context,
                   PageRouteBuilder(
                     pageBuilder: (BuildContext context, Animation<double> animation, Animation<double> secondaryAnimation) {
-                      return RegisterPage(_tokenController.text, role);
+                      return RegisterPage(_tokenController.text, companyId, companyName, role);
                     },
                     transitionsBuilder: (BuildContext context, Animation<double> animation, Animation<double> secondaryAnimation, Widget child) {
                       return SlideTransition(

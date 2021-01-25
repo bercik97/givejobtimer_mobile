@@ -89,6 +89,7 @@ Text textCenter28GreenBold(String text) { return Text(text, textAlign: TextAlign
 /* TEXT GREEN BOLD */
 /////////////////////
 Text textGreenBold(String text) { return Text(text, style: GoogleFonts.lato(color: GREEN, fontWeight: FontWeight.bold)); }
+Text text16GreenBold(String text) { return Text(text, style: GoogleFonts.lato(fontSize: 16, color: GREEN, fontWeight: FontWeight.bold)); }
 Text text18GreenBold(String text) { return Text(text, style: GoogleFonts.lato(fontSize: 18, color: GREEN, fontWeight: FontWeight.bold)); }
 Text text20GreenBold(String text) { return Text(text, style: GoogleFonts.lato(fontSize: 20, color: GREEN, fontWeight: FontWeight.bold)); }
 

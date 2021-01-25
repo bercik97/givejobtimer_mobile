@@ -207,5 +207,7 @@
   "timeOfStartCannotStartLaterThanFinish": "Time of starting work cannot start later than time of finishing work",
   "workingTimeHasBeenSuccessfullySetForSelectedDaysAndEmployees": "Working time has been successfully set for selected days and employees",
   "workTimeFromAndToEmpty": "Please provide work time",
-  "ifYouWantToFillTimeManuallyPleaseFirstStopTheirWork": "If you want to fill time manually, please first stop their work"
+  "ifYouWantToFillTimeManuallyPleaseFirstStopTheirWork": "If you want to fill time manually, please first stop their work",
+  "companyName": "Company name",
+  "role": "Role",
 }

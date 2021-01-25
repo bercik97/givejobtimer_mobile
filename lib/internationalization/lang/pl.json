@@ -207,5 +207,7 @@
   "timeOfStartCannotStartLaterThanFinish": "Czas zaczęcia pracy nie może zaczynać się później niż czas zaczęcia pracy",
   "workingTimeHasBeenSuccessfullySetForSelectedDaysAndEmployees": "Czas pracy został pomyślnie ustawiony dla wybranych dni oraz pracowników",
   "workTimeFromAndToEmpty": "Proszę podać czas pracy",
-  "ifYouWantToFillTimeManuallyPleaseFirstStopTheirWork": "Jeśli chcesz wpisać czas pracy ręcznie, musisz najpierw zastopować bieżącą pracę wybranych pracowników"
+  "ifYouWantToFillTimeManuallyPleaseFirstStopTheirWork": "Jeśli chcesz wpisać czas pracy ręcznie, musisz najpierw zastopować bieżącą pracę wybranych pracowników",
+  "companyName": "Nazwa firmy",
+  "role": "Rola"
 }

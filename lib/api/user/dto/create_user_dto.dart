@@ -8,6 +8,7 @@ class CreateUserDto {
   final String viber;
   final String whatsApp;
   final String tokenId;
+  final num companyId;
   final String role;
 
   CreateUserDto({
@@ -18,6 +19,7 @@ class CreateUserDto {
     @required this.viber,
     @required this.whatsApp,
     @required this.tokenId,
+    @required this.companyId,
     @required this.role,
   });
 
@@ -30,6 +32,7 @@ class CreateUserDto {
     map['viber'] = dto.viber;
     map['whatsApp'] = dto.whatsApp;
     map['tokenId'] = dto.tokenId;
+    map['companyId'] = dto.companyId;
     map['role'] = dto.role;
     return map;
   }
