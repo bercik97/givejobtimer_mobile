@@ -18,8 +18,9 @@ import 'package:givejobtimer_mobile/shared/util/language_util.dart';
 
 class ManagerProfilePage extends StatefulWidget {
   final User _user;
+  final num _groupId;
 
-  ManagerProfilePage(this._user);
+  ManagerProfilePage(this._user, this._groupId);
 
   @override
   _ManagerProfilePageState createState() => _ManagerProfilePageState();
@@ -27,10 +28,12 @@ class ManagerProfilePage extends StatefulWidget {
 
 class _ManagerProfilePageState extends State<ManagerProfilePage> {
   User _user;
+  num _groupId;
 
   @override
   Widget build(BuildContext context) {
     this._user = widget._user;
+    this._groupId = widget._groupId;
     String _employeeInfo = _user.name + ' ' + _user.surname;
     return WillPopScope(
       child: MaterialApp(
@@ -93,7 +96,7 @@ class _ManagerProfilePageState extends State<ManagerProfilePage> {
                                       Navigator.of(context).push(
                                         CupertinoPageRoute<Null>(
                                           builder: (BuildContext context) {
-                                            return EmployeesPage(_user);
+                                            return EmployeesPage(_user, _groupId);
                                           },
                                         ),
                                       );

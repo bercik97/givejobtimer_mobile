@@ -109,7 +109,7 @@ class _GroupPageState extends State<GroupPage> {
                         child: Material(
                           color: BRIGHTER_DARK,
                           child: InkWell(
-                            onTap: () => NavigatorUtil.navigate(context, EmployeesPage(_user)),
+                            onTap: () => NavigatorUtil.navigate(context, EmployeesPage(_user, _model.groupId)),
                             child: _buildScrollableContainer('images/big-employees-icon.png', 'employees', 'seeYourEmployees'),
                           ),
                         ),

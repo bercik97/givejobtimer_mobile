@@ -7,7 +7,6 @@ import 'package:givejobtimer_mobile/api/workplace/service/workplace_service.dart
 import 'package:givejobtimer_mobile/internationalization/localization/localization_constants.dart';
 import 'package:givejobtimer_mobile/manager/pages/groups/group/workplace/workplace_work_time_page.dart';
 import 'package:givejobtimer_mobile/manager/shared/manager_side_bar.dart';
-import 'package:givejobtimer_mobile/manager/shared/navigate_button.dart';
 import 'package:givejobtimer_mobile/shared/app_bar.dart';
 import 'package:givejobtimer_mobile/shared/colors.dart';
 import 'package:givejobtimer_mobile/shared/constants.dart';
@@ -151,8 +150,6 @@ class _WorkplaceDatesPageState extends State<WorkplaceDatesPage> {
                 : _handleEmptyData()
           ],
         ),
-        floatingActionButtonLocation: FloatingActionButtonLocation.endFloat,
-        floatingActionButton: navigateButton(context, _user),
       ),
     );
   }

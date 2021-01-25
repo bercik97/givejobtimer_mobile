@@ -4,7 +4,7 @@ import 'dart:convert';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_progress_dialog/flutter_progress_dialog.dart';
-import 'package:givejobtimer_mobile/api/employee/dto/employee_basic_dto.dart';
+import 'package:givejobtimer_mobile/api/employee/dto/employee_dto.dart';
 import 'package:givejobtimer_mobile/api/employee/service/employee_service.dart';
 import 'package:givejobtimer_mobile/api/group/service/group_service.dart';
 import 'package:givejobtimer_mobile/api/shared/service_initializer.dart';
@@ -43,8 +43,8 @@ class _DeleteGroupEmployeesPageState extends State<DeleteGroupEmployeesPage> {
 
   final ScrollController _scrollController = new ScrollController();
 
-  List<EmployeeBasicDto> _employees = new List();
-  List<EmployeeBasicDto> _filteredEmployees = new List();
+  List<EmployeeDto> _employees = new List();
+  List<EmployeeDto> _filteredEmployees = new List();
   bool _loading = false;
   bool _isChecked = false;
   bool _isDeleteButtonTapped = false;
@@ -186,7 +186,7 @@ class _DeleteGroupEmployeesPageState extends State<DeleteGroupEmployeesPage> {
             _checked.forEach((b) => l.add(value));
             _checked = l;
             if (value) {
-              _selectedIds.addAll(_filteredEmployees.map((e) => e.id));
+              _selectedIds.addAll(_filteredEmployees.map((e) => e.employeeId));
             } else
               _selectedIds.clear();
           });
@@ -206,10 +206,10 @@ class _DeleteGroupEmployeesPageState extends State<DeleteGroupEmployeesPage> {
           controller: _scrollController,
           itemCount: _filteredEmployees.length,
           itemBuilder: (BuildContext context, int index) {
-            EmployeeBasicDto employee = _filteredEmployees[index];
+            EmployeeDto employee = _filteredEmployees[index];
             int foundIndex = 0;
             for (int i = 0; i < _employees.length; i++) {
-              if (_employees[i].id == employee.id) {
+              if (_employees[i].employeeId == employee.employeeId) {
                 foundIndex = i;
               }
             }
@@ -235,9 +235,9 @@ class _DeleteGroupEmployeesPageState extends State<DeleteGroupEmployeesPage> {
                           setState(() {
                             _checked[foundIndex] = value;
                             if (value) {
-                              _selectedIds.add(_employees[foundIndex].id);
+                              _selectedIds.add(_employees[foundIndex].employeeId);
                             } else {
-                              _selectedIds.remove(_employees[foundIndex].id);
+                              _selectedIds.remove(_employees[foundIndex].employeeId);
                             }
                             int selectedIdsLength = _selectedIds.length;
                             if (selectedIdsLength == _employees.length) {

@@ -15,19 +15,6 @@ class EmployeeService {
 
   static const String _url = '$SERVER_IP/employees';
 
-  Future<List<EmployeeDto>> findAllByManagerId(String managerId) async {
-    int id = int.parse(managerId);
-    String url = _url + '?manager_id=$id';
-    Response res = await get(url, headers: _header);
-    if (res.statusCode == 200) {
-      return (json.decode(res.body) as List).map((data) => EmployeeDto.fromJson(data)).toList();
-    } else if (res.statusCode == 401) {
-      return Logout.handle401WithLogout(_context);
-    } else {
-      return Future.error(res.body);
-    }
-  }
-
   Future<List<EmployeeBasicDto>> findAllByGroupIsNullAndCompanyId(int companyId) async {
     Response res = await get(
       '$_url/nullable-group/companies?company_id=$companyId',
@@ -42,13 +29,13 @@ class EmployeeService {
     }
   }
 
-  Future<List<EmployeeBasicDto>> findAllByGroupId(int groupId) async {
+  Future<List<EmployeeDto>> findAllByGroupId(int groupId) async {
     Response res = await get(
       '$_url/groups?group_id=$groupId',
       headers: _header,
     );
     if (res.statusCode == 200) {
-      return (json.decode(res.body) as List).map((data) => EmployeeBasicDto.fromJson(data)).toList();
+      return (json.decode(res.body) as List).map((data) => EmployeeDto.fromJson(data)).toList();
     } else if (res.statusCode == 401) {
       return Logout.handle401WithLogout(_context);
     } else {

@@ -35,8 +35,9 @@ import 'employee_dates_page.dart';
 
 class EmployeesPage extends StatefulWidget {
   final User _user;
+  final num _groupId;
 
-  EmployeesPage(this._user);
+  EmployeesPage(this._user, this._groupId);
 
   @override
   _EmployeesPageState createState() => _EmployeesPageState();
@@ -53,6 +54,7 @@ class _EmployeesPageState extends State<EmployeesPage> {
   WorkTimeService _workTimeService;
 
   User _user;
+  num _groupId;
 
   List<EmployeeDto> _employees = new List();
   List<EmployeeDto> _filteredEmployees = new List();
@@ -73,12 +75,13 @@ class _EmployeesPageState extends State<EmployeesPage> {
   @override
   void initState() {
     this._user = widget._user;
+    this._groupId = widget._groupId;
     this._employeeService = ServiceInitializer.initialize(context, _user.authHeader, EmployeeService);
     this._workplaceService = ServiceInitializer.initialize(context, _user.authHeader, WorkplaceService);
     this._workTimeService = ServiceInitializer.initialize(context, _user.authHeader, WorkTimeService);
     super.initState();
     _loading = true;
-    _employeeService.findAllByManagerId(_user.managerId).then((res) {
+    _employeeService.findAllByGroupId(_groupId).then((res) {
       setState(() {
         _employees = res;
         _employees.forEach((e) => _checked.add(false));
@@ -875,7 +878,7 @@ class _EmployeesPageState extends State<EmployeesPage> {
   }
 
   Future<Null> _refresh() {
-    return _employeeService.findAllByManagerId(_user.managerId).then((res) {
+    return _employeeService.findAllByGroupId(_groupId).then((res) {
       setState(() {
         _employees = res;
         _filteredEmployees = _employees;
