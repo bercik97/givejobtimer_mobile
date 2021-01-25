@@ -16,16 +16,16 @@ import 'package:givejobtimer_mobile/shared/service/logout_service.dart';
 import 'package:givejobtimer_mobile/shared/texts.dart';
 import 'package:givejobtimer_mobile/shared/util/language_util.dart';
 
-class ManagerPage extends StatefulWidget {
+class ManagerProfilePage extends StatefulWidget {
   final User _user;
 
-  ManagerPage(this._user);
+  ManagerProfilePage(this._user);
 
   @override
-  _ManagerPageState createState() => _ManagerPageState();
+  _ManagerProfilePageState createState() => _ManagerProfilePageState();
 }
 
-class _ManagerPageState extends State<ManagerPage> {
+class _ManagerProfilePageState extends State<ManagerProfilePage> {
   User _user;
 
   @override

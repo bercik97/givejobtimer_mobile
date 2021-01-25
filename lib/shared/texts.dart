@@ -61,6 +61,7 @@ Text text25Dark(String text) { return Text(text, style: GoogleFonts.lato(fontSiz
 /*    TEXT GREEN   */
 /////////////////////
 Text textGreen(String text) { return Text(text, style: GoogleFonts.lato(color: GREEN)); }
+Text text25Green(String text) { return Text(text, style: GoogleFonts.lato(fontSize: 25, color: GREEN)); }
 
 
 /////////////////////////////////
@@ -99,6 +100,12 @@ Text text20GreenBold(String text) { return Text(text, style: GoogleFonts.lato(fo
 /////////////////////
 Text textRed(String text) { return Text(text, style: GoogleFonts.lato(color: Colors.red)); }
 Text text13Red(String text) { return Text(text, style: GoogleFonts.lato(fontSize: 13, color: Colors.red)); }
+
+
+/////////////////////
+/* TEXT GREEN BOLD */
+/////////////////////
+Text text20RedBold(String text) { return Text(text, style: GoogleFonts.lato(color: Colors.red, fontWeight: FontWeight.bold)); }
 
 
 /////////////////////

@@ -3,6 +3,7 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
+import 'package:givejobtimer_mobile/manager/pages/groups_dashboard_page.dart';
 import 'package:givejobtimer_mobile/shared/colors.dart';
 import 'package:givejobtimer_mobile/shared/constants.dart';
 import 'package:givejobtimer_mobile/shared/model/user.dart';
@@ -15,7 +16,6 @@ import 'package:upgrader/upgrader.dart';
 import 'employee/employee_page.dart';
 import 'internationalization/localization/demo_localization.dart';
 import 'internationalization/localization/localization_constants.dart';
-import 'manager/manager_page.dart';
 import 'shared/own_http_overrides.dart';
 
 final storage = new FlutterSecureStorage();
@@ -151,7 +151,7 @@ class _MyAppState extends State<MyApp> {
               if (role == ROLE_EMPLOYEE) {
                 pageToReturn = EmployeePage(user);
               } else if (role == ROLE_MANAGER) {
-                pageToReturn = ManagerPage(user);
+                pageToReturn = GroupsDashboardPage(user);
               } else {
                 pageToReturn = LoginPage();
               }

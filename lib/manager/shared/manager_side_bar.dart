@@ -1,7 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:givejobtimer_mobile/internationalization/localization/localization_constants.dart';
-import 'package:givejobtimer_mobile/manager/manager_page.dart';
+import 'package:givejobtimer_mobile/manager/pages/groups_dashboard_page.dart';
 import 'package:givejobtimer_mobile/settings/settings_page.dart';
 import 'package:givejobtimer_mobile/shared/colors.dart';
 import 'package:givejobtimer_mobile/shared/constants.dart';
@@ -47,12 +47,12 @@ Drawer managerSideBar(BuildContext context, User user) {
           ),
           ListTile(
             leading: iconWhite(Icons.person),
-            title: text18White(getTranslated(context, 'profile')),
+            title: text18White(getTranslated(context, 'groups')),
             onTap: () {
               Navigator.of(context).push(
                 CupertinoPageRoute<Null>(
                   builder: (BuildContext context) {
-                    return ManagerPage(user);
+                    return GroupsDashboardPage(user);
                   },
                 ),
               );
