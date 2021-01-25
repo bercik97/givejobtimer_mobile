@@ -13,7 +13,6 @@ import 'package:givejobtimer_mobile/api/work_time/service/work_time_service.dart
 import 'package:givejobtimer_mobile/api/workplace/dto/workplace_dto.dart';
 import 'package:givejobtimer_mobile/api/workplace/service/workplace_service.dart';
 import 'package:givejobtimer_mobile/internationalization/localization/localization_constants.dart';
-import 'package:givejobtimer_mobile/manager/pages/employees/employee_dates_page.dart';
 import 'package:givejobtimer_mobile/manager/shared/manager_side_bar.dart';
 import 'package:givejobtimer_mobile/shared/app_bar.dart';
 import 'package:givejobtimer_mobile/shared/colors.dart';
@@ -31,6 +30,8 @@ import 'package:givejobtimer_mobile/shared/widget/hint.dart';
 import 'package:givejobtimer_mobile/shared/widget/icons_legend_dialog.dart';
 import 'package:intl/intl.dart';
 import 'package:number_inc_dec/number_inc_dec.dart';
+
+import 'employee_dates_page.dart';
 
 class EmployeesPage extends StatefulWidget {
   final User _user;

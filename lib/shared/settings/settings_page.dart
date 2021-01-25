@@ -14,7 +14,7 @@ import 'package:givejobtimer_mobile/shared/pdf_viewer_from_asset.dart';
 import 'package:givejobtimer_mobile/shared/texts.dart';
 import 'package:givejobtimer_mobile/shared/util/url_util.dart';
 
-import '../main.dart';
+import '../../main.dart';
 import 'bug_report_dialog.dart';
 
 class SettingsPage extends StatefulWidget {

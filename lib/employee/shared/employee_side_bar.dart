@@ -2,12 +2,12 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:givejobtimer_mobile/employee/employee_page.dart';
 import 'package:givejobtimer_mobile/internationalization/localization/localization_constants.dart';
-import 'package:givejobtimer_mobile/settings/settings_page.dart';
 import 'package:givejobtimer_mobile/shared/colors.dart';
 import 'package:givejobtimer_mobile/shared/constants.dart';
 import 'package:givejobtimer_mobile/shared/icons.dart';
 import 'package:givejobtimer_mobile/shared/model/user.dart';
 import 'package:givejobtimer_mobile/shared/service/logout_service.dart';
+import 'package:givejobtimer_mobile/shared/settings/settings_page.dart';
 import 'package:givejobtimer_mobile/shared/texts.dart';
 import 'package:open_appstore/open_appstore.dart';
 

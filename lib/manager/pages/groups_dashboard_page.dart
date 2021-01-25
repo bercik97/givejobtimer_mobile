@@ -24,9 +24,9 @@ import 'package:givejobtimer_mobile/shared/texts.dart';
 import 'package:givejobtimer_mobile/shared/util/navigator_util.dart';
 import 'package:givejobtimer_mobile/shared/widget/buttons.dart';
 
-import 'groups/add_group_employees_page.dart';
-import 'groups/add_group_page.dart';
-import 'groups/delete_group_employees_page.dart';
+import 'groups/manage/add_group_employees_page.dart';
+import 'groups/manage/add_group_page.dart';
+import 'groups/manage/delete_group_employees_page.dart';
 
 class GroupsDashboardPage extends StatefulWidget {
   final User _user;

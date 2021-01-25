@@ -1,14 +1,11 @@
 import 'dart:collection';
 import 'dart:convert';
 
-import 'package:dropdown_formfield/dropdown_formfield.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_progress_dialog/flutter_progress_dialog.dart';
-import 'package:form_field_validator/form_field_validator.dart';
 import 'package:givejobtimer_mobile/api/employee/dto/employee_basic_dto.dart';
 import 'package:givejobtimer_mobile/api/employee/service/employee_service.dart';
-import 'package:givejobtimer_mobile/api/group/dto/create_group_dto.dart';
 import 'package:givejobtimer_mobile/api/group/service/group_service.dart';
 import 'package:givejobtimer_mobile/api/shared/service_initializer.dart';
 import 'package:givejobtimer_mobile/internationalization/localization/localization_constants.dart';
@@ -19,37 +16,32 @@ import 'package:givejobtimer_mobile/shared/constants.dart';
 import 'package:givejobtimer_mobile/shared/icons.dart';
 import 'package:givejobtimer_mobile/shared/loader_container.dart';
 import 'package:givejobtimer_mobile/shared/model/user.dart';
-import 'package:givejobtimer_mobile/shared/service/dialog_service.dart';
 import 'package:givejobtimer_mobile/shared/service/toastr_service.dart';
 import 'package:givejobtimer_mobile/shared/texts.dart';
 import 'package:givejobtimer_mobile/shared/util/language_util.dart';
 import 'package:givejobtimer_mobile/shared/util/navigator_util.dart';
 import 'package:givejobtimer_mobile/shared/widget/hint.dart';
 
-import '../groups_dashboard_page.dart';
+import '../../groups_dashboard_page.dart';
 
-class AddGroupPage extends StatefulWidget {
+class AddGroupEmployeesPage extends StatefulWidget {
   final User user;
+  final int groupId;
 
-  AddGroupPage(this.user);
+  AddGroupEmployeesPage(this.user, this.groupId);
 
   @override
-  _AddGroupPageState createState() => _AddGroupPageState();
+  _AddGroupEmployeesPageState createState() => _AddGroupEmployeesPageState();
 }
 
-class _AddGroupPageState extends State<AddGroupPage> {
+class _AddGroupEmployeesPageState extends State<AddGroupEmployeesPage> {
   User _user;
+  int _groupId;
 
   EmployeeService _employeeService;
   GroupService _groupService;
 
-  GlobalKey<FormState> formKey = GlobalKey<FormState>();
-
   final ScrollController _scrollController = new ScrollController();
-  final TextEditingController _groupNameController = new TextEditingController();
-  final TextEditingController _groupDescriptionController = new TextEditingController();
-
-  String _nationality = '';
 
   List<EmployeeBasicDto> _employees = new List();
   List<EmployeeBasicDto> _filteredEmployees = new List();
@@ -62,6 +54,7 @@ class _AddGroupPageState extends State<AddGroupPage> {
   @override
   void initState() {
     this._user = widget.user;
+    this._groupId = widget.groupId;
     this._employeeService = ServiceInitializer.initialize(context, _user.authHeader, EmployeeService);
     this._groupService = ServiceInitializer.initialize(context, _user.authHeader, GroupService);
     super.initState();
@@ -90,7 +83,7 @@ class _AddGroupPageState extends State<AddGroupPage> {
             content: SingleChildScrollView(
               child: ListBody(
                 children: <Widget>[
-                  textWhite(getTranslated(this.context, 'noEmployeesToFormGroup')),
+                  textWhite(getTranslated(this.context, 'noEmployeesToAddGroup')),
                 ],
               ),
             ),
@@ -131,72 +124,23 @@ class _AddGroupPageState extends State<AddGroupPage> {
         debugShowCheckedModeBanner: false,
         home: Scaffold(
           backgroundColor: DARK,
-          appBar: appBar(context, _user, getTranslated(context, 'createGroup')),
+          appBar: appBar(context, _user, getTranslated(context, 'addingEmployeesToGroup')),
           drawer: managerSideBar(context, _user),
           body: Padding(
             padding: const EdgeInsets.all(12.0),
-            child: Form(
-              autovalidate: true,
-              key: formKey,
-              child: Column(
-                children: [
-                  SizedBox(height: 5),
-                  _buildField(
-                    _groupNameController,
-                    getTranslated(context, 'nameYourGroup'),
-                    getTranslated(context, 'groupName'),
-                    26,
-                    1,
-                    getTranslated(context, 'groupNameIsRequired'),
-                  ),
-                  SizedBox(height: 5),
-                  _buildField(
-                    _groupDescriptionController,
-                    getTranslated(context, 'textSomeGroupDescription'),
-                    getTranslated(context, 'groupDescription'),
-                    100,
-                    2,
-                    getTranslated(context, 'groupDescriptionIsRequired'),
-                  ),
-                  SizedBox(height: 5),
-                  _buildLoupe(),
-                  _buildSelectUnselectAllCheckbox(),
-                  _buildEmployees(),
-                ],
-              ),
+            child: Column(
+              children: [
+                SizedBox(height: 5),
+                _buildLoupe(),
+                _buildSelectUnselectAllCheckbox(),
+                _buildEmployees(),
+              ],
             ),
           ),
           bottomNavigationBar: _buildBottomNavigationBar(),
         ),
       ),
       onWillPop: () => NavigatorUtil.onWillPopNavigate(context, GroupsDashboardPage(_user)),
-    );
-  }
-
-  bool _isValid() {
-    return formKey.currentState.validate();
-  }
-
-  Widget _buildField(TextEditingController controller, String hintText, String labelText, int length, int lines, String errorText) {
-    return TextFormField(
-      autofocus: false,
-      controller: controller,
-      autocorrect: true,
-      keyboardType: TextInputType.multiline,
-      maxLength: length,
-      maxLines: lines,
-      cursorColor: WHITE,
-      textAlignVertical: TextAlignVertical.center,
-      style: TextStyle(color: WHITE),
-      validator: RequiredValidator(errorText: errorText),
-      decoration: InputDecoration(
-        enabledBorder: OutlineInputBorder(borderSide: BorderSide(color: WHITE, width: 2)),
-        counterStyle: TextStyle(color: WHITE),
-        border: OutlineInputBorder(),
-        hintText: hintText,
-        labelText: labelText,
-        labelStyle: TextStyle(color: WHITE),
-      ),
     );
   }
 
@@ -345,63 +289,29 @@ class _AddGroupPageState extends State<AddGroupPage> {
               children: <Widget>[iconWhite(Icons.check)],
             ),
             color: GREEN,
-            onPressed: () => _isAddButtonTapped ? null : _createGroup(),
+            onPressed: () => _isAddButtonTapped ? null : _handleAddBtn(),
           ),
         ],
       ),
     );
   }
 
-  void _createGroup() {
+  _handleAddBtn() {
     setState(() => _isAddButtonTapped = true);
-    if (!_isValid()) {
-      DialogService.showCustomDialog(
-        context: context,
-        titleWidget: textRed(getTranslated(context, 'error')),
-        content: getTranslated(context, 'correctInvalidFields'),
-      );
-      setState(() => _isAddButtonTapped = false);
-      return;
-    }
     if (_selectedIds.isEmpty) {
-      showHint(context, getTranslated(context, 'needToSelectEmployees') + ' ', getTranslated(context, 'youWantToAddToGroup'));
+      showHint(context, getTranslated(context, 'needToSelectEmployees'), getTranslated(context, 'youWantToAddToGroup'));
       setState(() => _isAddButtonTapped = false);
       return;
     }
     showProgressDialog(context: context, loadingText: getTranslated(context, 'loading'));
-    CreateGroupDto dto = new CreateGroupDto(
-      name: _groupNameController.text,
-      description: _groupDescriptionController.text,
-      companyId: int.parse(_user.companyId),
-      employeeIds: _selectedIds.map((el) => el.toString()).toList(),
-    );
-    _groupService.create(dto).then((res) {
+    _groupService.addGroupEmployees(_groupId, _selectedIds.map((e) => e.toInt()).toList()).then((value) {
       Future.delayed(Duration(microseconds: 1), () => dismissProgressDialog()).whenComplete(() {
-        ToastService.showSuccessToast(getTranslated(context, 'successfullyAddedNewGroup'));
+        ToastService.showSuccessToast(getTranslated(context, 'successfullyAddedGroupEmployees'));
         NavigatorUtil.navigate(context, GroupsDashboardPage(_user));
       });
     }).catchError((onError) {
       Future.delayed(Duration(microseconds: 1), () => dismissProgressDialog()).whenComplete(() {
-        String errorMsg = onError.toString();
-        if (errorMsg.contains("GROUP_NAME_EXISTS")) {
-          DialogService.showCustomDialog(
-            context: context,
-            titleWidget: textRed(getTranslated(context, 'error')),
-            content: getTranslated(context, 'groupNameExists') + '\n' + getTranslated(context, 'chooseOtherGroupName'),
-          );
-        } else if (errorMsg.contains("SOME_EMPLOYEES_ARE_IN_OTHER_GROUP")) {
-          DialogService.showCustomDialog(
-            context: context,
-            titleWidget: textRed(getTranslated(context, 'error')),
-            content: getTranslated(context, 'someEmployeesAreInOtherGroup'),
-          );
-        } else {
-          DialogService.showCustomDialog(
-            context: context,
-            titleWidget: textRed(getTranslated(context, 'error')),
-            content: getTranslated(context, 'smthWentWrong'),
-          );
-        }
+        ToastService.showErrorToast(getTranslated(context, 'smthWentWrong'));
         setState(() => _isAddButtonTapped = false);
       });
     });

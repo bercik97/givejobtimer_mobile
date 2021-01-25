@@ -1,8 +1,8 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:givejobtimer_mobile/settings/settings_page.dart';
 import 'package:givejobtimer_mobile/shared/colors.dart';
 import 'package:givejobtimer_mobile/shared/model/user.dart';
+import 'package:givejobtimer_mobile/shared/settings/settings_page.dart';
 import 'package:givejobtimer_mobile/shared/texts.dart';
 
 AppBar appBar(BuildContext context, User user, String title) {
