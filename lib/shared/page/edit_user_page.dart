@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:dropdown_formfield/dropdown_formfield.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -74,8 +76,8 @@ class _EditUserPageState extends State<EditUserPage> {
         setState(() {
           _loading = false;
           _fieldsValues = res;
-          _nameController.text = this._fieldsValues['name'];
-          _surnameController.text = this._fieldsValues['surname'];
+          _nameController.text = utf8.decode((this._fieldsValues['name'].toString()).runes.toList());
+          _surnameController.text = utf8.decode((this._fieldsValues['surname'].toString()).runes.toList());
           _nationality = this._fieldsValues['nationality'];
           _phoneController.text = this._fieldsValues['phone'];
           _viberController.text = this._fieldsValues['viber'];
@@ -136,7 +138,7 @@ class _EditUserPageState extends State<EditUserPage> {
           dense: true,
           contentPadding: EdgeInsets.only(left: 0.0, right: 0.0),
           title: text16GreenBold(getTranslated(context, 'companyName')),
-          subtitle: text16White(_companyName),
+          subtitle: text16White(utf8.decode(_companyName.runes.toList())),
         ),
         ListTile(
           dense: true,

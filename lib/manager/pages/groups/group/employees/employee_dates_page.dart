@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:givejobtimer_mobile/api/employee/dto/employee_dto.dart';
@@ -63,7 +65,7 @@ class _EmployeeDatesPageState extends State<EmployeeDatesPage> {
       debugShowCheckedModeBanner: false,
       home: Scaffold(
         backgroundColor: DARK,
-        appBar: appBar(context, _user, _employee.name + ' ' + _employee.surname),
+        appBar: appBar(context, _user, utf8.decode((_employee.name + ' ' + _employee.surname).runes.toList())),
         drawer: managerSideBar(context, _user),
         body: Column(
           children: <Widget>[

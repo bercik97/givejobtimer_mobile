@@ -813,7 +813,7 @@ class _EmployeesPageState extends State<EmployeesPage> {
           alignment,
           iconGreen(Icons.check),
           textGreen(getTranslated(context, 'workIsDoneStatus')),
-          textGreen(workplace != null ? workplace : '-'),
+          textGreen(workplace != null ? utf8.decode(workplace.runes.toList()) : '-'),
           textGreen(workplaceCode != null ? workplaceCode : '-'),
         );
       case 'In progress':
@@ -821,7 +821,7 @@ class _EmployeesPageState extends State<EmployeesPage> {
           alignment,
           iconOrange(Icons.timer),
           textOrange(getTranslated(context, 'workIsInProgress')),
-          textOrange(workplace != null ? workplace : '-'),
+          textOrange(workplace != null ? utf8.decode(workplace.runes.toList()) : '-'),
           textOrange(workplaceCode != null ? workplaceCode : '-'),
         );
       default:

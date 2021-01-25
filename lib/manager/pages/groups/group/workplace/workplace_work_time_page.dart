@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:givejobtimer_mobile/api/shared/service_initializer.dart';
@@ -60,7 +62,7 @@ class _WorkplaceWorkTimePageState extends State<WorkplaceWorkTimePage> {
                   ),
                   ListTile(
                     title: text20White(getTranslated(this.context, 'workplace')),
-                    subtitle: text20GreenBold(_workplaceDto.name),
+                    subtitle: text20GreenBold(utf8.decode(_workplaceDto.name.runes.toList())),
                   ),
                   ListTile(
                     title: text20White(getTranslated(this.context, 'totalTimeWorked')),
@@ -103,7 +105,7 @@ class _WorkplaceWorkTimePageState extends State<WorkplaceWorkTimePage> {
                                     DataCell(textWhite(workTime.startTime)),
                                     DataCell(textWhite(workTime.endTime != null ? workTime.endTime : '-')),
                                     DataCell(textWhite(workTime.totalTime != null ? workTime.totalTime : '-')),
-                                    DataCell(textWhite(workTime.employeeInfo != null ? workTime.employeeInfo : '-')),
+                                    DataCell(textWhite(workTime.employeeInfo != null ? utf8.decode(workTime.employeeInfo.runes.toList()) : '-')),
                                   ],
                                 ),
                             ],

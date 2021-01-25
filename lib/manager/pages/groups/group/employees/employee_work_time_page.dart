@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_progress_dialog/flutter_progress_dialog.dart';
@@ -57,7 +59,7 @@ class _EmployeeWorkTimePageState extends State<EmployeeWorkTimePage> {
         debugShowCheckedModeBanner: false,
         home: Scaffold(
           backgroundColor: DARK,
-          appBar: appBar(this.context, _user, _employeeInfo),
+          appBar: appBar(this.context, _user, utf8.decode(_employeeInfo.runes.toList())),
           drawer: managerSideBar(this.context, _user),
           body: SingleChildScrollView(
             child: FutureBuilder(

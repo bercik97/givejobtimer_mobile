@@ -459,7 +459,7 @@ class _WorkplacePageState extends State<WorkplacePage> {
 
   void _editWorkplace(WorkplaceDto workplace) {
     TextEditingController _workplaceController = new TextEditingController();
-    _workplaceController.text = workplace.name;
+    _workplaceController.text = utf8.decode(workplace.name.runes.toList());
     showGeneralDialog(
       context: context,
       barrierColor: DARK.withOpacity(0.95),
