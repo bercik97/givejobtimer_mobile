@@ -4,12 +4,14 @@ class CreateGroupDto {
   final String name;
   final String description;
   final num companyId;
+  final num managerId;
   final List<String> employeeIds;
 
   CreateGroupDto({
     @required this.name,
     @required this.description,
     @required this.companyId,
+    @required this.managerId,
     @required this.employeeIds,
   });
 
@@ -18,6 +20,7 @@ class CreateGroupDto {
     map['name'] = dto.name;
     map['description'] = dto.description;
     map['companyId'] = dto.companyId;
+    map['managerId'] = dto.managerId;
     map['employeeIds'] = dto.employeeIds;
     return map;
   }

@@ -59,9 +59,6 @@ class _MyAppState extends State<MyApp> {
     var auth = await storage.read(key: 'authorization');
     var id = await storage.read(key: 'id');
     var managerId = await storage.read(key: 'managerId');
-    var managerPhone = await storage.read(key: 'managerPhone');
-    var managerViber = await storage.read(key: 'managerViber');
-    var managerWhatsApp = await storage.read(key: 'managerWhatsApp');
     var employeeId = await storage.read(key: 'employeeId');
     var role = await storage.read(key: 'role');
     var companyId = await storage.read(key: 'companyId');
@@ -69,17 +66,11 @@ class _MyAppState extends State<MyApp> {
     var name = await storage.read(key: 'name');
     var surname = await storage.read(key: 'surname');
     var nationality = await storage.read(key: 'nationality');
-    var phone = await storage.read(key: 'phone');
-    var viber = await storage.read(key: 'viber');
-    var whatsApp = await storage.read(key: 'whatsApp');
     Map<String, String> map = new Map();
     map['getStartedClick'] = getStartedClick;
     map['authorization'] = auth;
     map['id'] = id;
     map['managerId'] = managerId;
-    map['managerPhone'] = managerPhone;
-    map['managerViber'] = managerViber;
-    map['managerWhatsApp'] = managerWhatsApp;
     map['employeeId'] = employeeId;
     map['role'] = role;
     map['companyId'] = companyId;
@@ -87,9 +78,6 @@ class _MyAppState extends State<MyApp> {
     map['name'] = name;
     map['surname'] = surname;
     map['nationality'] = nationality;
-    map['phone'] = phone;
-    map['viber'] = viber;
-    map['whatsApp'] = whatsApp;
     return map.isNotEmpty ? map : null;
   }
 

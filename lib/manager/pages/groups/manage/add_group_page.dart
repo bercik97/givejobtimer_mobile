@@ -367,6 +367,7 @@ class _AddGroupPageState extends State<AddGroupPage> {
       name: _groupNameController.text,
       description: _groupDescriptionController.text,
       companyId: int.parse(_user.companyId),
+      managerId: int.parse(_user.managerId),
       employeeIds: _selectedIds.map((el) => el.toString()).toList(),
     );
     _groupService.create(dto).then((res) {
