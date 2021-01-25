@@ -14,6 +14,7 @@ import 'package:givejobtimer_mobile/shared/icons.dart';
 import 'package:givejobtimer_mobile/shared/model/user.dart';
 import 'package:givejobtimer_mobile/shared/page/edit_user_page.dart';
 import 'package:givejobtimer_mobile/shared/service/logout_service.dart';
+import 'package:givejobtimer_mobile/shared/service/toastr_service.dart';
 import 'package:givejobtimer_mobile/shared/texts.dart';
 import 'package:givejobtimer_mobile/shared/util/language_util.dart';
 import 'package:givejobtimer_mobile/shared/util/navigator_util.dart';
@@ -92,6 +93,10 @@ class _EmployeePageState extends State<EmployeePage> {
                                   color: BRIGHTER_DARK,
                                   child: InkWell(
                                     onTap: () {
+                                      if (_user.groupId == null) {
+                                        ToastService.showErrorToast(getTranslated(context, 'youAreNotAssignedToWorkGroup'));
+                                        return;
+                                      }
                                       Navigator.of(context).push(
                                         CupertinoPageRoute<Null>(
                                           builder: (BuildContext context) {
@@ -109,7 +114,7 @@ class _EmployeePageState extends State<EmployeePage> {
                                 child: Material(
                                   color: BRIGHTER_DARK,
                                   child: InkWell(
-                                    onTap: () => showContactDialog(context, _userService, int.parse(_user.groupId)),
+                                    onTap: () => showContactDialog(context, _userService, _user.groupId),
                                     child: _buildScrollableContainer('images/big-contact-with-manager-icon.png', 'contact', 'contactWithYourManager'),
                                   ),
                                 ),

@@ -6,18 +6,23 @@ import 'package:givejobtimer_mobile/api/user/service/user_service.dart';
 import 'package:givejobtimer_mobile/internationalization/localization/localization_constants.dart';
 import 'package:givejobtimer_mobile/shared/colors.dart';
 import 'package:givejobtimer_mobile/shared/icons.dart';
+import 'package:givejobtimer_mobile/shared/service/toastr_service.dart';
 import 'package:givejobtimer_mobile/shared/texts.dart';
 import 'package:givejobtimer_mobile/shared/util/url_util.dart';
 import 'package:slide_popup_dialog/slide_popup_dialog.dart' as slideDialog;
 
 import 'circular_progress_indicator.dart';
 
-void showContactDialog(BuildContext context, UserService userService, num groupId) {
+void showContactDialog(BuildContext context, UserService userService, String groupId) {
+  if (groupId == null) {
+    ToastService.showErrorToast(getTranslated(context, 'youAreNotAssignedToWorkGroup'));
+    return;
+  }
   slideDialog.showSlideDialog(
     context: context,
     backgroundColor: DARK,
     child: FutureBuilder(
-      future: userService.findContactByGroupId(groupId),
+      future: userService.findContactByGroupId(int.parse(groupId)),
       builder: (BuildContext context, AsyncSnapshot<UserContactDto> snapshot) {
         if (snapshot.connectionState == ConnectionState.waiting || snapshot.data == null) {
           return Padding(

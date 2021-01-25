@@ -264,5 +264,6 @@
   "group": "Group",
   "groupName": "Group name",
   "groupDescription": "Group description",
-  "needToSelectEmployees": "Need to select employees"
+  "needToSelectEmployees": "Need to select employees",
+  "youAreNotAssignedToWorkGroup": "You are not assigned to a work group."
 }
