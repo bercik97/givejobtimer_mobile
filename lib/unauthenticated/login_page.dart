@@ -7,7 +7,7 @@ import 'package:flutter_progress_dialog/flutter_progress_dialog.dart';
 import 'package:givejobtimer_mobile/api/shared/service_initializer.dart';
 import 'package:givejobtimer_mobile/api/token/service/token_service.dart';
 import 'package:givejobtimer_mobile/employee/employee_page.dart';
-import 'package:givejobtimer_mobile/manager/pages/groups_dashboard_page.dart';
+import 'package:givejobtimer_mobile/manager/pages/groups/groups_dashboard_page.dart';
 import 'package:givejobtimer_mobile/shared/colors.dart';
 import 'package:givejobtimer_mobile/shared/constants.dart';
 import 'package:givejobtimer_mobile/shared/icons.dart';

@@ -6,6 +6,24 @@ class ValidatorService {
     return loginCode.isEmpty ? getTranslated(context, 'loginCodeIsRequired') : null;
   }
 
+  static String validateUpdatingGroupName(String groupName, BuildContext context) {
+    if (groupName.isEmpty) {
+      return getTranslated(context, 'groupNameCannotBeEmpty');
+    } else if (groupName.length > 26) {
+      return getTranslated(context, 'groupNameWrongLength');
+    }
+    return null;
+  }
+
+  static String validateUpdatingGroupDescription(String groupDescription, BuildContext context) {
+    if (groupDescription.isEmpty) {
+      return getTranslated(context, 'groupDescriptionCannotBeEmpty');
+    } else if (groupDescription.length > 100) {
+      return getTranslated(context, 'groupDescriptionWrongLength');
+    }
+    return null;
+  }
+
   static String validateWorkplace(String workplace, BuildContext context) {
     if (workplace.isEmpty) {
       return getTranslated(context, 'workplaceIsRequired');

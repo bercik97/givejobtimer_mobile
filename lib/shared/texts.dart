@@ -48,6 +48,7 @@ Text textCenter30White(String text) { return Text(text, textAlign: TextAlign.cen
 //////////////////////////
 /*TEXT CENTER WHITE BOLD*/
 /////////////////////////
+Text textCenter16WhiteBold(String text) { return Text(text, textAlign: TextAlign.center, style: GoogleFonts.lato(fontSize: 16, color: WHITE, fontWeight: FontWeight.bold)); }
 Text textCenter20WhiteBold(String text) { return Text(text, textAlign: TextAlign.center, style: GoogleFonts.lato(fontSize: 20, color: WHITE, fontWeight: FontWeight.bold)); }
 
 

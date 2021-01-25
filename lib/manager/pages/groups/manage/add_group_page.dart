@@ -26,7 +26,7 @@ import 'package:givejobtimer_mobile/shared/util/language_util.dart';
 import 'package:givejobtimer_mobile/shared/util/navigator_util.dart';
 import 'package:givejobtimer_mobile/shared/widget/hint.dart';
 
-import '../../groups_dashboard_page.dart';
+import '../groups_dashboard_page.dart';
 
 class AddGroupPage extends StatefulWidget {
   final User user;

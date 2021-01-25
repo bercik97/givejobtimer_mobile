@@ -10,6 +10,7 @@ import 'package:givejobtimer_mobile/api/group/dto/group_dashboard_dto.dart';
 import 'package:givejobtimer_mobile/api/group/service/group_service.dart';
 import 'package:givejobtimer_mobile/api/shared/service_initializer.dart';
 import 'package:givejobtimer_mobile/internationalization/localization/localization_constants.dart';
+import 'package:givejobtimer_mobile/manager/pages/shared/group_model.dart';
 import 'package:givejobtimer_mobile/manager/shared/manager_side_bar.dart';
 import 'package:givejobtimer_mobile/shared/app_bar.dart';
 import 'package:givejobtimer_mobile/shared/colors.dart';
@@ -24,9 +25,10 @@ import 'package:givejobtimer_mobile/shared/texts.dart';
 import 'package:givejobtimer_mobile/shared/util/navigator_util.dart';
 import 'package:givejobtimer_mobile/shared/widget/buttons.dart';
 
-import 'groups/manage/add_group_employees_page.dart';
-import 'groups/manage/add_group_page.dart';
-import 'groups/manage/delete_group_employees_page.dart';
+import 'group/group_page.dart';
+import 'manage/add_group_employees_page.dart';
+import 'manage/add_group_page.dart';
+import 'manage/delete_group_employees_page.dart';
 
 class GroupsDashboardPage extends StatefulWidget {
   final User _user;
@@ -145,19 +147,10 @@ class _GroupsDashboardPageState extends State<GroupsDashboardPage> {
                           child: ListTile(
                             onTap: () {
                               GroupDashboardDto group = _groups[index];
-                              // NavigatorUtil.navigate(
-                              //   this.context,
-                              //   GroupPage(
-                              //     new GroupModel(
-                              //       _user,
-                              //       group.id,
-                              //       group.name,
-                              //       group.description,
-                              //       group.numberOfEmployees.toString(),
-                              //       group.countryOfWork,
-                              //     ),
-                              //   ),
-                              // );
+                              NavigatorUtil.navigate(
+                                this.context,
+                                GroupPage(GroupModel(_user, group.id, group.name, group.description, group.numberOfEmployees.toString())),
+                              );
                             },
                             title: text18WhiteBold(
                               utf8.decode(

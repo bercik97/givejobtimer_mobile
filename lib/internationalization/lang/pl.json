@@ -261,5 +261,8 @@
   "groups": "Grupy",
   "account": "KONTO",
   "aboutMe": "O mnie",
-  "other": "INNE"
+  "other": "INNE",
+  "group": "Grupa",
+  "groupName": "Nazwa grupy",
+  "groupDescription": "Opis grupy"
 }

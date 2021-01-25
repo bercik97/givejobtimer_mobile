@@ -261,5 +261,8 @@
   "groups": "Groups",
   "account": "ACCOUNT",
   "aboutMe": "About me",
-  "other": "OTHER"
+  "other": "OTHER",
+  "group": "Group",
+  "groupName": "Group name",
+  "groupDescription": "Group description"
 }
