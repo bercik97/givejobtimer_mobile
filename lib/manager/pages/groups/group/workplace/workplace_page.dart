@@ -56,7 +56,7 @@ class _WorkplacePageState extends State<WorkplacePage> {
     this._workplaceService = ServiceInitializer.initialize(context, _user.authHeader, WorkplaceService);
     super.initState();
     _loading = true;
-    _workplaceService.findAllByManagerId(_user.managerId).then((res) {
+    _workplaceService.findAllByCompanyId(_user.companyId).then((res) {
       setState(() {
         _workplaces = res;
         _workplaces.forEach((e) => _checked.add(false));
@@ -339,7 +339,7 @@ class _WorkplacePageState extends State<WorkplacePage> {
       ToastService.showErrorToast(invalidMessage);
       return;
     }
-    CreateWorkplaceDto dto = new CreateWorkplaceDto(managerId: int.parse(_user.managerId), name: workplace);
+    CreateWorkplaceDto dto = new CreateWorkplaceDto(companyId: int.parse(_user.companyId), name: workplace);
     showProgressDialog(context: context, loadingText: getTranslated(context, 'loading'));
     _workplaceService.create(dto).then((res) {
       Future.delayed(Duration(microseconds: 1), () => dismissProgressDialog()).whenComplete(() {
@@ -595,7 +595,7 @@ class _WorkplacePageState extends State<WorkplacePage> {
 
   Future<Null> _refresh() {
     _loading = true;
-    return _workplaceService.findAllByManagerId(_user.managerId).then((res) {
+    return _workplaceService.findAllByCompanyId(_user.companyId).then((res) {
       setState(() {
         _isAddButtonTapped = false;
         _isDeleteButtonTapped = false;

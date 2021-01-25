@@ -28,9 +28,9 @@ class WorkplaceService {
     }
   }
 
-  Future<bool> isCorrectByIdAndManagerId(String id, String managerId) async {
-    int managerIdAsInt = int.parse(managerId);
-    String url = _url + '/correct?id=$id&manager_id=$managerIdAsInt';
+  Future<bool> isCorrectByIdAndCompanyId(String id, String companyId) async {
+    int companyIdAsInt = int.parse(companyId);
+    String url = _url + '/correct?id=$id&company_id=$companyIdAsInt';
     Response res = await get(url, headers: _header);
     if (res.statusCode == 200) {
       return res.body == 'true';
@@ -41,9 +41,9 @@ class WorkplaceService {
     }
   }
 
-  Future<List<WorkplaceDto>> findAllByManagerId(String managerId) async {
-    int id = int.parse(managerId);
-    String url = _url + '?manager_id=$id';
+  Future<List<WorkplaceDto>> findAllByCompanyId(String companyId) async {
+    int id = int.parse(companyId);
+    String url = _url + '?company_id=$id';
     Response res = await get(url, headers: _header);
     if (res.statusCode == 200) {
       return (json.decode(res.body) as List).map((data) => WorkplaceDto.fromJson(data)).toList();

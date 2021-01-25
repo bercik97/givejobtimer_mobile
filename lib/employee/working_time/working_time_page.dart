@@ -244,7 +244,7 @@ class _WorkingTimePageState extends State<WorkingTimePage> {
                         color: GREEN,
                         onPressed: () {
                           showProgressDialog(context: context, loadingText: getTranslated(context, 'loading'));
-                          _workplaceService.isCorrectByIdAndManagerId(_workplaceCodeController.text, _user.managerId).then((res) {
+                          _workplaceService.isCorrectByIdAndCompanyId(_workplaceCodeController.text, _user.companyId).then((res) {
                             Future.delayed(Duration(microseconds: 1), () => dismissProgressDialog()).whenComplete(() {
                               Navigator.pop(context);
                               _resultWorkplaceCodeAlertDialog(res);

@@ -1,17 +1,17 @@
 import 'package:flutter/cupertino.dart';
 
 class CreateWorkplaceDto {
-  final int managerId;
+  final int companyId;
   final String name;
 
   CreateWorkplaceDto({
-    @required this.managerId,
+    @required this.companyId,
     @required this.name,
   });
 
   static Map<String, dynamic> jsonEncode(CreateWorkplaceDto dto) {
     Map<String, dynamic> map = new Map();
-    map['managerId'] = dto.managerId;
+    map['companyId'] = dto.companyId;
     map['name'] = dto.name;
     return map;
   }

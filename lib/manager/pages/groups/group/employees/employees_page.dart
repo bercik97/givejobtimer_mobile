@@ -87,7 +87,7 @@ class _EmployeesPageState extends State<EmployeesPage> {
         _employees = res;
         _employees.forEach((e) => _checked.add(false));
         _filteredEmployees = _employees;
-        _workplaceService.findAllByManagerId(_user.managerId).then((res) {
+        _workplaceService.findAllByCompanyId(_user.companyId).then((res) {
           setState(() {
             _workplaces = res;
             _workplaces.forEach((element) => _workplacesRadioValues.add(-1));
@@ -220,7 +220,7 @@ class _EmployeesPageState extends State<EmployeesPage> {
                                 SizedBox(width: 15),
                                 Expanded(
                                   child: InkWell(
-                                    onTap: () => NavigatorUtil.navigate(context, EmployeeDatesPage(_user, employee)),
+                                    onTap: () => NavigatorUtil.navigate(this.context, EmployeeDatesPage(_user, employee)),
                                     child: Ink(
                                       color: BRIGHTER_DARK,
                                       child: Padding(
@@ -876,7 +876,7 @@ class _EmployeesPageState extends State<EmployeesPage> {
       setState(() {
         _employees = res;
         _filteredEmployees = _employees;
-        _workplaceService.findAllByManagerId(_user.managerId).then((res) {
+        _workplaceService.findAllByCompanyId(_user.companyId).then((res) {
           setState(() {
             _workplaces = res;
             _workplaces.forEach((element) => _workplacesRadioValues.add(-1));
