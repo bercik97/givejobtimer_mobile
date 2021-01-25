@@ -15,6 +15,7 @@ import 'package:givejobtimer_mobile/shared/model/user.dart';
 import 'package:givejobtimer_mobile/shared/service/toastr_service.dart';
 import 'package:givejobtimer_mobile/shared/service/validator_service.dart';
 import 'package:givejobtimer_mobile/shared/texts.dart';
+import 'package:givejobtimer_mobile/shared/util/navigator_util.dart';
 import 'package:givejobtimer_mobile/unauthenticated/registration_page.dart';
 import 'package:http/http.dart' as http;
 import 'package:pin_code_text_field/pin_code_text_field.dart';
@@ -181,9 +182,9 @@ class _LoginPageState extends State<LoginPage> {
         storage.write(key: 'nationality', value: user.nationality);
         Future.delayed(Duration(microseconds: 1), () => dismissProgressDialog()).whenComplete(() {
           if (user.role == ROLE_EMPLOYEE) {
-            Navigator.push(context, MaterialPageRoute(builder: (context) => EmployeePage(user)));
+            NavigatorUtil.navigate(context, EmployeePage(user));
           } else {
-            Navigator.push(context, MaterialPageRoute(builder: (context) => GroupsDashboardPage(user)));
+            NavigatorUtil.navigate(context, GroupsDashboardPage(user));
           }
           ToastService.showSuccessToast(getTranslated(context, 'loginSuccessfully'));
         });

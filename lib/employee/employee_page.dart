@@ -14,6 +14,7 @@ import 'package:givejobtimer_mobile/shared/page/edit_user_page.dart';
 import 'package:givejobtimer_mobile/shared/service/logout_service.dart';
 import 'package:givejobtimer_mobile/shared/texts.dart';
 import 'package:givejobtimer_mobile/shared/util/language_util.dart';
+import 'package:givejobtimer_mobile/shared/util/navigator_util.dart';
 import 'package:givejobtimer_mobile/shared/widget/contact_section.dart';
 
 class EmployeePage extends StatefulWidget {
@@ -60,10 +61,7 @@ class _EmployeePageState extends State<EmployeePage> {
                         decoration: ShapeDecoration(color: GREEN, shape: CircleBorder()),
                         child: IconButton(
                           icon: iconDark(Icons.border_color),
-                          onPressed: () => Navigator.push(
-                            context,
-                            MaterialPageRoute(builder: (context) => EditUserPage(_user)),
-                          ),
+                          onPressed: () => NavigatorUtil.navigate(context, EditUserPage(_user)),
                         ),
                       ),
                     ],

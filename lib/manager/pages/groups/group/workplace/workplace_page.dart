@@ -22,6 +22,7 @@ import 'package:givejobtimer_mobile/shared/service/dialog_service.dart';
 import 'package:givejobtimer_mobile/shared/service/toastr_service.dart';
 import 'package:givejobtimer_mobile/shared/service/validator_service.dart';
 import 'package:givejobtimer_mobile/shared/texts.dart';
+import 'package:givejobtimer_mobile/shared/util/navigator_util.dart';
 import 'package:givejobtimer_mobile/shared/widget/hint.dart';
 import 'package:shimmer/shimmer.dart';
 
@@ -126,111 +127,103 @@ class _WorkplacePageState extends State<WorkplacePage> {
                 controlAffinity: ListTileControlAffinity.leading,
               ),
             ),
-            _workplaces.isEmpty
-                ? _handleNoWorkplaces()
-                : Expanded(
-                    child: ListView.builder(
-                      itemCount: _filteredWorkplaces.length,
-                      itemBuilder: (BuildContext context, int index) {
-                        WorkplaceDto workplace = _filteredWorkplaces[index];
-                        int foundIndex = 0;
-                        for (int i = 0; i < _workplaces.length; i++) {
-                          if (_workplaces[i].id == workplace.id) {
-                            foundIndex = i;
-                          }
-                        }
-                        String id = workplace.id;
-                        String name = workplace.name;
-                        String totalTimeWorked = workplace.totalTimeWorked;
-                        if (name != null && name.length >= 30) {
-                          name = name.substring(0, 30) + ' ...';
-                        }
-                        return Card(
-                          color: DARK,
-                          child: Column(
-                            mainAxisAlignment: MainAxisAlignment.start,
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: <Widget>[
-                              Container(
-                                color: BRIGHTER_DARK,
-                                child: ListTileTheme(
-                                  contentPadding: EdgeInsets.only(right: 10),
-                                  child: CheckboxListTile(
-                                    controlAffinity: ListTileControlAffinity.trailing,
-                                    secondary: Padding(
-                                      padding: EdgeInsets.only(left: 10),
-                                      child: Shimmer.fromColors(
-                                        baseColor: GREEN,
-                                        highlightColor: WHITE,
-                                        child: BouncingWidget(
-                                          duration: Duration(milliseconds: 100),
-                                          scaleFactor: 2,
-                                          onPressed: () => {
-                                            Navigator.push(
-                                              this.context,
-                                              MaterialPageRoute(
-                                                builder: (context) => WorkplaceDatesPage(_user, workplace),
-                                              ),
-                                            ),
-                                          },
-                                          child: Image(
-                                            image: AssetImage('images/big-workplace-icon.png'),
-                                          ),
-                                        ),
-                                      ),
+            if (_workplaces.isEmpty)
+              _handleNoWorkplaces()
+            else
+              Expanded(
+                child: ListView.builder(
+                  itemCount: _filteredWorkplaces.length,
+                  itemBuilder: (BuildContext context, int index) {
+                    WorkplaceDto workplace = _filteredWorkplaces[index];
+                    int foundIndex = 0;
+                    for (int i = 0; i < _workplaces.length; i++) {
+                      if (_workplaces[i].id == workplace.id) {
+                        foundIndex = i;
+                      }
+                    }
+                    String id = workplace.id;
+                    String name = workplace.name;
+                    String totalTimeWorked = workplace.totalTimeWorked;
+                    if (name != null && name.length >= 30) {
+                      name = name.substring(0, 30) + ' ...';
+                    }
+                    return Card(
+                      color: DARK,
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.start,
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: <Widget>[
+                          Container(
+                            color: BRIGHTER_DARK,
+                            child: ListTileTheme(
+                              contentPadding: EdgeInsets.only(right: 10),
+                              child: CheckboxListTile(
+                                controlAffinity: ListTileControlAffinity.trailing,
+                                secondary: Padding(
+                                  padding: EdgeInsets.only(left: 10),
+                                  child: Shimmer.fromColors(
+                                    baseColor: GREEN,
+                                    highlightColor: WHITE,
+                                    child: BouncingWidget(
+                                      duration: Duration(milliseconds: 100),
+                                      scaleFactor: 2,
+                                      onPressed: () => NavigatorUtil.navigate(this.context, WorkplaceDatesPage(_user, workplace)),
+                                      child: Image(image: AssetImage('images/big-workplace-icon.png')),
                                     ),
-                                    title: Row(
-                                      children: [
-                                        text18WhiteBold(getTranslated(this.context, 'code') + ': '),
-                                        text18GreenBold(id),
-                                        IconButton(
-                                          icon: icon30Green(Icons.border_color),
-                                          onPressed: () => _editWorkplace(workplace),
-                                        ),
-                                      ],
-                                    ),
-                                    subtitle: Column(
-                                      children: [
-                                        Align(
-                                          alignment: Alignment.topLeft,
-                                          child: textWhite(name != null ? utf8.decode(name.runes.toList()) : getTranslated(this.context, 'empty')),
-                                        ),
-                                        Align(
-                                          alignment: Alignment.topLeft,
-                                          child: textWhite(
-                                            getTranslated(this.context, 'totalTimeWorked') + ': ' + (totalTimeWorked != null ? totalTimeWorked : '00:00:00'),
-                                          ),
-                                        )
-                                      ],
-                                    ),
-                                    activeColor: GREEN,
-                                    checkColor: WHITE,
-                                    value: _checked[foundIndex],
-                                    onChanged: (bool value) {
-                                      setState(() {
-                                        _checked[foundIndex] = value;
-                                        if (value) {
-                                          _selectedIds.add(_workplaces[foundIndex].id);
-                                        } else {
-                                          _selectedIds.remove(_workplaces[foundIndex].id);
-                                        }
-                                        int selectedIdsLength = _selectedIds.length;
-                                        if (selectedIdsLength == _workplaces.length) {
-                                          _isChecked = true;
-                                        } else if (selectedIdsLength == 0) {
-                                          _isChecked = false;
-                                        }
-                                      });
-                                    },
                                   ),
                                 ),
-                              )
-                            ],
-                          ),
-                        );
-                      },
-                    ),
-                  ),
+                                title: Row(
+                                  children: [
+                                    text18WhiteBold(getTranslated(this.context, 'code') + ': '),
+                                    text18GreenBold(id),
+                                    IconButton(
+                                      icon: icon30Green(Icons.border_color),
+                                      onPressed: () => _editWorkplace(workplace),
+                                    ),
+                                  ],
+                                ),
+                                subtitle: Column(
+                                  children: [
+                                    Align(
+                                      alignment: Alignment.topLeft,
+                                      child: textWhite(name != null ? utf8.decode(name.runes.toList()) : getTranslated(this.context, 'empty')),
+                                    ),
+                                    Align(
+                                      alignment: Alignment.topLeft,
+                                      child: textWhite(
+                                        getTranslated(this.context, 'totalTimeWorked') + ': ' + (totalTimeWorked != null ? totalTimeWorked : '00:00:00'),
+                                      ),
+                                    )
+                                  ],
+                                ),
+                                activeColor: GREEN,
+                                checkColor: WHITE,
+                                value: _checked[foundIndex],
+                                onChanged: (bool value) {
+                                  setState(() {
+                                    _checked[foundIndex] = value;
+                                    if (value) {
+                                      _selectedIds.add(_workplaces[foundIndex].id);
+                                    } else {
+                                      _selectedIds.remove(_workplaces[foundIndex].id);
+                                    }
+                                    int selectedIdsLength = _selectedIds.length;
+                                    if (selectedIdsLength == _workplaces.length) {
+                                      _isChecked = true;
+                                    } else if (selectedIdsLength == 0) {
+                                      _isChecked = false;
+                                    }
+                                  });
+                                },
+                              ),
+                            ),
+                          )
+                        ],
+                      ),
+                    );
+                  },
+                ),
+              ),
           ],
         ),
         floatingActionButtonLocation: FloatingActionButtonLocation.endFloat,
@@ -385,10 +378,7 @@ class _WorkplacePageState extends State<WorkplacePage> {
                 showProgressDialog(context: context, loadingText: getTranslated(context, 'loading'));
                 _workplaceService.deleteByIdIn(ids.toList()).then((res) {
                   Future.delayed(Duration(microseconds: 1), () => dismissProgressDialog()).whenComplete(() {
-                    Navigator.of(context).pushAndRemoveUntil(
-                      MaterialPageRoute(builder: (BuildContext context) => WorkplacePage(_user)),
-                      ModalRoute.withName('/'),
-                    );
+                    NavigatorUtil.navigateReplacement(context, WorkplacePage(_user));
                     ToastService.showSuccessToast(getTranslated(this.context, 'selectedWorkplacesRemoved'));
                   });
                 }).catchError((onError) {

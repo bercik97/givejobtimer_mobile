@@ -1,7 +1,6 @@
 import 'dart:collection';
 import 'dart:convert';
 
-import 'package:dropdown_formfield/dropdown_formfield.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_progress_dialog/flutter_progress_dialog.dart';
@@ -113,10 +112,7 @@ class _AddGroupPageState extends State<AddGroupPage> {
   }
 
   void _resetAndOpenPage() {
-    Navigator.of(context).pushAndRemoveUntil(
-      MaterialPageRoute(builder: (BuildContext context) => GroupsDashboardPage(_user)),
-      ModalRoute.withName('/'),
-    );
+    NavigatorUtil.navigateReplacement(context, GroupsDashboardPage(_user));
   }
 
   @override
@@ -331,9 +327,7 @@ class _AddGroupPageState extends State<AddGroupPage> {
               children: <Widget>[iconWhite(Icons.close)],
             ),
             color: Colors.red,
-            onPressed: () => {
-              Navigator.pushAndRemoveUntil(context, MaterialPageRoute(builder: (context) => GroupsDashboardPage(_user)), (e) => false),
-            },
+            onPressed: () => NavigatorUtil.navigateReplacement(context, GroupsDashboardPage(_user)),
           ),
           SizedBox(width: 25),
           MaterialButton(

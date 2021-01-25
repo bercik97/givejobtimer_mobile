@@ -195,7 +195,7 @@ class _GroupsDashboardPageState extends State<GroupsDashboardPage> {
   }
 
   Widget _handleNoGroups() {
-    String info = _user.name + ' ' + _user.surname;
+    String info = utf8.decode((_user.name + ' ' + _user.surname).runes.toList());
     return Column(
       children: <Widget>[
         Padding(

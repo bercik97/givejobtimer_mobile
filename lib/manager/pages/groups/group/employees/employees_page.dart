@@ -26,6 +26,7 @@ import 'package:givejobtimer_mobile/shared/service/validator_service.dart';
 import 'package:givejobtimer_mobile/shared/texts.dart';
 import 'package:givejobtimer_mobile/shared/util/icons_legend_util.dart';
 import 'package:givejobtimer_mobile/shared/util/language_util.dart';
+import 'package:givejobtimer_mobile/shared/util/navigator_util.dart';
 import 'package:givejobtimer_mobile/shared/widget/hint.dart';
 import 'package:givejobtimer_mobile/shared/widget/icons_legend_dialog.dart';
 import 'package:intl/intl.dart';
@@ -219,14 +220,7 @@ class _EmployeesPageState extends State<EmployeesPage> {
                                 SizedBox(width: 15),
                                 Expanded(
                                   child: InkWell(
-                                    onTap: () => {
-                                      Navigator.push(
-                                        this.context,
-                                        MaterialPageRoute(
-                                          builder: (context) => EmployeeDatesPage(_user, employee),
-                                        ),
-                                      ),
-                                    },
+                                    onTap: () => NavigatorUtil.navigate(context, EmployeeDatesPage(_user, employee)),
                                     child: Ink(
                                       color: BRIGHTER_DARK,
                                       child: Padding(

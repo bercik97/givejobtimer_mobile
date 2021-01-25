@@ -263,5 +263,6 @@
   "other": "OTHER",
   "group": "Group",
   "groupName": "Group name",
-  "groupDescription": "Group description"
+  "groupDescription": "Group description",
+  "needToSelectEmployees": "Need to select employees"
 }

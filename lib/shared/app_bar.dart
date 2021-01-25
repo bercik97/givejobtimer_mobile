@@ -4,6 +4,7 @@ import 'package:givejobtimer_mobile/shared/colors.dart';
 import 'package:givejobtimer_mobile/shared/model/user.dart';
 import 'package:givejobtimer_mobile/shared/settings/settings_page.dart';
 import 'package:givejobtimer_mobile/shared/texts.dart';
+import 'package:givejobtimer_mobile/shared/util/navigator_util.dart';
 
 AppBar appBar(BuildContext context, User user, String title) {
   return AppBar(
@@ -17,12 +18,7 @@ AppBar appBar(BuildContext context, User user, String title) {
         padding: EdgeInsets.only(right: 15.0),
         child: IconButton(
           icon: Container(child: Icon(Icons.settings)),
-          onPressed: () {
-            Navigator.push(
-              context,
-              MaterialPageRoute(builder: (context) => SettingsPage(user)),
-            );
-          },
+          onPressed: () => NavigatorUtil.navigate(context, SettingsPage(user)),
         ),
       ),
     ],
