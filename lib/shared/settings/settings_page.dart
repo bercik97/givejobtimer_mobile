@@ -71,7 +71,7 @@ class _SettingsPageState extends State<SettingsPage> {
           children: <Widget>[
             _titleContainer(getTranslated(context, 'account')),
             Container(
-              margin: EdgeInsets.only(left: 15, top: 10),
+              margin: EdgeInsets.only(left: 15),
               child: InkWell(
                 child: _subtitleInkWellContainer(getTranslated(context, 'aboutMe')),
                 onTap: () => NavigatorUtil.navigate(context, EditUserPage(widget._user)),
@@ -79,7 +79,7 @@ class _SettingsPageState extends State<SettingsPage> {
             ),
             _titleContainer(getTranslated(context, 'other')),
             Container(
-              margin: EdgeInsets.only(top: 20, left: 15),
+              margin: EdgeInsets.only(left: 15),
               child: Theme(
                 data: Theme.of(context).copyWith(canvasColor: DARK),
                 child: Container(
