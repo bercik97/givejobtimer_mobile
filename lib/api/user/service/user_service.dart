@@ -2,6 +2,7 @@ import 'dart:convert';
 
 import 'package:flutter/cupertino.dart';
 import 'package:givejobtimer_mobile/api/user/dto/create_user_dto.dart';
+import 'package:givejobtimer_mobile/api/user/dto/user_contact_dto.dart';
 import 'package:givejobtimer_mobile/shared/constants.dart';
 import 'package:givejobtimer_mobile/shared/service/logout_service.dart';
 import 'package:http/http.dart';
@@ -38,6 +39,18 @@ class UserService {
       return Logout.handle401WithLogout(_context);
     } else {
       return Future.error(body);
+    }
+  }
+
+  Future<UserContactDto> findContactByGroupId(num groupId) async {
+    String url = _url + '/contact?group_id=$groupId';
+    Response res = await get(url, headers: _headers);
+    if (res.statusCode == 200) {
+      return UserContactDto.fromJson(jsonDecode(res.body));
+    } else if (res.statusCode == 401) {
+      return Logout.handle401WithLogout(_context);
+    } else {
+      return Future.error(res.body);
     }
   }
 

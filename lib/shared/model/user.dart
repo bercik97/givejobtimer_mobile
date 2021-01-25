@@ -8,6 +8,7 @@ class User {
   String nationality;
   String companyId;
   String companyName;
+  String groupId;
   String authHeader;
 
   User();
@@ -22,6 +23,7 @@ class User {
     nationality = data['nationality'];
     companyId = data['companyId'];
     companyName = data['companyName'];
+    groupId = data['groupId'];
     authHeader = data['authorization'];
     return this;
   }

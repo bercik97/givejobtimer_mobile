@@ -2,6 +2,8 @@ import 'dart:convert';
 
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:givejobtimer_mobile/api/shared/service_initializer.dart';
+import 'package:givejobtimer_mobile/api/user/service/user_service.dart';
 import 'package:givejobtimer_mobile/employee/shared/employee_side_bar.dart';
 import 'package:givejobtimer_mobile/employee/working_time/working_time_page.dart';
 import 'package:givejobtimer_mobile/internationalization/localization/localization_constants.dart';
@@ -28,11 +30,13 @@ class EmployeePage extends StatefulWidget {
 
 class _EmployeePageState extends State<EmployeePage> {
   User _user;
+  UserService _userService;
 
   @override
   Widget build(BuildContext context) {
     this._user = widget._user;
     String _employeeInfo = _user.name + ' ' + _user.surname;
+    this._userService = ServiceInitializer.initialize(context, _user.authHeader, UserService);
     return WillPopScope(
       child: MaterialApp(
         title: APP_NAME,
@@ -105,7 +109,7 @@ class _EmployeePageState extends State<EmployeePage> {
                                 child: Material(
                                   color: BRIGHTER_DARK,
                                   child: InkWell(
-                                    onTap: () => showContactDialog(context, null, null, null),
+                                    onTap: () => showContactDialog(context, _userService, int.parse(_user.groupId)),
                                     child: _buildScrollableContainer('images/big-contact-with-manager-icon.png', 'contact', 'contactWithYourManager'),
                                   ),
                                 ),
