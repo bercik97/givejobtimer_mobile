@@ -46,7 +46,7 @@ Drawer managerSideBar(BuildContext context, User user) {
             ),
           ),
           ListTile(
-            leading: iconWhite(Icons.person),
+            leading: iconWhite(Icons.group),
             title: text18White(getTranslated(context, 'groups')),
             onTap: () {
               Navigator.of(context).push(
