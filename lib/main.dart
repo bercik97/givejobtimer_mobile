@@ -63,7 +63,6 @@ class _MyAppState extends State<MyApp> {
     var role = await storage.read(key: 'role');
     var companyId = await storage.read(key: 'companyId');
     var companyName = await storage.read(key: 'companyName');
-    var groupId = await storage.read(key: 'groupId');
     var name = await storage.read(key: 'name');
     var surname = await storage.read(key: 'surname');
     var nationality = await storage.read(key: 'nationality');
@@ -76,7 +75,6 @@ class _MyAppState extends State<MyApp> {
     map['role'] = role;
     map['companyId'] = companyId;
     map['companyName'] = companyName;
-    map['groupId'] = groupId;
     map['name'] = name;
     map['surname'] = surname;
     map['nationality'] = nationality;

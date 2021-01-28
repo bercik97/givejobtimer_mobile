@@ -258,6 +258,5 @@
   "group": "Grupa",
   "groupName": "Nazwa grupy",
   "groupDescription": "Opis grupy",
-  "needToSelectEmployees": "Musisz wybrać pracowników",
-  "youAreNotAssignedToWorkGroup": "Nie jesteś przypisany do grupy pracowniczej."
+  "needToSelectEmployees": "Musisz wybrać pracowników"
 }

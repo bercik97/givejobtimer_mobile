@@ -2,6 +2,7 @@ import 'dart:convert';
 
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:givejobtimer_mobile/api/employee/service/employee_service.dart';
 import 'package:givejobtimer_mobile/api/shared/service_initializer.dart';
 import 'package:givejobtimer_mobile/api/user/service/user_service.dart';
 import 'package:givejobtimer_mobile/employee/shared/employee_side_bar.dart';
@@ -14,7 +15,6 @@ import 'package:givejobtimer_mobile/shared/icons.dart';
 import 'package:givejobtimer_mobile/shared/model/user.dart';
 import 'package:givejobtimer_mobile/shared/page/edit_user_page.dart';
 import 'package:givejobtimer_mobile/shared/service/logout_service.dart';
-import 'package:givejobtimer_mobile/shared/service/toastr_service.dart';
 import 'package:givejobtimer_mobile/shared/texts.dart';
 import 'package:givejobtimer_mobile/shared/util/language_util.dart';
 import 'package:givejobtimer_mobile/shared/util/navigator_util.dart';
@@ -31,13 +31,13 @@ class EmployeePage extends StatefulWidget {
 
 class _EmployeePageState extends State<EmployeePage> {
   User _user;
-  UserService _userService;
+  EmployeeService _employeeService;
 
   @override
   Widget build(BuildContext context) {
     this._user = widget._user;
     String _employeeInfo = _user.name + ' ' + _user.surname;
-    this._userService = ServiceInitializer.initialize(context, _user.authHeader, UserService);
+    this._employeeService = ServiceInitializer.initialize(context, _user.authHeader, EmployeeService);
     return WillPopScope(
       child: MaterialApp(
         title: APP_NAME,
@@ -92,19 +92,13 @@ class _EmployeePageState extends State<EmployeePage> {
                                 child: Material(
                                   color: BRIGHTER_DARK,
                                   child: InkWell(
-                                    onTap: () {
-                                      if (_user.groupId == null) {
-                                        ToastService.showErrorToast(getTranslated(context, 'youAreNotAssignedToWorkGroup'));
-                                        return;
-                                      }
-                                      Navigator.of(context).push(
-                                        CupertinoPageRoute<Null>(
-                                          builder: (BuildContext context) {
-                                            return WorkingTimePage(_user);
-                                          },
-                                        ),
-                                      );
-                                    },
+                                    onTap: () => Navigator.of(context).push(
+                                      CupertinoPageRoute<Null>(
+                                        builder: (BuildContext context) {
+                                          return WorkingTimePage(_user);
+                                        },
+                                      ),
+                                    ),
                                     child: _buildScrollableContainer('images/big-employee-work-icon.png', 'workingTime', 'startFinishWork'),
                                   ),
                                 ),
@@ -114,7 +108,7 @@ class _EmployeePageState extends State<EmployeePage> {
                                 child: Material(
                                   color: BRIGHTER_DARK,
                                   child: InkWell(
-                                    onTap: () => showContactDialog(context, _userService, _user.groupId),
+                                    onTap: () => showContactDialog(context, _employeeService, int.parse(_user.employeeId)),
                                     child: _buildScrollableContainer('images/big-contact-with-manager-icon.png', 'contact', 'contactWithYourCoordinator'),
                                   ),
                                 ),

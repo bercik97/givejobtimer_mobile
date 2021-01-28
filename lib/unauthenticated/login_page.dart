@@ -167,7 +167,6 @@ class _LoginPageState extends State<LoginPage> {
         user.role = map['role'];
         user.companyId = map['companyId'];
         user.companyName = map['companyName'];
-        user.groupId = map['groupId'];
         user.name = map['name'];
         user.surname = map['surname'];
         user.nationality = map['nationality'];
@@ -178,7 +177,6 @@ class _LoginPageState extends State<LoginPage> {
         storage.write(key: 'role', value: user.role);
         storage.write(key: 'companyId', value: user.companyId);
         storage.write(key: 'companyName', value: user.companyName);
-        storage.write(key: 'groupId', value: user.groupId);
         storage.write(key: 'name', value: user.name);
         storage.write(key: 'surname', value: user.surname);
         storage.write(key: 'nationality', value: user.nationality);
