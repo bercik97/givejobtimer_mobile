@@ -153,9 +153,10 @@ class _EmployeesPageState extends State<EmployeesPage> {
                     if (value) {
                       _selectedIds.addAll(_filteredEmployees.map((e) => e.employeeId));
                       _selectedEmployees.addAll(_filteredEmployees);
-                    } else
+                    } else {
                       _selectedIds.clear();
-                    _selectedEmployees.clear();
+                      _selectedEmployees.clear();
+                    }
                   });
                 },
                 controlAffinity: ListTileControlAffinity.leading,
@@ -347,6 +348,7 @@ class _EmployeesPageState extends State<EmployeesPage> {
   }
 
   bool _areSelectedEmployeesNotInWork() {
+    EmployeeDto dto = _selectedEmployees.iterator.current;
     for (var employee in _selectedEmployees) {
       if (employee.workStatus != 'In progress' || employee.workStatus == 'Done') {
         return true;
