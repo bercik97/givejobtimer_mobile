@@ -50,29 +50,29 @@ class _WorkplaceWorkTimePageState extends State<WorkplaceWorkTimePage> {
         backgroundColor: DARK,
         appBar: appBar(this.context, _user, _workplace.year + ' ' + getTranslated(this.context, _workplace.month)),
         drawer: managerSideBar(this.context, _user),
-        body: Column(
-          children: [
-            Padding(
-              padding: EdgeInsets.only(left: 12),
-              child: Column(
-                children: [
-                  ListTile(
-                    title: text20White(getTranslated(this.context, 'code')),
-                    subtitle: text20GreenBold(_workplaceDto.id),
-                  ),
-                  ListTile(
-                    title: text20White(getTranslated(this.context, 'workplace')),
-                    subtitle: text20GreenBold(utf8.decode(_workplaceDto.name.runes.toList())),
-                  ),
-                  ListTile(
-                    title: text20White(getTranslated(this.context, 'totalTimeWorked')),
-                    subtitle: text20GreenBold(_workplaceDto.totalTimeWorked),
-                  ),
-                ],
+        body: SingleChildScrollView(
+          child: Column(
+            children: [
+              Padding(
+                padding: EdgeInsets.only(left: 12),
+                child: Column(
+                  children: [
+                    ListTile(
+                      title: text20White(getTranslated(this.context, 'code')),
+                      subtitle: text20GreenBold(_workplaceDto.id),
+                    ),
+                    ListTile(
+                      title: text20White(getTranslated(this.context, 'workplace')),
+                      subtitle: text20GreenBold(utf8.decode(_workplaceDto.name.runes.toList())),
+                    ),
+                    ListTile(
+                      title: text20White(getTranslated(this.context, 'totalTimeWorked')),
+                      subtitle: text20GreenBold(_workplaceDto.totalTimeWorked),
+                    ),
+                  ],
+                ),
               ),
-            ),
-            SingleChildScrollView(
-              child: FutureBuilder(
+              FutureBuilder(
                 future: _workTimeService.findAllDatesWithTotalTimeByWorkplaceIdAndYearMonthIn(_workplaceDto.id, _workplace.year + '-' + _workplace.month),
                 builder: (BuildContext context, AsyncSnapshot<List<WorkTimeEmployeeDto>> snapshot) {
                   if (snapshot.connectionState == ConnectionState.waiting || snapshot.data == null) {
@@ -116,8 +116,8 @@ class _WorkplaceWorkTimePageState extends State<WorkplaceWorkTimePage> {
                   }
                 },
               ),
-            ),
-          ],
+            ],
+          ),
         ),
       ),
     );

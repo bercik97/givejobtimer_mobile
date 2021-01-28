@@ -600,8 +600,7 @@ class _EmployeesPageState extends State<EmployeesPage> {
                 child: Padding(
                   padding: EdgeInsets.only(left: 10, right: 10),
                   child: Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: <Widget>[
+                    children: [
                       Padding(
                         padding: EdgeInsets.only(top: 50),
                         child: Column(
@@ -611,69 +610,80 @@ class _EmployeesPageState extends State<EmployeesPage> {
                         ),
                       ),
                       SizedBox(height: 7.5),
-                      Column(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          for (int i = 0; i < _workplaces.length; i++)
-                            _buildRadioBtn(
-                              color: GREEN,
-                              title: utf8.decode(_workplaces[i].name.runes.toList()),
-                              value: 0,
-                              groupValue: _workplacesRadioValues[i],
-                              onChanged: (newValue) => setState(
-                                () {
-                                  if (_chosenIndex != -1) {
-                                    _workplacesRadioValues[_chosenIndex] = -1;
-                                  }
-                                  _workplacesRadioValues[i] = newValue;
-                                  _chosenIndex = i;
-                                  _isChoseWorkplaceBtnDisabled = false;
-                                },
+                      Expanded(
+                        child: SingleChildScrollView(
+                          child: Column(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: <Widget>[
+                              Column(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                children: [
+                                  for (int i = 0; i < _workplaces.length; i++)
+                                    _buildRadioBtn(
+                                      color: GREEN,
+                                      title: utf8.decode(_workplaces[i].name.runes.toList()),
+                                      value: 0,
+                                      groupValue: _workplacesRadioValues[i],
+                                      onChanged: (newValue) => setState(
+                                        () {
+                                          if (_chosenIndex != -1) {
+                                            _workplacesRadioValues[_chosenIndex] = -1;
+                                          }
+                                          _workplacesRadioValues[i] = newValue;
+                                          _chosenIndex = i;
+                                          _isChoseWorkplaceBtnDisabled = false;
+                                        },
+                                      ),
+                                    ),
+                                ],
                               ),
-                            ),
-                        ],
+                            ],
+                          ),
+                        ),
                       ),
-                      SizedBox(height: 20),
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: <Widget>[
-                          MaterialButton(
-                            elevation: 0,
-                            height: 50,
-                            minWidth: 40,
-                            shape: new RoundedRectangleBorder(borderRadius: new BorderRadius.circular(30.0)),
-                            child: Row(
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              children: <Widget>[iconWhite(Icons.close)],
+                      Padding(
+                        padding: const EdgeInsets.all(20.0),
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: <Widget>[
+                            MaterialButton(
+                              elevation: 0,
+                              height: 50,
+                              minWidth: 40,
+                              shape: new RoundedRectangleBorder(borderRadius: new BorderRadius.circular(30.0)),
+                              child: Row(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                children: <Widget>[iconWhite(Icons.close)],
+                              ),
+                              color: Colors.red,
+                              onPressed: () {
+                                if (_chosenIndex != -1) {
+                                  _workplacesRadioValues[_chosenIndex] = -1;
+                                }
+                                _chosenIndex = -1;
+                                _isChoseWorkplaceBtnDisabled = true;
+                                Navigator.pop(context);
+                              },
                             ),
-                            color: Colors.red,
-                            onPressed: () {
-                              if (_chosenIndex != -1) {
-                                _workplacesRadioValues[_chosenIndex] = -1;
-                              }
-                              _chosenIndex = -1;
-                              _isChoseWorkplaceBtnDisabled = true;
-                              Navigator.pop(context);
-                            },
-                          ),
-                          SizedBox(width: 25),
-                          MaterialButton(
-                            elevation: 0,
-                            height: 50,
-                            shape: new RoundedRectangleBorder(borderRadius: new BorderRadius.circular(30.0)),
-                            child: Row(
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              children: <Widget>[iconWhite(Icons.check)],
+                            SizedBox(width: 25),
+                            MaterialButton(
+                              elevation: 0,
+                              height: 50,
+                              shape: new RoundedRectangleBorder(borderRadius: new BorderRadius.circular(30.0)),
+                              child: Row(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                children: <Widget>[iconWhite(Icons.check)],
+                              ),
+                              color: !_isChoseWorkplaceBtnDisabled ? GREEN : Colors.grey,
+                              onPressed: () {
+                                if (_isChoseWorkplaceBtnDisabled) {
+                                  return;
+                                }
+                                fun();
+                              },
                             ),
-                            color: !_isChoseWorkplaceBtnDisabled ? GREEN : Colors.grey,
-                            onPressed: () {
-                              if (_isChoseWorkplaceBtnDisabled) {
-                                return;
-                              }
-                              fun();
-                            },
-                          ),
-                        ],
+                          ],
+                        ),
                       ),
                     ],
                   ),
