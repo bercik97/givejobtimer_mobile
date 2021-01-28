@@ -58,7 +58,7 @@ class _AddGroupEmployeesPageState extends State<AddGroupEmployeesPage> {
     this._groupService = ServiceInitializer.initialize(context, _user.authHeader, GroupService);
     super.initState();
     _loading = true;
-    _employeeService.findAllByCompanyId(int.parse(_user.companyId)).then((res) {
+    _employeeService.findAllByCompanyIdAndNotByGivenGroupId(int.parse(_user.companyId), _groupId).then((res) {
       setState(() {
         _employees = res;
         _employees.forEach((e) => _checked.add(false));
@@ -81,7 +81,7 @@ class _AddGroupEmployeesPageState extends State<AddGroupEmployeesPage> {
             content: SingleChildScrollView(
               child: ListBody(
                 children: <Widget>[
-                  textWhite(getTranslated(this.context, 'noEmployees')),
+                  textWhite(getTranslated(this.context, 'noEmployeesToAddForSelectedGroup')),
                 ],
               ),
             ),

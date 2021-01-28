@@ -258,5 +258,6 @@
   "group": "Grupa",
   "groupName": "Nazwa grupy",
   "groupDescription": "Opis grupy",
-  "needToSelectEmployees": "Musisz wybrać pracowników"
+  "needToSelectEmployees": "Musisz wybrać pracowników",
+  "noEmployeesToAddForSelectedGroup": "Brak pracowników do dodania dla wybranej grupy, ponieważ wszyscy pracownicy są już w tej grupie"
 }

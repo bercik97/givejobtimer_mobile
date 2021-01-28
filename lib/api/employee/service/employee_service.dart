@@ -27,6 +27,17 @@ class EmployeeService {
     }
   }
 
+  Future<List<EmployeeBasicDto>> findAllByCompanyIdAndNotByGivenGroupId(int companyId, int groupId) async {
+    Response res = await get('$_url/companies/$companyId/groups-not-equal/$groupId', headers: _header);
+    if (res.statusCode == 200) {
+      return (json.decode(res.body) as List).map((data) => EmployeeBasicDto.fromJson(data)).toList();
+    } else if (res.statusCode == 401) {
+      return Logout.handle401WithLogout(_context);
+    } else {
+      return Future.error(res.body);
+    }
+  }
+
   Future<List<EmployeeDto>> findAllByGroupId(int groupId) async {
     Response res = await get('$_url/groups?group_id=$groupId', headers: _header);
     if (res.statusCode == 200) {
