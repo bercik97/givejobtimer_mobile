@@ -44,7 +44,6 @@ class _DeleteGroupEmployeesPageState extends State<DeleteGroupEmployeesPage> {
   final ScrollController _scrollController = new ScrollController();
 
   List<EmployeeDto> _employees = new List();
-  List<EmployeeDto> _filteredEmployees = new List();
   bool _loading = false;
   bool _isChecked = false;
   bool _isDeleteButtonTapped = false;
@@ -63,7 +62,6 @@ class _DeleteGroupEmployeesPageState extends State<DeleteGroupEmployeesPage> {
       setState(() {
         _employees = res;
         _employees.forEach((e) => _checked.add(false));
-        _filteredEmployees = _employees;
         _loading = false;
       });
     }).catchError((onError) {
@@ -128,7 +126,6 @@ class _DeleteGroupEmployeesPageState extends State<DeleteGroupEmployeesPage> {
             child: Column(
               children: [
                 SizedBox(height: 5),
-                _buildLoupe(),
                 _buildSelectUnselectAllCheckbox(),
                 _buildEmployees(),
               ],
@@ -138,33 +135,6 @@ class _DeleteGroupEmployeesPageState extends State<DeleteGroupEmployeesPage> {
         ),
       ),
       onWillPop: () => NavigatorUtil.onWillPopNavigate(context, GroupsDashboardPage(_user)),
-    );
-  }
-
-  Widget _buildLoupe() {
-    return Container(
-      padding: EdgeInsets.only(left: 10, right: 10),
-      child: TextFormField(
-        autofocus: false,
-        autocorrect: true,
-        cursorColor: WHITE,
-        style: TextStyle(color: WHITE),
-        decoration: InputDecoration(
-          enabledBorder: OutlineInputBorder(borderSide: BorderSide(color: WHITE, width: 2)),
-          counterStyle: TextStyle(color: WHITE),
-          border: OutlineInputBorder(),
-          labelText: getTranslated(this.context, 'search'),
-          prefixIcon: iconWhite(Icons.search),
-          labelStyle: TextStyle(color: WHITE),
-        ),
-        onChanged: (string) {
-          setState(
-            () {
-              _filteredEmployees = _employees.where((e) => ((e.name + e.surname).toLowerCase().contains(string.toLowerCase()))).toList();
-            },
-          );
-        },
-      ),
     );
   }
 
@@ -183,7 +153,7 @@ class _DeleteGroupEmployeesPageState extends State<DeleteGroupEmployeesPage> {
             _checked.forEach((b) => l.add(value));
             _checked = l;
             if (value) {
-              _selectedIds.addAll(_filteredEmployees.map((e) => e.employeeId));
+              _selectedIds.addAll(_employees.map((e) => e.employeeId));
             } else
               _selectedIds.clear();
           });
@@ -201,9 +171,9 @@ class _DeleteGroupEmployeesPageState extends State<DeleteGroupEmployeesPage> {
         controller: _scrollController,
         child: ListView.builder(
           controller: _scrollController,
-          itemCount: _filteredEmployees.length,
+          itemCount: _employees.length,
           itemBuilder: (BuildContext context, int index) {
-            EmployeeDto employee = _filteredEmployees[index];
+            EmployeeDto employee = _employees[index];
             int foundIndex = 0;
             for (int i = 0; i < _employees.length; i++) {
               if (_employees[i].employeeId == employee.employeeId) {

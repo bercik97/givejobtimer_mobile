@@ -15,11 +15,8 @@ class EmployeeService {
 
   static const String _url = '$SERVER_IP/employees';
 
-  Future<List<EmployeeBasicDto>> findAllByGroupIsNullAndCompanyId(int companyId) async {
-    Response res = await get(
-      '$_url/nullable-group/companies?company_id=$companyId',
-      headers: _header,
-    );
+  Future<List<EmployeeBasicDto>> findAllByCompanyId(int companyId) async {
+    Response res = await get('$_url/companies?company_id=$companyId', headers: _header);
     if (res.statusCode == 200) {
       return (json.decode(res.body) as List).map((data) => EmployeeBasicDto.fromJson(data)).toList();
     } else if (res.statusCode == 401) {
@@ -30,10 +27,7 @@ class EmployeeService {
   }
 
   Future<List<EmployeeDto>> findAllByGroupId(int groupId) async {
-    Response res = await get(
-      '$_url/groups?group_id=$groupId',
-      headers: _header,
-    );
+    Response res = await get('$_url/groups?group_id=$groupId', headers: _header);
     if (res.statusCode == 200) {
       return (json.decode(res.body) as List).map((data) => EmployeeDto.fromJson(data)).toList();
     } else if (res.statusCode == 401) {

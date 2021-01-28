@@ -48,10 +48,7 @@ class _AddGroupPageState extends State<AddGroupPage> {
   final TextEditingController _groupNameController = new TextEditingController();
   final TextEditingController _groupDescriptionController = new TextEditingController();
 
-  String _nationality = '';
-
   List<EmployeeBasicDto> _employees = new List();
-  List<EmployeeBasicDto> _filteredEmployees = new List();
   bool _loading = false;
   bool _isChecked = false;
   bool _isAddButtonTapped = false;
@@ -65,11 +62,10 @@ class _AddGroupPageState extends State<AddGroupPage> {
     this._groupService = ServiceInitializer.initialize(context, _user.authHeader, GroupService);
     super.initState();
     _loading = true;
-    _employeeService.findAllByGroupIsNullAndCompanyId(int.parse(_user.companyId)).then((res) {
+    _employeeService.findAllByCompanyId(int.parse(_user.companyId)).then((res) {
       setState(() {
         _employees = res;
         _employees.forEach((e) => _checked.add(false));
-        _filteredEmployees = _employees;
         _loading = false;
       });
     }).catchError((onError) {
@@ -89,7 +85,7 @@ class _AddGroupPageState extends State<AddGroupPage> {
             content: SingleChildScrollView(
               child: ListBody(
                 children: <Widget>[
-                  textWhite(getTranslated(this.context, 'noEmployeesToFormGroup')),
+                  textWhite(getTranslated(this.context, 'noEmployees')),
                 ],
               ),
             ),
@@ -155,7 +151,6 @@ class _AddGroupPageState extends State<AddGroupPage> {
                     getTranslated(context, 'groupDescriptionIsRequired'),
                   ),
                   SizedBox(height: 5),
-                  _buildLoupe(),
                   _buildSelectUnselectAllCheckbox(),
                   _buildEmployees(),
                 ],
@@ -196,33 +191,6 @@ class _AddGroupPageState extends State<AddGroupPage> {
     );
   }
 
-  Widget _buildLoupe() {
-    return Container(
-      padding: EdgeInsets.only(left: 10, right: 10),
-      child: TextFormField(
-        autofocus: false,
-        autocorrect: true,
-        cursorColor: WHITE,
-        style: TextStyle(color: WHITE),
-        decoration: InputDecoration(
-          enabledBorder: OutlineInputBorder(borderSide: BorderSide(color: WHITE, width: 2)),
-          counterStyle: TextStyle(color: WHITE),
-          border: OutlineInputBorder(),
-          labelText: getTranslated(this.context, 'search'),
-          prefixIcon: iconWhite(Icons.search),
-          labelStyle: TextStyle(color: WHITE),
-        ),
-        onChanged: (string) {
-          setState(
-            () {
-              _filteredEmployees = _employees.where((e) => ((e.name + e.surname).toLowerCase().contains(string.toLowerCase()))).toList();
-            },
-          );
-        },
-      ),
-    );
-  }
-
   Widget _buildSelectUnselectAllCheckbox() {
     return ListTileTheme(
       contentPadding: EdgeInsets.only(left: 3),
@@ -238,7 +206,7 @@ class _AddGroupPageState extends State<AddGroupPage> {
             _checked.forEach((b) => l.add(value));
             _checked = l;
             if (value) {
-              _selectedIds.addAll(_filteredEmployees.map((e) => e.id));
+              _selectedIds.addAll(_employees.map((e) => e.id));
             } else
               _selectedIds.clear();
           });
@@ -256,9 +224,9 @@ class _AddGroupPageState extends State<AddGroupPage> {
         controller: _scrollController,
         child: ListView.builder(
           controller: _scrollController,
-          itemCount: _filteredEmployees.length,
+          itemCount: _employees.length,
           itemBuilder: (BuildContext context, int index) {
-            EmployeeBasicDto employee = _filteredEmployees[index];
+            EmployeeBasicDto employee = _employees[index];
             int foundIndex = 0;
             for (int i = 0; i < _employees.length; i++) {
               if (_employees[i].id == employee.id) {
@@ -383,12 +351,6 @@ class _AddGroupPageState extends State<AddGroupPage> {
             context: context,
             titleWidget: textRed(getTranslated(context, 'error')),
             content: getTranslated(context, 'groupNameExists') + '.\n' + getTranslated(context, 'chooseOtherGroupName') + '.',
-          );
-        } else if (errorMsg.contains("SOME_EMPLOYEES_ARE_IN_OTHER_GROUP")) {
-          DialogService.showCustomDialog(
-            context: context,
-            titleWidget: textRed(getTranslated(context, 'error')),
-            content: getTranslated(context, 'someEmployeesAreInOtherGroup'),
           );
         } else {
           DialogService.showCustomDialog(
