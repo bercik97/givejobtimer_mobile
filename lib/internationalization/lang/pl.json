@@ -260,5 +260,6 @@
   "groupDescription": "Opis grupy",
   "needToSelectEmployees": "Musisz wybrać pracowników",
   "noEmployeesToAddForSelectedGroup": "Brak pracowników do dodania dla wybranej grupy, ponieważ wszyscy pracownicy są już w tej grupie",
-  "createNewEmployeeAccount": "Dodawanie nowego pracownika"
+  "createNewEmployeeAccount": "Dodawanie nowego pracownika",
+  "employeeAccountHasBeenSuccessfullyCreated": "Konto pracownika zostało pomyślnie utworzone"
 }

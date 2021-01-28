@@ -5,12 +5,14 @@ class EmployeeBasicDto {
   final String name;
   final String surname;
   final String nationality;
+  final String loginCode;
 
   EmployeeBasicDto({
     @required this.id,
     @required this.name,
     @required this.surname,
     @required this.nationality,
+    @required this.loginCode,
   });
 
   factory EmployeeBasicDto.fromJson(Map<String, dynamic> json) {
@@ -19,6 +21,7 @@ class EmployeeBasicDto {
       name: json['name'] as String,
       surname: json['surname'] as String,
       nationality: json['nationality'] as String,
+      loginCode: json['loginCode'] as String,
     );
   }
 }

@@ -248,6 +248,12 @@ class _AddGroupPageState extends State<AddGroupPage> {
                       child: CheckboxListTile(
                         controlAffinity: ListTileControlAffinity.leading,
                         title: text20WhiteBold(utf8.decode(info.runes.toList()) + ' ' + LanguageUtil.findFlagByNationality(nationality)),
+                        subtitle: Row(
+                          children: [
+                            textWhite(getTranslated(this.context, 'loginCode') + ': '),
+                            textGreen(employee.loginCode),
+                          ],
+                        ),
                         activeColor: GREEN,
                         checkColor: WHITE,
                         value: _checked[foundIndex],

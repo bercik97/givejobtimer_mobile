@@ -2,6 +2,7 @@ import 'dart:convert';
 
 import 'package:flutter/cupertino.dart';
 import 'package:givejobtimer_mobile/api/user/dto/create_user_dto.dart';
+import 'package:givejobtimer_mobile/api/user/dto/create_user_employee_without_token_dto.dart';
 import 'package:givejobtimer_mobile/shared/constants.dart';
 import 'package:givejobtimer_mobile/shared/service/logout_service.dart';
 import 'package:http/http.dart';
@@ -16,6 +17,17 @@ class UserService {
 
   Future<dynamic> create(CreateUserDto dto) async {
     Response res = await post(_url, body: jsonEncode(CreateUserDto.jsonEncode(dto)), headers: {"content-type": "application/json"});
+    if (res.statusCode == 200) {
+      return res.body.toString();
+    } else if (res.statusCode == 401) {
+      return Logout.handle401WithLogout(_context);
+    } else {
+      return Future.error(res.body);
+    }
+  }
+
+  Future<dynamic> createUserEmployeeWithoutToken(CreateUserEmployeeWithoutTokenDto dto) async {
+    Response res = await post('$_url/user-employee-without-token', body: jsonEncode(CreateUserEmployeeWithoutTokenDto.jsonEncode(dto)), headers: {"content-type": "application/json"});
     if (res.statusCode == 200) {
       return res.body.toString();
     } else if (res.statusCode == 401) {

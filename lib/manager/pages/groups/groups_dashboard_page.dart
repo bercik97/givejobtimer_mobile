@@ -1,5 +1,6 @@
 import 'dart:convert';
 
+import 'package:dropdown_formfield/dropdown_formfield.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
@@ -7,9 +8,12 @@ import 'package:flutter/services.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_progress_dialog/flutter_progress_dialog.dart';
 import 'package:flutter_speed_dial/flutter_speed_dial.dart';
+import 'package:form_field_validator/form_field_validator.dart';
 import 'package:givejobtimer_mobile/api/group/dto/group_dashboard_dto.dart';
 import 'package:givejobtimer_mobile/api/group/service/group_service.dart';
 import 'package:givejobtimer_mobile/api/shared/service_initializer.dart';
+import 'package:givejobtimer_mobile/api/user/dto/create_user_employee_without_token_dto.dart';
+import 'package:givejobtimer_mobile/api/user/service/user_service.dart';
 import 'package:givejobtimer_mobile/internationalization/localization/localization_constants.dart';
 import 'package:givejobtimer_mobile/manager/pages/shared/group_model.dart';
 import 'package:givejobtimer_mobile/manager/shared/manager_side_bar.dart';
@@ -23,6 +27,7 @@ import 'package:givejobtimer_mobile/shared/service/dialog_service.dart';
 import 'package:givejobtimer_mobile/shared/service/logout_service.dart';
 import 'package:givejobtimer_mobile/shared/service/toastr_service.dart';
 import 'package:givejobtimer_mobile/shared/texts.dart';
+import 'package:givejobtimer_mobile/shared/util/language_util.dart';
 import 'package:givejobtimer_mobile/shared/util/navigator_util.dart';
 import 'package:givejobtimer_mobile/shared/widget/buttons.dart';
 
@@ -42,10 +47,21 @@ class GroupsDashboardPage extends StatefulWidget {
 
 class _GroupsDashboardPageState extends State<GroupsDashboardPage> {
   User _user;
+
   GroupService _groupService;
+  UserService _userService;
+
   GlobalKey<FormState> formKey = GlobalKey<FormState>();
   List<GroupDashboardDto> _groups = new List();
   ScrollController _scrollController = new ScrollController();
+
+  final _nameController = new TextEditingController();
+  final _surnameController = new TextEditingController();
+  String _nationality = '';
+  bool _isErrorMsgOfNationalityShouldBeShow = false;
+  bool _isCreateEmployeeAccountButtonTapped = false;
+
+  CreateUserEmployeeWithoutTokenDto dto;
 
   bool _loading = false;
 
@@ -54,6 +70,7 @@ class _GroupsDashboardPageState extends State<GroupsDashboardPage> {
     super.initState();
     this._user = widget._user;
     this._groupService = ServiceInitializer.initialize(context, _user.authHeader, GroupService);
+    this._userService = ServiceInitializer.initialize(context, _user.authHeader, UserService);
     this._loading = true;
     _groupService.findAllByCompanyId(_user.companyId).then((res) {
       setState(() {
@@ -96,7 +113,7 @@ class _GroupsDashboardPageState extends State<GroupsDashboardPage> {
               SpeedDialChild(
                 child: Icon(Icons.person_add, color: DARK),
                 backgroundColor: GREEN,
-                onTap: () => NavigatorUtil.navigate(this.context, AddGroupPage(_user)),
+                onTap: () => _createNewEmployeeAccount(),
                 label: getTranslated(context, 'createNewEmployeeAccount'),
                 labelStyle: TextStyle(fontWeight: FontWeight.w500),
                 labelBackgroundColor: GREEN,
@@ -107,6 +124,185 @@ class _GroupsDashboardPageState extends State<GroupsDashboardPage> {
       ),
       onWillPop: _onWillPop,
     );
+  }
+
+  void _createNewEmployeeAccount() {
+    showGeneralDialog(
+      context: context,
+      barrierColor: DARK.withOpacity(0.95),
+      barrierDismissible: false,
+      barrierLabel: getTranslated(context, 'createNewEmployeeAccount'),
+      transitionDuration: Duration(milliseconds: 400),
+      pageBuilder: (_, __, ___) {
+        return SizedBox.expand(
+          child: StatefulBuilder(builder: (context, setState) {
+            return Scaffold(
+              backgroundColor: Colors.black12,
+              body: Center(
+                child: Form(
+                  autovalidate: true,
+                  key: formKey,
+                  child: Padding(
+                    padding: EdgeInsets.only(left: 30, right: 30),
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: <Widget>[
+                        _buildTextField(
+                          _nameController,
+                          getTranslated(context, 'name'),
+                          getTranslated(context, 'nameIsRequired'),
+                          Icons.person_outline,
+                        ),
+                        _buildTextField(
+                          _surnameController,
+                          getTranslated(context, 'surname'),
+                          getTranslated(context, 'surnameIsRequired'),
+                          Icons.person_outline,
+                        ),
+                        Theme(
+                          data: ThemeData(hintColor: Colors.white, splashColor: GREEN, colorScheme: ColorScheme.dark()),
+                          child: Column(
+                            children: <Widget>[
+                              DropDownFormField(
+                                titleText: getTranslated(context, 'nationality'),
+                                hintText: getTranslated(context, 'nationalityIsRequired'),
+                                validator: (value) {
+                                  if (_isErrorMsgOfNationalityShouldBeShow || (_isCreateEmployeeAccountButtonTapped && value == null)) {
+                                    return getTranslated(context, 'nationalityIsRequired');
+                                  }
+                                  return null;
+                                },
+                                value: _nationality,
+                                onSaved: (value) {
+                                  setState(() {
+                                    _nationality = value;
+                                  });
+                                },
+                                onChanged: (value) {
+                                  setState(() {
+                                    _nationality = value;
+                                    _isErrorMsgOfNationalityShouldBeShow = false;
+                                  });
+                                },
+                                dataSource: [
+                                  {'display': 'English ' + LanguageUtil.findFlagByNationality('EN'), 'value': 'EN'},
+                                  {'display': 'Polska ' + LanguageUtil.findFlagByNationality('PL'), 'value': 'PL'},
+                                  {'display': 'Українська ' + LanguageUtil.findFlagByNationality('UK'), 'value': 'UK'},
+                                ],
+                                textField: 'display',
+                                valueField: 'value',
+                                required: true,
+                                autovalidate: true,
+                              ),
+                              SizedBox(height: 20),
+                            ],
+                          ),
+                        ),
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: <Widget>[
+                            MaterialButton(
+                              elevation: 0,
+                              height: 50,
+                              minWidth: 40,
+                              shape: new RoundedRectangleBorder(borderRadius: new BorderRadius.circular(30.0)),
+                              child: Row(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                children: <Widget>[iconWhite(Icons.close)],
+                              ),
+                              color: Colors.red,
+                              onPressed: () {
+                                _nameController.clear();
+                                _surnameController.clear();
+                                _nationality = '';
+                                _isCreateEmployeeAccountButtonTapped = false;
+                                Navigator.pop(context);
+                              },
+                            ),
+                            SizedBox(width: 25),
+                            MaterialButton(
+                              elevation: 0,
+                              height: 50,
+                              shape: new RoundedRectangleBorder(borderRadius: new BorderRadius.circular(30.0)),
+                              child: Row(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                children: <Widget>[iconWhite(Icons.check)],
+                              ),
+                              color: GREEN,
+                              onPressed: () => _isCreateEmployeeAccountButtonTapped ? null : _handleCreateEmployeeAccountButton(),
+                            ),
+                          ],
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
+              ),
+            );
+          }),
+        );
+      },
+    );
+  }
+
+  Widget _buildTextField(TextEditingController controller, String labelText, String errorText, IconData icon) {
+    return Column(
+      children: <Widget>[
+        TextFormField(
+          controller: controller,
+          autocorrect: true,
+          cursorColor: WHITE,
+          maxLength: 26,
+          style: TextStyle(color: WHITE),
+          decoration: InputDecoration(enabledBorder: OutlineInputBorder(borderSide: BorderSide(color: WHITE, width: 2)), counterStyle: TextStyle(color: WHITE), border: OutlineInputBorder(), labelText: labelText, prefixIcon: iconWhite(icon), labelStyle: TextStyle(color: WHITE)),
+          validator: RequiredValidator(errorText: errorText),
+        ),
+        SizedBox(height: 10),
+      ],
+    );
+  }
+
+  _handleCreateEmployeeAccountButton() {
+    setState(() => _isCreateEmployeeAccountButtonTapped = true);
+    if (!_isValid()) {
+      DialogService.showCustomDialog(
+        context: context,
+        titleWidget: textRed(getTranslated(context, 'error')),
+        content: getTranslated(context, 'correctInvalidFields'),
+      );
+      if (_nationality == '') {
+        setState(() => _isErrorMsgOfNationalityShouldBeShow = true);
+      } else {
+        setState(() => _isErrorMsgOfNationalityShouldBeShow = false);
+      }
+      setState(() => _isCreateEmployeeAccountButtonTapped = false);
+      return;
+    }
+    showProgressDialog(context: context, loadingText: getTranslated(context, 'loading'));
+    dto = new CreateUserEmployeeWithoutTokenDto(
+      name: _nameController.text,
+      surname: _surnameController.text,
+      nationality: _nationality,
+      companyId: int.parse(_user.companyId),
+    );
+    _userService.createUserEmployeeWithoutToken(dto).then((res) {
+      Future.delayed(Duration(microseconds: 1), () => dismissProgressDialog()).whenComplete(() {
+        ToastService.showSuccessToast(getTranslated(context, 'employeeAccountHasBeenSuccessfullyCreated'));
+        Navigator.pop(context);
+        _nameController.clear();
+        _surnameController.clear();
+        setState(() {
+          _nationality = '';
+          _isErrorMsgOfNationalityShouldBeShow = false;
+          _isCreateEmployeeAccountButtonTapped = false;
+        });
+      });
+    }).catchError((onError) {
+      Future.delayed(Duration(microseconds: 1), () => dismissProgressDialog()).whenComplete(() {
+        ToastService.showErrorToast(getTranslated(context, 'smthWentWrong'));
+        setState(() => _isCreateEmployeeAccountButtonTapped = false);
+      });
+    });
   }
 
   bool _isValid() {
