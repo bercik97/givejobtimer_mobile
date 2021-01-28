@@ -7,11 +7,8 @@ String getTranslated(BuildContext context, String key) {
   return DemoLocalization.of(context).getTranslatedValue(key);
 }
 
-const String BELARUSIAN = 'be';
 const String ENGLISH = 'en';
-const String GEORGIA = 'pt';
 const String POLISH = 'pl';
-const String RUSSIAN = 'ru';
 const String UKRAINIAN = 'uk';
 
 const String LANGUAGE_CODE = 'languageCode';
@@ -25,11 +22,8 @@ Future<Locale> setLocale(String languageCode) async {
 Locale _locale(String languageCode) {
   Locale _temp;
   switch (languageCode) {
-    case BELARUSIAN: _temp = Locale(languageCode, 'BY'); break;
     case ENGLISH: _temp = Locale(languageCode, 'EN'); break;
-    case GEORGIA: _temp = Locale(languageCode, 'PT'); break;
     case POLISH: _temp = Locale(languageCode, 'PL'); break;
-    case RUSSIAN: _temp = Locale(languageCode, 'RU'); break;
     case UKRAINIAN: _temp = Locale(languageCode, 'UA'); break;
     default: _temp = Locale(ENGLISH, 'EN');
   }

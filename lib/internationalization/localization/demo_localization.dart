@@ -36,7 +36,7 @@ class _DemoLocalizationDelegate extends LocalizationsDelegate<DemoLocalization> 
 
   @override
   bool isSupported(Locale locale) {
-    return [BELARUSIAN, ENGLISH, GEORGIA, POLISH, RUSSIAN, UKRAINIAN].contains(locale.languageCode);
+    return [ENGLISH, POLISH, UKRAINIAN].contains(locale.languageCode);
   }
 
   @override
