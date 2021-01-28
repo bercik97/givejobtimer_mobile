@@ -82,11 +82,19 @@ class _GroupsDashboardPageState extends State<GroupsDashboardPage> {
             mainAxisAlignment: MainAxisAlignment.end,
             children: [
               FloatingActionButton(
-                heroTag: "plusBtn",
+                heroTag: "createEmployeeBtn",
                 tooltip: getTranslated(context, 'createGroup'),
                 backgroundColor: GREEN,
                 onPressed: () => NavigatorUtil.navigate(this.context, AddGroupPage(_user)),
-                child: text25Dark('+'),
+                child: iconDark(Icons.person_add),
+              ),
+              SizedBox(height: 20),
+              FloatingActionButton(
+                heroTag: "createGroupBtn",
+                tooltip: getTranslated(context, 'createGroup'),
+                backgroundColor: GREEN,
+                onPressed: () => NavigatorUtil.navigate(this.context, AddGroupPage(_user)),
+                child: iconDark(Icons.group_add_outlined),
               ),
             ],
           ),
@@ -171,9 +179,10 @@ class _GroupsDashboardPageState extends State<GroupsDashboardPage> {
                               mainAxisSize: MainAxisSize.min,
                               children: [
                                 IconButton(
-                                  icon: text25Green('+ -'),
+                                  icon: icon30Green(Icons.emoji_people),
                                   onPressed: () => _manageGroupEmployees(_groups[index].name, _groups[index].id),
                                 ),
+                                SizedBox(width: 20),
                                 IconButton(
                                   icon: icon30Red(Icons.delete),
                                   onPressed: () => _showDeleteGroupDialog(_groups[index].name),
