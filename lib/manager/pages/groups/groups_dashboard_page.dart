@@ -6,6 +6,7 @@ import 'package:flutter/rendering.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_progress_dialog/flutter_progress_dialog.dart';
+import 'package:flutter_speed_dial/flutter_speed_dial.dart';
 import 'package:givejobtimer_mobile/api/group/dto/group_dashboard_dto.dart';
 import 'package:givejobtimer_mobile/api/group/service/group_service.dart';
 import 'package:givejobtimer_mobile/api/shared/service_initializer.dart';
@@ -78,23 +79,27 @@ class _GroupsDashboardPageState extends State<GroupsDashboardPage> {
           drawer: managerSideBar(context, _user),
           body: _groups.isNotEmpty ? _handleGroups() : _handleNoGroups(),
           floatingActionButtonLocation: FloatingActionButtonLocation.endFloat,
-          floatingActionButton: Column(
-            mainAxisAlignment: MainAxisAlignment.end,
+          floatingActionButton: SpeedDial(
+            animatedIcon: AnimatedIcons.menu_close,
+            backgroundColor: GREEN,
+            animatedIconTheme: IconThemeData(size: 22.0),
+            curve: Curves.bounceIn,
             children: [
-              FloatingActionButton(
-                heroTag: "createEmployeeBtn",
-                tooltip: getTranslated(context, 'createGroup'),
+              SpeedDialChild(
+                child: Icon(Icons.group_add_outlined, color: DARK),
                 backgroundColor: GREEN,
-                onPressed: () => NavigatorUtil.navigate(this.context, AddGroupPage(_user)),
-                child: iconDark(Icons.person_add),
+                onTap: () => NavigatorUtil.navigate(this.context, AddGroupPage(_user)),
+                label: getTranslated(context, 'createGroup'),
+                labelStyle: TextStyle(fontWeight: FontWeight.w500),
+                labelBackgroundColor: GREEN,
               ),
-              SizedBox(height: 20),
-              FloatingActionButton(
-                heroTag: "createGroupBtn",
-                tooltip: getTranslated(context, 'createGroup'),
+              SpeedDialChild(
+                child: Icon(Icons.person_add, color: DARK),
                 backgroundColor: GREEN,
-                onPressed: () => NavigatorUtil.navigate(this.context, AddGroupPage(_user)),
-                child: iconDark(Icons.group_add_outlined),
+                onTap: () => NavigatorUtil.navigate(this.context, AddGroupPage(_user)),
+                label: getTranslated(context, 'createNewEmployeeAccount'),
+                labelStyle: TextStyle(fontWeight: FontWeight.w500),
+                labelBackgroundColor: GREEN,
               ),
             ],
           ),

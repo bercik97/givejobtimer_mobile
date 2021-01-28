@@ -259,5 +259,6 @@
   "groupName": "Group name",
   "groupDescription": "Group description",
   "needToSelectEmployees": "Need to select employees",
-  "noEmployeesToAddForSelectedGroup": "No employees to add for selected group because all employees are already in this group"
+  "noEmployeesToAddForSelectedGroup": "No employees to add for selected group because all employees are already in this group",
+  "createNewEmployeeAccount": "Create new employee account"
 }
