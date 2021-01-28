@@ -4,7 +4,6 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:givejobtimer_mobile/api/employee/service/employee_service.dart';
 import 'package:givejobtimer_mobile/api/shared/service_initializer.dart';
-import 'package:givejobtimer_mobile/api/user/service/user_service.dart';
 import 'package:givejobtimer_mobile/employee/shared/employee_side_bar.dart';
 import 'package:givejobtimer_mobile/employee/working_time/working_time_page.dart';
 import 'package:givejobtimer_mobile/internationalization/localization/localization_constants.dart';
@@ -131,15 +130,19 @@ class _EmployeePageState extends State<EmployeePage> {
 
   Widget _buildScrollableContainer(String imagePath, String title, String subtitle) {
     return Container(
-      height: 160,
+      height: 170,
       child: SingleChildScrollView(
         scrollDirection: Axis.vertical,
         child: Column(
           children: <Widget>[
             Image(height: 100, image: AssetImage(imagePath)),
-            text18WhiteBold(getTranslated(context, title)),
-            Padding(padding: EdgeInsets.only(left: 10, right: 10), child: textCenter13White(getTranslated(context, subtitle))),
-            SizedBox(height: 10),
+            textCenter16WhiteBold(getTranslated(context, title)),
+            Padding(
+              padding: EdgeInsets.only(left: 10, right: 10),
+              child: textCenter13White(
+                getTranslated(context, subtitle),
+              ),
+            ),
           ],
         ),
       ),
