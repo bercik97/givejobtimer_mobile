@@ -8,7 +8,6 @@ import 'package:givejobtimer_mobile/shared/colors.dart';
 import 'package:givejobtimer_mobile/shared/constants.dart';
 import 'package:givejobtimer_mobile/shared/model/user.dart';
 import 'package:givejobtimer_mobile/shared/own_upgrader_messages.dart';
-import 'package:givejobtimer_mobile/shared/texts.dart';
 import 'package:givejobtimer_mobile/unauthenticated/get_started_page.dart';
 import 'package:givejobtimer_mobile/unauthenticated/login_page.dart';
 import 'package:splashscreen/splashscreen.dart';

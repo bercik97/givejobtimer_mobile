@@ -144,7 +144,7 @@ class _EditUserPageState extends State<EditUserPage> {
           dense: true,
           contentPadding: EdgeInsets.only(left: 0.0, right: 0.0),
           title: text16GreenBold(getTranslated(context, 'role')),
-          subtitle: text16White(isRoleManager ? getTranslated(context, 'manager') : getTranslated(context, 'employee')),
+          subtitle: text16White(isRoleManager ? getTranslated(context, 'coordinator') : getTranslated(context, 'employee')),
         ),
       ],
     );

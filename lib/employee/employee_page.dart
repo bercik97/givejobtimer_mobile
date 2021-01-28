@@ -115,7 +115,7 @@ class _EmployeePageState extends State<EmployeePage> {
                                   color: BRIGHTER_DARK,
                                   child: InkWell(
                                     onTap: () => showContactDialog(context, _userService, _user.groupId),
-                                    child: _buildScrollableContainer('images/big-contact-with-manager-icon.png', 'contact', 'contactWithYourManager'),
+                                    child: _buildScrollableContainer('images/big-contact-with-manager-icon.png', 'contact', 'contactWithYourCoordinator'),
                                   ),
                                 ),
                               ),

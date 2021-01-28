@@ -125,7 +125,7 @@ class _RegisterPageState extends State<RegisterPage> {
           dense: true,
           contentPadding: EdgeInsets.only(left: 0.0, right: 0.0),
           title: text16GreenBold(getTranslated(context, 'role')),
-          subtitle: text16White(_role == 'ROLE_MANAGER' ? getTranslated(context, 'manager') : getTranslated(context, 'employee')),
+          subtitle: text16White(_role == 'ROLE_MANAGER' ? getTranslated(context, 'coordinator') : getTranslated(context, 'employee')),
         ),
       ],
     );

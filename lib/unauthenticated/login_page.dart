@@ -384,7 +384,7 @@ class _LoginPageState extends State<LoginPage> {
   _buildSuccessMessageForSpecificRoleToken(String role) {
     String msg = getTranslated(context, 'tokenIsCorrect') + '\n\n';
     if (role == ROLE_MANAGER) {
-      return msg + getTranslated(context, 'redirectToManagerRegistration');
+      return msg + getTranslated(context, 'redirectToCoordinatorRegistration');
     } else {
       return msg + getTranslated(context, 'redirectToEmployeeRegistration');
     }
