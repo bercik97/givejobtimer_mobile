@@ -67,7 +67,7 @@ class _WorkplaceWorkTimePageState extends State<WorkplaceWorkTimePage> {
                     ),
                     ListTile(
                       title: text20White(getTranslated(this.context, 'totalTimeWorked')),
-                      subtitle: text20GreenBold(_workplaceDto.totalTimeWorked),
+                      subtitle: text20GreenBold(_workplace.totalDateTime),
                     ),
                   ],
                 ),
